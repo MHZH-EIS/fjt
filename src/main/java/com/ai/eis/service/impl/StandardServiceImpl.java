@@ -19,4 +19,9 @@ public class StandardServiceImpl implements StandardService {
     public List <EisStandard> list(Map <String, String> map) {
         return standardMapper.list(map);
     }
+
+    @Override
+    public void add(EisStandard standard) {
+        standardMapper.insert(standard);
+    }
 }

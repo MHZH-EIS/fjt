@@ -7,5 +7,7 @@ import java.util.Map;
 
 public interface StandardService {
 
-    List <EisStandard> list(Map<String, String> map);
+    List <EisStandard> list(Map <String, String> map);
+
+    void add(EisStandard standard);
 }

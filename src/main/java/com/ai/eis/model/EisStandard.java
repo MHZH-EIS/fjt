@@ -1,5 +1,7 @@
 package com.ai.eis.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 
 public class EisStandard {
@@ -32,6 +34,8 @@ public class EisStandard {
     private String cb;
 
     private Date cbDate;
+
+    private MultipartFile enclosureFile;
 
     public Integer getStId() {
         return stId;
@@ -151,5 +155,13 @@ public class EisStandard {
 
     public void setCbDate(Date cbDate) {
         this.cbDate = cbDate;
+    }
+
+    public MultipartFile getEnclosureFile() {
+        return enclosureFile;
+    }
+
+    public void setEnclosureFile(MultipartFile enclosureFile) {
+        this.enclosureFile = enclosureFile;
     }
 }

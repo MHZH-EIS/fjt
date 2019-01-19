@@ -17,4 +17,8 @@ public interface Constants {
     String WEB_SOCKET_USERNAME = "socket_member";
     String SESSION_VERIFY_CODE_KEY = "verify_code";
     String SESSION_EIS_KEY = "s_eis";
+
+    int CONTRACT_RESOURCE_ID = 1;
+    int DEVICE_RESOURCE_ID = 2;
+    int STANDARD_RESOURCE_ID = 3;
 }

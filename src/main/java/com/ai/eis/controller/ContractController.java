@@ -71,8 +71,9 @@ public class ContractController {
     }
 
     @RequestMapping("/deploy")
-    public void deployProcess() {
+    public String deployProcess() {
         repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
+        return "流程文件部署成功";
     }
 
     @RequestMapping("/save")
@@ -92,6 +93,7 @@ public class ContractController {
                                                    .variable("manager", user.getUserid())
                                                    .start();
         logger.info("项目流程创建成功，当前流程实例{}", pi.getId());
+        contract.setResourceId(Constants.CONTRACT_RESOURCE_ID);
         contractService.insertContract(contract);
         Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
         taskService.complete(task.getId());
@@ -110,6 +112,7 @@ public class ContractController {
     }
 
     @RequestMapping(value = "/delete")
+    @ResponseBody
     public AjaxResult delete(Integer projectId) {
         contractService.deleteByPrimaryKey(projectId);
         return new AjaxResult(true);
@@ -127,7 +130,7 @@ public class ContractController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/needToHandle", produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "/needToHandle")
     public List <EisContract> queryNeedToHandle() {
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute("s_member");
@@ -144,6 +147,7 @@ public class ContractController {
 
 
     @RequestMapping("/taskAllocat")
+    @ResponseBody
     public AjaxResult taskAllocat(String projectId, String charge) {
         Task task = taskService.createTaskQuery().processInstanceBusinessKey(projectId).singleResult();
         Map <String, Object> variables = new HashMap <>();
@@ -153,6 +157,7 @@ public class ContractController {
     }
 
     @RequestMapping("/addExperiment")
+    @ResponseBody
     public AjaxResult addExperiment(List <EisExperiment> list) {
         for (EisExperiment eisExperiment : list) {
             experimentService.insert(eisExperiment);
