@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisExperimentMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisExperiment" >
+    <result column="PROJECT_ID" property="projectId" jdbcType="INTEGER" />
+    <result column="ITEM_ID" property="itemId" jdbcType="INTEGER" />
+    <result column="REQUIREMENT" property="requirement" jdbcType="VARCHAR" />
+    <result column="RESULT" property="result" jdbcType="VARCHAR" />
+    <result column="FILE" property="file" jdbcType="VARCHAR" />
+    <result column="DEV_ID" property="devId" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ai.eis.model.EisExperiment" >
+    insert into eis_experiment (PROJECT_ID, ITEM_ID, REQUIREMENT, 
+      RESULT, FILE, DEV_ID
+      )
+    values (#{projectId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{requirement,jdbcType=VARCHAR}, 
+      #{result,jdbcType=VARCHAR}, #{file,jdbcType=VARCHAR}, #{devId,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisExperiment" >
+    insert into eis_experiment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        PROJECT_ID,
+      </if>
+      <if test="itemId != null" >
+        ITEM_ID,
+      </if>
+      <if test="requirement != null" >
+        REQUIREMENT,
+      </if>
+      <if test="result != null" >
+        RESULT,
+      </if>
+      <if test="file != null" >
+        FILE,
+      </if>
+      <if test="devId != null" >
+        DEV_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="requirement != null" >
+        #{requirement,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="file != null" >
+        #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

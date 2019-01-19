@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ai.eis.mapper.EisContractMapper">
+    <resultMap id="BaseResultMap" type="com.ai.eis.model.EisContract">
+        <id column="PROJECT_ID" jdbcType="INTEGER" property="projectId"/>
+        <result column="RESOURCE_ID" jdbcType="INTEGER" property="resourceId"/>
+        <result column="CLIENT_COMPANY" jdbcType="VARCHAR" property="clientCompany"/>
+        <result column="CLIENT_ADDRESS" jdbcType="VARCHAR" property="clientAddress"/>
+        <result column="CONTACT" jdbcType="VARCHAR" property="contact"/>
+        <result column="CONTACT_WAY" jdbcType="VARCHAR" property="contactWay"/>
+        <result column="VERIFY_METHOD" jdbcType="VARCHAR" property="verifyMethod"/>
+        <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName"/>
+        <result column="PROJECT_VERSION" jdbcType="VARCHAR" property="projectVersion"/>
+        <result column="SAMPLE_NUM" jdbcType="INTEGER" property="sampleNum"/>
+        <result column="CHEACK_TYPE" jdbcType="VARCHAR" property="cheackType"/>
+        <result column="MF_NAME" jdbcType="VARCHAR" property="mfName"/>
+        <result column="MF_ADDRESS" jdbcType="VARCHAR" property="mfAddress"/>
+        <result column="REPORT_TYPE" jdbcType="VARCHAR" property="reportType"/>
+        <result column="TEST_COST" jdbcType="BIGINT" property="testCost"/>
+        <result column="CF_COST" jdbcType="BIGINT" property="cfCost"/>
+        <result column="TOTAL_COST" jdbcType="BIGINT" property="totalCost"/>
+        <result column="REGISTE_DATE" jdbcType="TIMESTAMP" property="registeDate"/>
+        <result column="EX_CASE" jdbcType="VARCHAR" property="exCase"/>
+        <result column="REMARKS" jdbcType="VARCHAR" property="remarks"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    PROJECT_ID, RESOURCE_ID, CLIENT_COMPANY, CLIENT_ADDRESS, CONTACT, CONTACT_WAY, VERIFY_METHOD, 
+    PROJECT_NAME, PROJECT_VERSION, SAMPLE_NUM, CHEACK_TYPE, MF_NAME, MF_ADDRESS, REPORT_TYPE, 
+    TEST_COST, CF_COST, TOTAL_COST, REGISTE_DATE, EX_CASE, REMARKS
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from eis_resource_contract
+        where PROJECT_ID = #{projectId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from eis_resource_contract
+    where PROJECT_ID = #{projectId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ai.eis.model.EisContract">
+    insert into eis_resource_contract (PROJECT_ID, RESOURCE_ID, CLIENT_COMPANY, 
+      CLIENT_ADDRESS, CONTACT, CONTACT_WAY, 
+      VERIFY_METHOD, PROJECT_NAME, PROJECT_VERSION, 
+      SAMPLE_NUM, CHEACK_TYPE, MF_NAME, 
+      MF_ADDRESS, REPORT_TYPE, TEST_COST, 
+      CF_COST, TOTAL_COST, REGISTE_DATE, 
+      EX_CASE, REMARKS)
+    values (#{projectId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{clientCompany,jdbcType=VARCHAR}, 
+      #{clientAddress,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{contactWay,jdbcType=VARCHAR}, 
+      #{verifyMethod,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{projectVersion,jdbcType=VARCHAR}, 
+      #{sampleNum,jdbcType=INTEGER}, #{cheackType,jdbcType=VARCHAR}, #{mfName,jdbcType=VARCHAR}, 
+      #{mfAddress,jdbcType=VARCHAR}, #{reportType,jdbcType=VARCHAR}, #{testCost,jdbcType=BIGINT}, 
+      #{cfCost,jdbcType=BIGINT}, #{totalCost,jdbcType=BIGINT}, #{registeDate,jdbcType=TIMESTAMP}, 
+      #{exCase,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.ai.eis.model.EisContract">
+        insert into eis_resource_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">
+                PROJECT_ID,
+            </if>
+            <if test="resourceId != null">
+                RESOURCE_ID,
+            </if>
+            <if test="clientCompany != null">
+                CLIENT_COMPANY,
+            </if>
+            <if test="clientAddress != null">
+                CLIENT_ADDRESS,
+            </if>
+            <if test="contact != null">
+                CONTACT,
+            </if>
+            <if test="contactWay != null">
+                CONTACT_WAY,
+            </if>
+            <if test="verifyMethod != null">
+                VERIFY_METHOD,
+            </if>
+            <if test="projectName != null">
+                PROJECT_NAME,
+            </if>
+            <if test="projectVersion != null">
+                PROJECT_VERSION,
+            </if>
+            <if test="sampleNum != null">
+                SAMPLE_NUM,
+            </if>
+            <if test="cheackType != null">
+                CHEACK_TYPE,
+            </if>
+            <if test="mfName != null">
+                MF_NAME,
+            </if>
+            <if test="mfAddress != null">
+                MF_ADDRESS,
+            </if>
+            <if test="reportType != null">
+                REPORT_TYPE,
+            </if>
+            <if test="testCost != null">
+                TEST_COST,
+            </if>
+            <if test="cfCost != null">
+                CF_COST,
+            </if>
+            <if test="totalCost != null">
+                TOTAL_COST,
+            </if>
+            <if test="registeDate != null">
+                REGISTE_DATE,
+            </if>
+            <if test="exCase != null">
+                EX_CASE,
+            </if>
+            <if test="remarks != null">
+                REMARKS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">
+                #{projectId,jdbcType=INTEGER},
+            </if>
+            <if test="resourceId != null">
+                #{resourceId,jdbcType=INTEGER},
+            </if>
+            <if test="clientCompany != null">
+                #{clientCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="clientAddress != null">
+                #{clientAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactWay != null">
+                #{contactWay,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyMethod != null">
+                #{verifyMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null">
+                #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="projectVersion != null">
+                #{projectVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="sampleNum != null">
+                #{sampleNum,jdbcType=INTEGER},
+            </if>
+            <if test="cheackType != null">
+                #{cheackType,jdbcType=VARCHAR},
+            </if>
+            <if test="mfName != null">
+                #{mfName,jdbcType=VARCHAR},
+            </if>
+            <if test="mfAddress != null">
+                #{mfAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null">
+                #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="testCost != null">
+                #{testCost,jdbcType=BIGINT},
+            </if>
+            <if test="cfCost != null">
+                #{cfCost,jdbcType=BIGINT},
+            </if>
+            <if test="totalCost != null">
+                #{totalCost,jdbcType=BIGINT},
+            </if>
+            <if test="registeDate != null">
+                #{registeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exCase != null">
+                #{exCase,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                #{remarks,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisContract">
+        update eis_resource_contract
+        <set>
+            <if test="resourceId != null">
+                RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+            </if>
+            <if test="clientCompany != null">
+                CLIENT_COMPANY = #{clientCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="clientAddress != null">
+                CLIENT_ADDRESS = #{clientAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                CONTACT = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactWay != null">
+                CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyMethod != null">
+                VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null">
+                PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="projectVersion != null">
+                PROJECT_VERSION = #{projectVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="sampleNum != null">
+                SAMPLE_NUM = #{sampleNum,jdbcType=INTEGER},
+            </if>
+            <if test="cheackType != null">
+                CHEACK_TYPE = #{cheackType,jdbcType=VARCHAR},
+            </if>
+            <if test="mfName != null">
+                MF_NAME = #{mfName,jdbcType=VARCHAR},
+            </if>
+            <if test="mfAddress != null">
+                MF_ADDRESS = #{mfAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="reportType != null">
+                REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+            </if>
+            <if test="testCost != null">
+                TEST_COST = #{testCost,jdbcType=BIGINT},
+            </if>
+            <if test="cfCost != null">
+                CF_COST = #{cfCost,jdbcType=BIGINT},
+            </if>
+            <if test="totalCost != null">
+                TOTAL_COST = #{totalCost,jdbcType=BIGINT},
+            </if>
+            <if test="registeDate != null">
+                REGISTE_DATE = #{registeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exCase != null">
+                EX_CASE = #{exCase,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                REMARKS = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where PROJECT_ID = #{projectId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisContract">
+    update eis_resource_contract
+    set RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+      CLIENT_COMPANY = #{clientCompany,jdbcType=VARCHAR},
+      CLIENT_ADDRESS = #{clientAddress,jdbcType=VARCHAR},
+      CONTACT = #{contact,jdbcType=VARCHAR},
+      CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
+      VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
+      PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      PROJECT_VERSION = #{projectVersion,jdbcType=VARCHAR},
+      SAMPLE_NUM = #{sampleNum,jdbcType=INTEGER},
+      CHEACK_TYPE = #{cheackType,jdbcType=VARCHAR},
+      MF_NAME = #{mfName,jdbcType=VARCHAR},
+      MF_ADDRESS = #{mfAddress,jdbcType=VARCHAR},
+      REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
+      TEST_COST = #{testCost,jdbcType=BIGINT},
+      CF_COST = #{cfCost,jdbcType=BIGINT},
+      TOTAL_COST = #{totalCost,jdbcType=BIGINT},
+      REGISTE_DATE = #{registeDate,jdbcType=TIMESTAMP},
+      EX_CASE = #{exCase,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR}
+    where PROJECT_ID = #{projectId,jdbcType=INTEGER}
+  </update>
+
+    <select id="getTotalSampleNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  		select SAMPLE_NUM from eis_resource_contract where PROJECT_ID = #{projectId}
+  </select>
+
+    <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+        select
+        <include refid="Base_Column_List"/>
+        from eis_resource_contract
+        <where>
+            <if test="pId != null and pId !=''">
+                PROJECT_ID = #{pId}
+            </if>
+            <if test="pName != null and pName != ''">
+                PROJECT_NAME like #{pName}
+            </if>
+        </where>
+    </select>
+
+</mapper>

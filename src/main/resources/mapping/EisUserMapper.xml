@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisUserMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisUser" >
+    <id column="USERID" property="userid" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="VARCHAR" />
+    <result column="SIGNATURE" property="signature" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="DM_ID" property="dmId" jdbcType="INTEGER" />
+    <result column="SALARY" property="salary" jdbcType="VARCHAR" />
+    <result column="RANK_ID" property="rankId" jdbcType="INTEGER" />
+    <result column="POST_ID" property="postId" jdbcType="INTEGER" />
+    <result column="ENTRY_TIME" property="entryTime" jdbcType="TIMESTAMP" />
+    <result column="REGISTE_TIME" property="registeTime" jdbcType="TIMESTAMP" />
+    <result column="PHOTO" property="photo" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    USERID, NAME, SEX, SIGNATURE, PHONE, EMAIL, DM_ID, SALARY, RANK_ID, POST_ID, ENTRY_TIME, 
+    REGISTE_TIME, PHOTO, ROLE_ID, REMARKS
+  </sql>
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_user
+    where USERID = #{userid,jdbcType=INTEGER}
+  </select>
+  
+  
+    <select id="selectAllEisUsers" resultMap="BaseResultMap"   >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_user
+  </select>
+  
+  
+  
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_user
+     where USERID = #{name,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_user
+    where USERID = #{userid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ai.eis.model.EisUser" >
+    insert into eis_user (USERID, NAME, SEX, 
+      SIGNATURE, PHONE, EMAIL, 
+      DM_ID, SALARY, RANK_ID, 
+      POST_ID, ENTRY_TIME, REGISTE_TIME, 
+      PHOTO, ROLE_ID, REMARKS
+      )
+    values (#{userid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{signature,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{dmId,jdbcType=INTEGER}, #{salary,jdbcType=VARCHAR}, #{rankId,jdbcType=INTEGER}, 
+      #{postId,jdbcType=INTEGER}, #{entryTime,jdbcType=TIMESTAMP}, #{registeTime,jdbcType=TIMESTAMP}, 
+      #{photo,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisUser" >
+    insert into eis_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        USERID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="signature != null" >
+        SIGNATURE,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="dmId != null" >
+        DM_ID,
+      </if>
+      <if test="salary != null" >
+        SALARY,
+      </if>
+      <if test="rankId != null" >
+        RANK_ID,
+      </if>
+      <if test="postId != null" >
+        POST_ID,
+      </if>
+      <if test="entryTime != null" >
+        ENTRY_TIME,
+      </if>
+      <if test="registeTime != null" >
+        REGISTE_TIME,
+      </if>
+      <if test="photo != null" >
+        PHOTO,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="signature != null" >
+        #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="dmId != null" >
+        #{dmId,jdbcType=INTEGER},
+      </if>
+      <if test="salary != null" >
+        #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="rankId != null" >
+        #{rankId,jdbcType=INTEGER},
+      </if>
+      <if test="postId != null" >
+        #{postId,jdbcType=INTEGER},
+      </if>
+      <if test="entryTime != null" >
+        #{entryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registeTime != null" >
+        #{registeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="photo != null" >
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisUser" >
+    update eis_user
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="signature != null" >
+        SIGNATURE = #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="dmId != null" >
+        DM_ID = #{dmId,jdbcType=INTEGER},
+      </if>
+      <if test="salary != null" >
+        SALARY = #{salary,jdbcType=VARCHAR},
+      </if>
+      <if test="rankId != null" >
+        RANK_ID = #{rankId,jdbcType=INTEGER},
+      </if>
+      <if test="postId != null" >
+        POST_ID = #{postId,jdbcType=INTEGER},
+      </if>
+      <if test="entryTime != null" >
+        ENTRY_TIME = #{entryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registeTime != null" >
+        REGISTE_TIME = #{registeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="photo != null" >
+        PHOTO = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USERID = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisUser" >
+    update eis_user
+    set NAME = #{name,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      SIGNATURE = #{signature,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      DM_ID = #{dmId,jdbcType=INTEGER},
+      SALARY = #{salary,jdbcType=VARCHAR},
+      RANK_ID = #{rankId,jdbcType=INTEGER},
+      POST_ID = #{postId,jdbcType=INTEGER},
+      ENTRY_TIME = #{entryTime,jdbcType=TIMESTAMP},
+      REGISTE_TIME = #{registeTime,jdbcType=TIMESTAMP},
+      PHOTO = #{photo,jdbcType=VARCHAR},
+      ROLE_ID = #{roleId,jdbcType=INTEGER},
+      REMARKS = #{remarks,jdbcType=VARCHAR}
+    where USERID = #{userid,jdbcType=INTEGER}
+  </update>
+</mapper>

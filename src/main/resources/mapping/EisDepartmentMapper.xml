@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisDepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisDepartment" >
+    <id column="DM_ID" property="dmId" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DM_ID, NAME, REMARKS
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_department
+    where DM_ID = #{dmId,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_department
+    where DM_ID = #{dmId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ai.eis.model.EisDepartment" >
+    insert into eis_department (DM_ID, NAME, REMARKS
+      )
+    values (#{dmId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisDepartment" >
+    insert into eis_department
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dmId != null" >
+        DM_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dmId != null" >
+        #{dmId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisDepartment" >
+    update eis_department
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DM_ID = #{dmId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisDepartment" >
+    update eis_department
+    set NAME = #{name,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR}
+    where DM_ID = #{dmId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ai.eis.mapper.EisSampleSignMapper">
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisSampleSign">
+    <result column="PROJECT_ID" jdbcType="INTEGER" property="projectId" />
+    <result column="SAMPLE_NAME" jdbcType="VARCHAR" property="sampleName" />
+    <result column="SING_NUM" jdbcType="INTEGER" property="singNum" />
+    <result column="COMPANY" jdbcType="VARCHAR" property="company" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="SIGN_DATE" jdbcType="TIMESTAMP" property="signDate" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ai.eis.model.EisSampleSign">
+    insert into eis_sample_sign (PROJECT_ID, SAMPLE_NAME, SING_NUM, 
+      COMPANY, ADDRESS, CONTACT, 
+      PHONE, SIGN_DATE, TYPE, 
+      STATUS)
+    values (#{projectId,jdbcType=INTEGER}, #{sampleName,jdbcType=VARCHAR}, #{singNum,jdbcType=INTEGER}, 
+      #{company,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{signDate,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisSampleSign">
+    insert into eis_sample_sign
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        PROJECT_ID,
+      </if>
+      <if test="sampleName != null">
+        SAMPLE_NAME,
+      </if>
+      <if test="singNum != null">
+        SING_NUM,
+      </if>
+      <if test="company != null">
+        COMPANY,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="contact != null">
+        CONTACT,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="signDate != null">
+        SIGN_DATE,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="sampleName != null">
+        #{sampleName,jdbcType=VARCHAR},
+      </if>
+      <if test="singNum != null">
+        #{singNum,jdbcType=INTEGER},
+      </if>
+      <if test="company != null">
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null">
+        #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getSampleNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  		select sum(SING_NUM) from eis_sample_sign where PROJECT_ID = #{projectId}
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ai.eis.mapper.EisSampleSendMapper">
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisSampleSend">
+    <result column="PROJECT_ID" jdbcType="INTEGER" property="projectId" />
+    <result column="SEND_DATE" jdbcType="TIMESTAMP" property="sendDate" />
+    <result column="TRACK" jdbcType="VARCHAR" property="track" />
+    <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="SEND_NUM" jdbcType="INTEGER" property="sendNum" />
+    <result column="REMARKS" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ai.eis.model.EisSampleSend">
+    insert into eis_sample_send (PROJECT_ID, SEND_DATE, TRACK, 
+      CONTACT, PHONE, SEND_NUM, 
+      REMARKS)
+    values (#{projectId,jdbcType=INTEGER}, #{sendDate,jdbcType=TIMESTAMP}, #{track,jdbcType=VARCHAR}, 
+      #{contact,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{sendNum,jdbcType=INTEGER}, 
+      #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisSampleSend">
+    insert into eis_sample_send
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        PROJECT_ID,
+      </if>
+      <if test="sendDate != null">
+        SEND_DATE,
+      </if>
+      <if test="track != null">
+        TRACK,
+      </if>
+      <if test="contact != null">
+        CONTACT,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="sendNum != null">
+        SEND_NUM,
+      </if>
+      <if test="remarks != null">
+        REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="sendDate != null">
+        #{sendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="track != null">
+        #{track,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="sendNum != null">
+        #{sendNum,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

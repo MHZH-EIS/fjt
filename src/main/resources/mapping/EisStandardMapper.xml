@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisStandardMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisStandard" >
+    <id column="ST_ID" property="stId" jdbcType="INTEGER" />
+    <result column="RESOURCE_ID" property="resourceId" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="RELEASE_DATE" property="releaseDate" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CARD_FORMAT" property="cardFormat" jdbcType="VARCHAR" />
+    <result column="RECORD_FORMAT" property="recordFormat" jdbcType="VARCHAR" />
+    <result column="TEMPLATE" property="template" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+    <result column="ENCLOSURE" property="enclosure" jdbcType="VARCHAR" />
+    <result column="SWITCHER" property="switcher" jdbcType="VARCHAR" />
+    <result column="CNAS" property="cnas" jdbcType="VARCHAR" />
+    <result column="CNAS_DATE" property="cnasDate" jdbcType="TIMESTAMP" />
+    <result column="CB" property="cb" jdbcType="VARCHAR" />
+    <result column="CB_DATE" property="cbDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ST_ID, RESOURCE_ID, NAME, RELEASE_DATE, STATUS, CARD_FORMAT, RECORD_FORMAT, TEMPLATE, 
+    REMARKS, ENCLOSURE, SWITCHER, CNAS, CNAS_DATE, CB, CB_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_standard
+    where ST_ID = #{stId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_standard
+    where ST_ID = #{stId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ai.eis.model.EisStandard" >
+    insert into eis_standard (ST_ID, RESOURCE_ID, NAME, 
+      RELEASE_DATE, STATUS, CARD_FORMAT, 
+      RECORD_FORMAT, TEMPLATE, REMARKS, 
+      ENCLOSURE, SWITCHER, CNAS, 
+      CNAS_DATE, CB, CB_DATE
+      )
+    values (#{stId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{releaseDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{cardFormat,jdbcType=VARCHAR}, 
+      #{recordFormat,jdbcType=VARCHAR}, #{template,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{enclosure,jdbcType=VARCHAR}, #{switcher,jdbcType=VARCHAR}, #{cnas,jdbcType=VARCHAR}, 
+      #{cnasDate,jdbcType=TIMESTAMP}, #{cb,jdbcType=VARCHAR}, #{cbDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisStandard" >
+    insert into eis_standard
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stId != null" >
+        ST_ID,
+      </if>
+      <if test="resourceId != null" >
+        RESOURCE_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="releaseDate != null" >
+        RELEASE_DATE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="cardFormat != null" >
+        CARD_FORMAT,
+      </if>
+      <if test="recordFormat != null" >
+        RECORD_FORMAT,
+      </if>
+      <if test="template != null" >
+        TEMPLATE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+      <if test="enclosure != null" >
+        ENCLOSURE,
+      </if>
+      <if test="switcher != null" >
+        SWITCHER,
+      </if>
+      <if test="cnas != null" >
+        CNAS,
+      </if>
+      <if test="cnasDate != null" >
+        CNAS_DATE,
+      </if>
+      <if test="cb != null" >
+        CB,
+      </if>
+      <if test="cbDate != null" >
+        CB_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stId != null" >
+        #{stId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null" >
+        #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="cardFormat != null" >
+        #{cardFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFormat != null" >
+        #{recordFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="template != null" >
+        #{template,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null" >
+        #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="switcher != null" >
+        #{switcher,jdbcType=VARCHAR},
+      </if>
+      <if test="cnas != null" >
+        #{cnas,jdbcType=VARCHAR},
+      </if>
+      <if test="cnasDate != null" >
+        #{cnasDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cb != null" >
+        #{cb,jdbcType=VARCHAR},
+      </if>
+      <if test="cbDate != null" >
+        #{cbDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisStandard" >
+    update eis_standard
+    <set >
+      <if test="resourceId != null" >
+        RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null" >
+        RELEASE_DATE = #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="cardFormat != null" >
+        CARD_FORMAT = #{cardFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFormat != null" >
+        RECORD_FORMAT = #{recordFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="template != null" >
+        TEMPLATE = #{template,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null" >
+        ENCLOSURE = #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="switcher != null" >
+        SWITCHER = #{switcher,jdbcType=VARCHAR},
+      </if>
+      <if test="cnas != null" >
+        CNAS = #{cnas,jdbcType=VARCHAR},
+      </if>
+      <if test="cnasDate != null" >
+        CNAS_DATE = #{cnasDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cb != null" >
+        CB = #{cb,jdbcType=VARCHAR},
+      </if>
+      <if test="cbDate != null" >
+        CB_DATE = #{cbDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ST_ID = #{stId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisStandard" >
+    update eis_standard
+    set RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+      NAME = #{name,jdbcType=VARCHAR},
+      RELEASE_DATE = #{releaseDate,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=VARCHAR},
+      CARD_FORMAT = #{cardFormat,jdbcType=VARCHAR},
+      RECORD_FORMAT = #{recordFormat,jdbcType=VARCHAR},
+      TEMPLATE = #{template,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      ENCLOSURE = #{enclosure,jdbcType=VARCHAR},
+      SWITCHER = #{switcher,jdbcType=VARCHAR},
+      CNAS = #{cnas,jdbcType=VARCHAR},
+      CNAS_DATE = #{cnasDate,jdbcType=TIMESTAMP},
+      CB = #{cb,jdbcType=VARCHAR},
+      CB_DATE = #{cbDate,jdbcType=TIMESTAMP}
+    where ST_ID = #{stId,jdbcType=INTEGER}
+  </update>
+</mapper>

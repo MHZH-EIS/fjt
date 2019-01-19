@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisLoginMapper" >
+  <resultMap id="EisLoginMap" type="com.ai.eis.model.EisLogin" >
+    <id column="USERID" property="userid" jdbcType="INTEGER" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="EXPIRED_TIME" property="expiredTime" jdbcType="TIMESTAMP" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="LOGIN_IP" property="loginIp" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap id="EisUserResultMap" type="com.ai.eis.model.EisUser" >
+    <id column="USERID" property="userid" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="VARCHAR" />
+    <result column="SIGNATURE" property="signature" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="DM_ID" property="dmId" jdbcType="INTEGER" />
+    <result column="SALARY" property="salary" jdbcType="VARCHAR" />
+    <result column="RANK_ID" property="rankId" jdbcType="INTEGER" />
+    <result column="POST_ID" property="postId" jdbcType="INTEGER" />
+    <result column="ENTRY_TIME" property="entryTime" jdbcType="TIMESTAMP" />
+    <result column="REGISTE_TIME" property="registeTime" jdbcType="TIMESTAMP" />
+    <result column="PHOTO" property="photo" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    USERID, ACCOUNT, PASSWORD, EXPIRED_TIME, LAST_LOGIN_TIME, LOGIN_IP, STATUS
+  </sql>
+  
+    <sql id="EisUser_Column_List" >
+    USERID, NAME, SEX, SIGNATURE, PHONE, EMAIL, DM_ID, SALARY, RANK_ID, POST_ID, ENTRY_TIME, 
+    REGISTE_TIME, PHOTO, ROLE_ID, REMARKS
+  </sql>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="EisLoginMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_login
+    where USERID = #{userid,jdbcType=INTEGER}
+  </select>
+  
+  
+  	<select id="selectUserByUserid" resultMap="EisUserResultMap" >
+		select 
+	   <include refid="EisUser_Column_List" />
+		from eis_user
+		where USERID = #{userid,jdbcType=INTEGER}
+	</select>
+  
+	
+    <select id="selectByAccount" resultMap="EisLoginMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_login
+    where ACCOUNT = #{account,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_login
+    where USERID = #{userid,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.ai.eis.model.EisLogin" >
+    insert into eis_login (USERID, ACCOUNT, PASSWORD, 
+      EXPIRED_TIME, LAST_LOGIN_TIME, LOGIN_IP, 
+      STATUS)
+    values (#{userid,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{expiredTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginIp,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisLogin" >
+    insert into eis_login
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        USERID,
+      </if>
+      <if test="account != null" >
+        ACCOUNT,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="expiredTime != null" >
+        EXPIRED_TIME,
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME,
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredTime != null" >
+        #{expiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisLogin" >
+    update eis_login
+    <set >
+      <if test="account != null" >
+        ACCOUNT = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredTime != null" >
+        EXPIRED_TIME = #{expiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where USERID = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisLogin" >
+    update eis_login
+    set ACCOUNT = #{account,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      EXPIRED_TIME = #{expiredTime,jdbcType=TIMESTAMP},
+      LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER}
+    where USERID = #{userid,jdbcType=INTEGER}
+  </update>
+</mapper>

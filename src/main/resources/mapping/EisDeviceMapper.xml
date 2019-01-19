@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisDeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisDevice" >
+    <id column="DEV_ID" property="devId" jdbcType="INTEGER" />
+    <result column="RESOURCE_ID" property="resourceId" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="VARCHAR" />
+    <result column="DEVICE_TYPE" property="deviceType" jdbcType="VARCHAR" />
+    <result column="ADJUST" property="adjust" jdbcType="VARCHAR" />
+    <result column="VALIDITY_DATE" property="validityDate" jdbcType="TIMESTAMP" />
+    <result column="CYCLE" property="cycle" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="ABNORMAL_STATE" property="abnormalState" jdbcType="VARCHAR" />
+    <result column="ADJUST_DATE" property="adjustDate" jdbcType="TIMESTAMP" />
+    <result column="ORG" property="org" jdbcType="VARCHAR" />
+    <result column="ENCLOSURE" property="enclosure" jdbcType="VARCHAR" />
+    <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DEV_ID, RESOURCE_ID, NAME, VERSION, DEVICE_TYPE, ADJUST, VALIDITY_DATE, CYCLE, STATUS, 
+    ABNORMAL_STATE, ADJUST_DATE, ORG, ENCLOSURE, REMARKS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_resource_device
+    where DEV_ID = #{devId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from  eis_resource_device
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_resource_device
+    where DEV_ID = #{devId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ai.eis.model.EisDevice" >
+    insert into eis_resource_device (DEV_ID, RESOURCE_ID, NAME, 
+      VERSION, DEVICE_TYPE, ADJUST, 
+      VALIDITY_DATE, CYCLE, STATUS, 
+      ABNORMAL_STATE, ADJUST_DATE, ORG, 
+      ENCLOSURE, REMARKS)
+    values (#{devId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{deviceType,jdbcType=VARCHAR}, #{adjust,jdbcType=VARCHAR}, 
+      #{validityDate,jdbcType=TIMESTAMP}, #{cycle,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{abnormalState,jdbcType=VARCHAR}, #{adjustDate,jdbcType=TIMESTAMP}, #{org,jdbcType=VARCHAR}, 
+      #{enclosure,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisDevice" >
+    insert into eis_resource_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="devId != null" >
+        DEV_ID,
+      </if>
+      <if test="resourceId != null" >
+        RESOURCE_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="deviceType != null" >
+        DEVICE_TYPE,
+      </if>
+      <if test="adjust != null" >
+        ADJUST,
+      </if>
+      <if test="validityDate != null" >
+        VALIDITY_DATE,
+      </if>
+      <if test="cycle != null" >
+        CYCLE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="abnormalState != null" >
+        ABNORMAL_STATE,
+      </if>
+      <if test="adjustDate != null" >
+        ADJUST_DATE,
+      </if>
+      <if test="org != null" >
+        ORG,
+      </if>
+      <if test="enclosure != null" >
+        ENCLOSURE,
+      </if>
+      <if test="remarks != null" >
+        REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="devId != null" >
+        #{devId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceType != null" >
+        #{deviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="adjust != null" >
+        #{adjust,jdbcType=VARCHAR},
+      </if>
+      <if test="validityDate != null" >
+        #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cycle != null" >
+        #{cycle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="abnormalState != null" >
+        #{abnormalState,jdbcType=VARCHAR},
+      </if>
+      <if test="adjustDate != null" >
+        #{adjustDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="org != null" >
+        #{org,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null" >
+        #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisDevice" >
+    update eis_resource_device
+    <set >
+      <if test="resourceId != null" >
+        RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        VERSION = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceType != null" >
+        DEVICE_TYPE = #{deviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="adjust != null" >
+        ADJUST = #{adjust,jdbcType=VARCHAR},
+      </if>
+      <if test="validityDate != null" >
+        VALIDITY_DATE = #{validityDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cycle != null" >
+        CYCLE = #{cycle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="abnormalState != null" >
+        ABNORMAL_STATE = #{abnormalState,jdbcType=VARCHAR},
+      </if>
+      <if test="adjustDate != null" >
+        ADJUST_DATE = #{adjustDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="org != null" >
+        ORG = #{org,jdbcType=VARCHAR},
+      </if>
+      <if test="enclosure != null" >
+        ENCLOSURE = #{enclosure,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEV_ID = #{devId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisDevice" >
+    update eis_resource_device
+    set RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+      NAME = #{name,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=VARCHAR},
+      DEVICE_TYPE = #{deviceType,jdbcType=VARCHAR},
+      ADJUST = #{adjust,jdbcType=VARCHAR},
+      VALIDITY_DATE = #{validityDate,jdbcType=TIMESTAMP},
+      CYCLE = #{cycle,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      ABNORMAL_STATE = #{abnormalState,jdbcType=VARCHAR},
+      ADJUST_DATE = #{adjustDate,jdbcType=TIMESTAMP},
+      ORG = #{org,jdbcType=VARCHAR},
+      ENCLOSURE = #{enclosure,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR}
+    where DEV_ID = #{devId,jdbcType=INTEGER}
+  </update>
+</mapper>
