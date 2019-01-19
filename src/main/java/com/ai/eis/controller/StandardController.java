@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/standard")
+@RequestMapping(value = "/resource/standard")
 public class StandardController {
 
     private Logger logger = LoggerFactory.getLogger(StandardController.class);
@@ -28,6 +28,11 @@ public class StandardController {
     @Autowired
     private StandardService standardService;
 
+    @RequestMapping
+    public void index() {
+    }
+    
+    
     @RequestMapping("/form")
     public void form(Long id) {
     }
