@@ -44,6 +44,17 @@ define(function () {
       saveUrl: '/resource/contract/update',
       updateUrl: '/resource/contract/update',
       destroyUrl: '/resource/contract/delete',
+      onBeforeSave: function(index) {
+    	  return true;
+      },
+      onSave: function (index, row) {
+    	                       
+    	                          if (dg.data('isSave')) {
+    	                              //如果需要刷新，保存完后刷新
+    	                              dg.edatagrid('reload');
+    	                              dg.removeData('isSave');
+    	                          }
+                      },
       emptyMsg: "还未有合同",
       idField: "projectId",
       fit: true,
@@ -264,16 +275,13 @@ define(function () {
             createForm()
           }
         },
-        "contract-update":{
+       /* "contract-update":{
             iconCls: 'fa fa-pencil-square-o',
             text: "保存修改",
             handler: function () {
-             	var row = dg.edatagrid('getSelected');
-             	if (row) {
-             		 dg.edatagrid('saveRow');
-             	}
+                dg.data('isSave', true).edatagrid('saveRow');
             }
-        },
+        },*/
         "contract-delete":{
             iconCls: 'fa fa-trash',
             text: "删除合同",
@@ -281,7 +289,6 @@ define(function () {
             	var row = dg.edatagrid('getSelected');
             	if (row) {
                     var rowIndex = dg.datagrid('getRowIndex', row);
-                    alert(row.projectId);
                     dg.edatagrid('destroyRow');
             	 }
             	 
@@ -314,12 +321,15 @@ define(function () {
 	 * 搜索区域事件
 	 */
     searchFrom.on('click', 'a.searcher', function () {// 检索
+      dg.datagrid('loadData', { total: 0, rows: [] });
       dg.datagrid('load', searchFrom.formToJson());
     }).on('click', 'a.reset', function () {// 重置
       searchFrom.form('reset');
       dg.datagrid('load', {});
     });
 
+
+    
 
     /**
 	 * 创建表单窗口

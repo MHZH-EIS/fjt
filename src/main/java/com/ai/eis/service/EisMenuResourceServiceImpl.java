@@ -76,7 +76,7 @@ public class EisMenuResourceServiceImpl  implements EisMenuResourceService {
 	@Override
 	public List<EisMenuResource> selectParentIsNull() {
  
-		return null;
+		return eisMenuResourceMapper.findByParentIsNull();
 	}
 
 

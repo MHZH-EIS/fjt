@@ -29,7 +29,8 @@ public class EisMenuResource {
 	private Long parentId;
 
     private Integer weight;
-
+    
+    @Transient
     private EisMenuResource parent;
     
     private String text;

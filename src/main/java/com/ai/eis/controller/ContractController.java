@@ -102,7 +102,8 @@ public class ContractController {
 
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public List <EisContract> postquery(String pId, String pName) {
+    public List <EisContract> postquery(@RequestParam(value="projectId",defaultValue="") String pId,
+    		@RequestParam(value="projectName",defaultValue="") String pName) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("pName", pName);
