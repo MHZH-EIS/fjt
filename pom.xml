@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ai</groupId>
-	<artifactId>eis</artifactId>
+	<artifactId>fjt</artifactId>
 	<version>0.0.1</version>
-	<name>eis</name>
+	<name>fjt</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
