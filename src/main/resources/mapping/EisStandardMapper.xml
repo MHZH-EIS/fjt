@@ -209,4 +209,18 @@
       CB_DATE = #{cbDate,jdbcType=TIMESTAMP}
     where ST_ID = #{stId,jdbcType=INTEGER}
   </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+    select
+    <include refid="Base_Column_List"/>
+    from eis_standard
+    <where>
+      <if test="sId != null and sId != ''">
+        ST_ID = #{sId,jdbcType=INTEGER}
+      </if>
+      <if test="name != null and name != ''">
+        NAME like #{name}
+      </if>
+    </where>
+  </select>
 </mapper>

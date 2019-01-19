@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisStItemMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisStItem" >
+    <id column="ITEM_ID" property="itemId" jdbcType="INTEGER" />
+    <result column="ST_ID" property="stId" jdbcType="INTEGER" />
+    <result column="TEST_NAME" property="testName" jdbcType="VARCHAR" />
+    <result column="CLAUSE" property="clause" jdbcType="VARCHAR" />
+    <result column="TEMPLATE" property="template" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ITEM_ID, ST_ID, TEST_NAME, CLAUSE, TEMPLATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_st_item
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_st_item
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByStandardId" parameterType="java.lang.Integer">
+    delete from eis_st_item
+    where ST_ID = #{sId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ai.eis.model.EisStItem" >
+    insert into eis_st_item (ITEM_ID, ST_ID, TEST_NAME, 
+      CLAUSE, TEMPLATE)
+    values (#{itemId,jdbcType=INTEGER}, #{stId,jdbcType=INTEGER}, #{testName,jdbcType=VARCHAR}, 
+      #{clause,jdbcType=VARCHAR}, #{template,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisStItem" >
+    insert into eis_st_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        ITEM_ID,
+      </if>
+      <if test="stId != null" >
+        ST_ID,
+      </if>
+      <if test="testName != null" >
+        TEST_NAME,
+      </if>
+      <if test="clause != null" >
+        CLAUSE,
+      </if>
+      <if test="template != null" >
+        TEMPLATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="stId != null" >
+        #{stId,jdbcType=INTEGER},
+      </if>
+      <if test="testName != null" >
+        #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="clause != null" >
+        #{clause,jdbcType=VARCHAR},
+      </if>
+      <if test="template != null" >
+        #{template,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisStItem" >
+    update eis_st_item
+    <set >
+      <if test="stId != null" >
+        ST_ID = #{stId,jdbcType=INTEGER},
+      </if>
+      <if test="testName != null" >
+        TEST_NAME = #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="clause != null" >
+        CLAUSE = #{clause,jdbcType=VARCHAR},
+      </if>
+      <if test="template != null" >
+        TEMPLATE = #{template,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisStItem" >
+    update eis_st_item
+    set ST_ID = #{stId,jdbcType=INTEGER},
+      TEST_NAME = #{testName,jdbcType=VARCHAR},
+      CLAUSE = #{clause,jdbcType=VARCHAR},
+      TEMPLATE = #{template,jdbcType=VARCHAR}
+    where ITEM_ID = #{itemId,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+    select
+    <include refid="Base_Column_List"/>
+    from eis_standard
+    <where>
+      <if test="stId != null and stId != ''">
+        ST_ID = #{name,jdbcType=INTEGER}
+      </if>
+      <if test="name != null and name != ''">
+        TEST_NAME like #{name}
+      </if>
+    </where>
+  </select>
+</mapper>

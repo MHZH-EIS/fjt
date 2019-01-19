@@ -17,11 +17,16 @@ public class StandardServiceImpl implements StandardService {
 
     @Override
     public List <EisStandard> list(Map <String, String> map) {
-        return standardMapper.list(map);
+        return standardMapper.queryByCondition(map);
     }
 
     @Override
     public void add(EisStandard standard) {
         standardMapper.insert(standard);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        standardMapper.deleteByPrimaryKey(id);
     }
 }

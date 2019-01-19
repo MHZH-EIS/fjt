@@ -10,4 +10,6 @@ public interface StandardService {
     List <EisStandard> list(Map <String, String> map);
 
     void add(EisStandard standard);
+
+    void delete(Integer id);
 }

@@ -18,5 +18,5 @@ public interface EisStandardMapper {
 
     int updateByPrimaryKey(EisStandard record);
 
-    List <EisStandard> list(Map <String, String> map);
+    List <EisStandard> queryByCondition(Map <String, String> map);
 }
