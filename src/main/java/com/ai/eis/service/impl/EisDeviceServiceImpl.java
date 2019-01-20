@@ -22,6 +22,6 @@ public class EisDeviceServiceImpl implements EisDeviceService {
 
     @Override
     public List <EisDevice> queryByCondition(Map <String, String> map) {
-        return deviceMapper.queryByCondition();
+        return deviceMapper.queryByCondition(map);
     }
 }
