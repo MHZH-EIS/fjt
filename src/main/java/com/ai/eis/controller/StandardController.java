@@ -52,8 +52,8 @@ public class StandardController {
 
 	@ResponseBody
 	@RequestMapping("/list")
-	public List<EisStandard> queryByCondition(@RequestParam(value = "projectId", defaultValue = "") String stid,
-			 @RequestParam(value = "projectName", defaultValue = "")  String name) {
+	public List<EisStandard> queryByCondition(@RequestParam(value = "stId", defaultValue = "") String stid,
+			 @RequestParam(value = "name", defaultValue = "")  String name) {
 		Map<String, String> map = new HashMap<>();
 		map.put("name", Tools.liker(name));
 		map.put("sId", Tools.liker(stid));
