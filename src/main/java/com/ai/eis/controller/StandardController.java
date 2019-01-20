@@ -13,11 +13,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.tools.Tool;
+import javax.validation.Valid;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -56,7 +59,12 @@ public class StandardController {
     @RequestMapping("/save")
     @Transactional
     @ResponseBody
-    public AjaxResult add(EisStandard standard) {
+    public AjaxResult add(@Valid EisStandard standard, BindingResult br) {
+    	 if (br.hasErrors()) {
+             logger.error("对象校验失败：" + br.getAllErrors());
+             return new AjaxResult(false).setData(br.getAllErrors());
+         }
+
         MultipartFile multipartFile = standard.getEnclosureFile();
         try {
             if (!multipartFile.isEmpty()) {
