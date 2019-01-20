@@ -3,12 +3,21 @@ package com.ai.eis.service;
 import com.ai.eis.model.EisSampleSend;
 import com.ai.eis.model.EisSampleSign;
 
+import java.util.List;
+import java.util.Map;
+
 public interface EisSampleService {
 
-	public int send(EisSampleSend sendSample);
+    int send(EisSampleSend sendSample);
 
-	public int sign(EisSampleSign signSample);
+    int sign(EisSampleSign signSample);
 
-	public int getSampleNum(Integer projectId);
+    int getSampleNum(Integer projectId);
+
+    List <Map <String, Object>> listProject(Map <String, String> map);
+
+    List <EisSampleSend> listSendRecord(Map <String, String> map);
+
+    List <EisSampleSign> listSignRecord(Map <String, String> map);
 
 }

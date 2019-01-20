@@ -94,6 +94,32 @@
   <select id="getSampleNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
   		select sum(SING_NUM) from eis_sample_sign where PROJECT_ID = #{projectId}
   </select>
-  
+
+  <select id="listSignRecord" resultMap="BaseResultMap" parameterType="Map">
+    select
+    <include refid="Base_Column_List"/>
+    from eis_sample_sign
+    <where>
+      <if test="pId != null and pId !=''">
+        PROJECT_ID = #{pId}
+      </if>
+      <if test="name != null and name != ''">
+        and SAMPLE_NAME like #{name}
+      </if>
+    </where>
+  </select>
+
+  <select id="listProject" resultType="java.util.HashMap" parameterType="Map">
+    SELECT a.PROJECT_ID,a.PROJECT_NAME ,a.SAMPLE_NUM, b.SEND_NUM,c.SING_NUM from eis_resource_contract a
+    LEFT JOIN eis_sample_send b on a.PROJECT_ID = b.PROJECT_ID
+    LEFT JOIN eis_sample_sign c on a.PROJECT_ID = c.PROJECT_ID
+    <where>
+      <if test="name != null and name !=''">
+        a.PROJECT_NAME like #{name}
+      </if>
+    </where>
+  </select>
+
+
   
 </mapper>

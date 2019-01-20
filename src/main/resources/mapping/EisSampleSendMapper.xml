@@ -67,4 +67,15 @@
       </if>
     </trim>
   </insert>
+
+  <select id="listSendRecord" resultMap="BaseResultMap" parameterType="Map">
+    select
+    <include refid="Base_Column_List"/>
+    from eis_sample_send
+    <where>
+      <if test="pId != null and pId !=''">
+        PROJECT_ID = #{pId}
+      </if>
+    </where>
+  </select>
 </mapper>

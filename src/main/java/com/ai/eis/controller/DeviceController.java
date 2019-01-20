@@ -24,6 +24,7 @@ public class DeviceController {
     private EisDeviceService deviceService;
 
     @RequestMapping(value = "/save")
+    @ResponseBody
     public AjaxResult insertDevice(EisDevice device) {
         deviceService.insert(device);
         logger.info("添加了一个新设备{}", device.getName());
