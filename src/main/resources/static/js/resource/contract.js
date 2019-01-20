@@ -34,22 +34,36 @@
 
 define(function () {
   return function () {
-    var dg = $("#member_dg");
-    var searchFrom = $("#member_search_from");
+    var dg = $("#contract_dg");
+    var searchFrom = $("#contract_search_from");
     var form;
     
     // 使用edatagrid，需要而外导入edatagrid扩展
-    dg.datagrid({
+    dg.edatagrid({
       url: '/resource/contract/list',
+      saveUrl: '/resource/contract/update',
+      updateUrl: '/resource/contract/update',
+      destroyUrl: '/resource/contract/delete',
+      onBeforeSave: function(index) {
+    	  return true;
+      },
+      onSave: function (index, row) {
+    	                       
+    	                          if (dg.data('isSave')) {
+    	                              //如果需要刷新，保存完后刷新
+    	                              dg.edatagrid('reload');
+    	                              dg.removeData('isSave');
+    	                          }
+                      },
       emptyMsg: "还未有合同",
-      idField: "id",
+      idField: "projectId",
       fit: true,
       rownumbers: true,
       fitColumns: true,
       border: false,
       pagination: true,
       singleSelect: true,
-      ignore: ['roles'],
+      ignore: ['projectId'],
       pageSize: 30,
       columns: [[{
         field: 'projectName',
@@ -254,25 +268,30 @@ define(function () {
       }
       ]],
       toolbar: authToolBar({
-        "member-create": {
+        "contract-create": {
           iconCls: 'fa fa-plus-square',
           text: "创建合同",
           handler: function () {
             createForm()
           }
         },
-        "member-edit":{
+       /* "contract-update":{
             iconCls: 'fa fa-pencil-square-o',
-            text: "修改合同",
+            text: "保存修改",
             handler: function () {
- 
+                dg.data('isSave', true).edatagrid('saveRow');
             }
-        },
-        "member-delete":{
+        },*/
+        "contract-delete":{
             iconCls: 'fa fa-trash',
             text: "删除合同",
             handler: function () {
-               
+            	var row = dg.edatagrid('getSelected');
+            	if (row) {
+                    var rowIndex = dg.datagrid('getRowIndex', row);
+                    dg.edatagrid('destroyRow');
+            	 }
+            	 
             }
         }
       })
@@ -293,7 +312,6 @@ define(function () {
           $.get("/system/member/delete", {id: id}, function () {
             // 数据操作成功后，对列表数据，进行刷新
             dg.datagrid("reload");
-            
           });
         }
       });
@@ -303,12 +321,15 @@ define(function () {
 	 * 搜索区域事件
 	 */
     searchFrom.on('click', 'a.searcher', function () {// 检索
+      dg.datagrid('loadData', { total: 0, rows: [] });
       dg.datagrid('load', searchFrom.formToJson());
     }).on('click', 'a.reset', function () {// 重置
       searchFrom.form('reset');
       dg.datagrid('load', {});
     });
 
+
+    
 
     /**
 	 * 创建表单窗口

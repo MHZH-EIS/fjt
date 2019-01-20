@@ -48,8 +48,8 @@ public class ResourceController {
     @RequestMapping("/parent/tree")
     @ResponseBody
     public Iterable<EisMenuResource> parentTree() {
-        return null;
-    	//return eisMenuResourceService.getResourceTree();
+
+    	return eisMenuResourceService.selectParentIsNull();
     }
 
     @RequestMapping("form")

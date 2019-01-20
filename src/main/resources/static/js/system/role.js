@@ -105,10 +105,7 @@ define(function () {
         // 操作请求发送错误
         console.error(data);
       },
-      onSelect: function (index, row) {
-    	 // alert(miaovariable);
-    	  //alert(currentRoelId);
-    	  
+      onSelect: function (index, row) {    	  
         if (row.name) {
           resourcePanel.panel("setTitle", "为[" + row.name + "]分配资源")
           currentRoelId = row.roleId;
