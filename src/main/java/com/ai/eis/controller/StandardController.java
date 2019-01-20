@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.tools.Tool;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -105,7 +106,7 @@ public class StandardController {
     public List <EisStItem> listItem(String sId, String name) {
         Map <String, String> map = new HashMap <>();
         map.put("sId", sId);
-        map.put("name", name);
+        map.put("name", Tools.liker(name));
         return sItemService.queryByCondition(map);
     }
 
