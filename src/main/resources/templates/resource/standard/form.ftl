@@ -1,6 +1,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
-<form class="app-form" id="standard-form">
-   <div class="field">
+<form class="app-form" id="standard-form" enctype="multipart/form-data"  method="post" >
+  <div class="field">
     <input class="easyui-textbox" name="stId" style="width:100%" data-options="label:'标准号:',required:true ">
    </div>
   <div class="field">
@@ -18,7 +18,6 @@
    <div class="field">
     <input class="easyui-textbox" name="cnas" style="width:100%" data-options="label:'CNAS授权:',required:true ">
   </div>
-  
    <div class="field">
     <input class="easyui-datebox" name="cnasDate" style="width:100%" data-options="label:'CNAS授权日期:',required:true ">
   </div>
@@ -30,10 +29,9 @@
   </div>
   <div class="field">
     <input class="easyui-textbox" name="remark" style="width:100%" data-options="label:'备注信息:',required:true ">
-  </div>
-   
+  </div> 
   <div class="field">
-    <input class="easyui-filebox" id="fileImport" name="enclosureFile"   style="width:100%" data-options="label:'标准上传:'">
+    <input class="easyui-filebox" name="enclosureFile" style="width:100%" data-options="label:'标准上传:',required:true,prompt:'文件上传' ">
   </div>
 </form>
  

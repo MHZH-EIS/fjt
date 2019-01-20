@@ -29,4 +29,9 @@ public class StandardServiceImpl implements StandardService {
     public void delete(Integer id) {
         standardMapper.deleteByPrimaryKey(id);
     }
+
+	@Override
+	public EisStandard queryById(Integer id) {
+		return standardMapper.selectByPrimaryKey(id);
+	}
 }

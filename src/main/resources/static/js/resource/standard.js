@@ -43,7 +43,7 @@ define(function () {
       url: '/resource/standard/list',
       saveUrl: '/resource/standard/update',
       updateUrl: '/resource/standard/update',
-      destroyUrl: '/resource/standard/delete',
+      destroyUrl: '/resource/standard/remove',
       onBeforeSave: function(index) {
     	  return true;
       },
@@ -234,7 +234,7 @@ define(function () {
       var id = this.dataset.id;
       $.messager.confirm("删除提醒", "确认删除此用户?", function (r) {
         if (r) {
-          $.get("/system/member/delete", {id: id}, function () {
+          $.get("/resource/standard/remove", {id: id}, function () {
             // 数据操作成功后，对列表数据，进行刷新
             dg.datagrid("reload");
           });
@@ -280,6 +280,9 @@ define(function () {
         onClose: function () {
           $(this).dialog("destroy");
         },
+        sucess:function(result) {
+        	
+        },
         buttons: [
             {
                 iconCls: 'fa fa-trash-o',
@@ -292,12 +295,20 @@ define(function () {
           iconCls: 'fa fa-save',
           text: '保存',
           handler: function () {
-        	  if (form.form('validate')) {
-              $.post("/resource/standard/save", form.serialize(), function (res) {
-                dg.datagrid('reload');
-                dialog.dialog('close');
-              },"json")
-          	}
+        	  form.form('submit',{
+        		 type:"post",
+        		 url:"/resource/standard/save",
+        		 success:function(data) {
+        			 var obj = JSON.parse(data);
+        			 if (obj.success) {
+        				 $.messager.alert({title:'提示',msg:"新建标准成功",icon:'info'});
+        				 dialog.dialog('close');
+        				 dg.datagrid('reload');
+        			 }else {
+        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+        			 }
+        		 }
+        	  });
           }
         }]
       });

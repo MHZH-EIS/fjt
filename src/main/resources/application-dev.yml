@@ -2,6 +2,10 @@
 server:
   port: 8081
   
+  
+ 
+
+
 spring:
  datasource:
   driver-class-name: com.mysql.jdbc.Driver
@@ -17,6 +21,13 @@ spring:
    template-loader-path: classpath:/templates/
    cache: false
    charset: UTF-8
+  http:
+   multipart:
+    enable: true
+    file-size-threshold: 0
+    max-file-size: 100Mb
+    max-request-size: 100Mb
+ 
  #如果没有这个配置项，则必须在resources/processes里面有bpmn
  activiti:
   check-process-definitions: false

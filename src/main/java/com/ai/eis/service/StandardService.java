@@ -12,4 +12,6 @@ public interface StandardService {
     void add(EisStandard standard);
 
     void delete(Integer id);
+    
+    EisStandard   queryById(Integer id);
 }
