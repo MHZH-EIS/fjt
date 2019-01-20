@@ -49,11 +49,11 @@ public class StandardController {
 
     @ResponseBody
     @RequestMapping("/list")
-    public List <EisStandard> queryByCondition(@RequestParam(value = "stId", defaultValue = "") String stid,
+    public List <EisStandard> queryByCondition(@RequestParam(value = "stNo", defaultValue = "") String sNo,
                                                @RequestParam(value = "name", defaultValue = "") String name) {
         Map <String, String> map = new HashMap <>();
         map.put("name", Tools.liker(name));
-        map.put("sId", stid);
+        map.put("sNo", Tools.liker(sNo));
         return standardService.list(map);
     }
 

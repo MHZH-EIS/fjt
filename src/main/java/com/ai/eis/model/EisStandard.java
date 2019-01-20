@@ -37,6 +37,8 @@ public class EisStandard {
 
     private MultipartFile enclosureFile;
 
+    private String stNo;
+
     public Integer getStId() {
         return stId;
     }
@@ -163,5 +165,13 @@ public class EisStandard {
 
     public void setEnclosureFile(MultipartFile enclosureFile) {
         this.enclosureFile = enclosureFile;
+    }
+
+    public String getStNo() {
+        return stNo;
+    }
+
+    public void setStNo(String stNo) {
+        this.stNo = stNo;
     }
 }

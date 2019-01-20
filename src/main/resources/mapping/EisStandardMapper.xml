@@ -17,10 +17,11 @@
     <result column="CNAS_DATE" property="cnasDate" jdbcType="TIMESTAMP" />
     <result column="CB" property="cb" jdbcType="VARCHAR" />
     <result column="CB_DATE" property="cbDate" jdbcType="TIMESTAMP" />
+    <result column="ST_NO" property="stNo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     ST_ID, RESOURCE_ID, NAME, RELEASE_DATE, STATUS, CARD_FORMAT, RECORD_FORMAT, TEMPLATE, 
-    REMARKS, ENCLOSURE, SWITCHER, CNAS, CNAS_DATE, CB, CB_DATE
+    REMARKS, ENCLOSURE, SWITCHER, CNAS, CNAS_DATE, CB, CB_DATE, ST_NO
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -37,13 +38,14 @@
       RELEASE_DATE, STATUS, CARD_FORMAT, 
       RECORD_FORMAT, TEMPLATE, REMARKS, 
       ENCLOSURE, SWITCHER, CNAS, 
-      CNAS_DATE, CB, CB_DATE
+      CNAS_DATE, CB, CB_DATE,ST_NO
       )
     values (#{stId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{releaseDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{cardFormat,jdbcType=VARCHAR}, 
       #{recordFormat,jdbcType=VARCHAR}, #{template,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
       #{enclosure,jdbcType=VARCHAR}, #{switcher,jdbcType=VARCHAR}, #{cnas,jdbcType=VARCHAR}, 
-      #{cnasDate,jdbcType=TIMESTAMP}, #{cb,jdbcType=VARCHAR}, #{cbDate,jdbcType=TIMESTAMP}
+      #{cnasDate,jdbcType=TIMESTAMP}, #{cb,jdbcType=VARCHAR}, #{cbDate,jdbcType=TIMESTAMP},
+      #{stNo,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.ai.eis.model.EisStandard" >
@@ -141,6 +143,9 @@
       <if test="cbDate != null" >
         #{cbDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="stNo != null">
+        #{stNo,jdbcType=VARCHAR}
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisStandard" >
@@ -188,6 +193,9 @@
       <if test="cbDate != null" >
         CB_DATE = #{cbDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="stNo != null">
+        #{stNo,jdbcType=VARCHAR}
+      </if>
     </set>
     where ST_ID = #{stId,jdbcType=INTEGER}
   </update>
@@ -207,6 +215,7 @@
       CNAS_DATE = #{cnasDate,jdbcType=TIMESTAMP},
       CB = #{cb,jdbcType=VARCHAR},
       CB_DATE = #{cbDate,jdbcType=TIMESTAMP}
+      ST_NO = #{stNo,jdbcType=VARCHAR}
     where ST_ID = #{stId,jdbcType=INTEGER}
   </update>
 
@@ -215,8 +224,8 @@
     <include refid="Base_Column_List"/>
     from eis_standard
     <where>
-      <if test="sId != null and sId != ''">
-        ST_ID = #{sId,jdbcType=INTEGER}
+      <if test="sNo != null and sNo != ''">
+        ST_NO like #{sNo}
       </if>
       <if test="name != null and name != ''">
         and NAME like #{name}
