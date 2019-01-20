@@ -2,13 +2,12 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
-
-
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -20,9 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,18 +98,18 @@ public class ContractController {
 
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public List <EisContract> postquery(@RequestParam(value="projectId",defaultValue="") String pId,
-    		@RequestParam(value="projectName",defaultValue="") String pName) {
+    public List <EisContract> postquery(@RequestParam(value = "projectId", defaultValue = "") String pId,
+                                        @RequestParam(value = "projectName", defaultValue = "") String pName) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
-        map.put("pName", pName);
+        map.put("pName", Tools.liker(pName));
         return contractService.queryByCondition(map);
     }
 
     @ResponseBody
     @Transactional
     @RequestMapping(value = "/delete")
-    public AjaxResult delete(@RequestParam(value="id") Integer projectId) {
+    public AjaxResult delete(@RequestParam(value = "id") Integer projectId) {
         contractService.deleteByPrimaryKey(projectId);
         return new AjaxResult(true);
     }

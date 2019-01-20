@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "EisDeviceService")
 public class EisDeviceServiceImpl implements EisDeviceService {
@@ -16,11 +17,11 @@ public class EisDeviceServiceImpl implements EisDeviceService {
 
     @Override
     public void insert(EisDevice device) {
-        deviceMapper.insert(device);
+        deviceMapper.insertSelective(device);
     }
 
     @Override
-    public List<EisDevice> selectAll() {
-        return deviceMapper.selectAll();
+    public List <EisDevice> queryByCondition(Map <String, String> map) {
+        return deviceMapper.queryByCondition();
     }
 }

@@ -3,6 +3,7 @@ package com.ai.eis.mapper;
 import com.ai.eis.model.EisDevice;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EisDeviceMapper {
     int deleteByPrimaryKey(Integer devId);
@@ -17,5 +18,5 @@ public interface EisDeviceMapper {
 
     int updateByPrimaryKey(EisDevice record);
 
-    List <EisDevice> selectAll();
+    List <EisDevice> queryByCondition(Map <String, String> map);
 }
