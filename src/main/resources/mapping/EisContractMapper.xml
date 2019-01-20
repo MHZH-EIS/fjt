@@ -282,7 +282,7 @@
                 PROJECT_ID = #{pId}
             </if>
             <if test="pName != null and pName != ''">
-                PROJECT_NAME like #{pName}
+                and PROJECT_NAME like #{pName}
             </if>
         </where>
     </select>

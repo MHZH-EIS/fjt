@@ -102,10 +102,10 @@
     from eis_standard
     <where>
       <if test="stId != null and stId != ''">
-        ST_ID = #{name,jdbcType=INTEGER}
+        ST_ID = #{stId,jdbcType=INTEGER}
       </if>
       <if test="name != null and name != ''">
-        TEST_NAME like #{name}
+        and TEST_NAME like #{name}
       </if>
     </where>
   </select>

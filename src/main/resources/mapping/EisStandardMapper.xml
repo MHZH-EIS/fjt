@@ -219,7 +219,7 @@
         ST_ID = #{sId,jdbcType=INTEGER}
       </if>
       <if test="name != null and name != ''">
-        NAME like #{name}
+        and NAME like #{name}
       </if>
     </where>
   </select>
