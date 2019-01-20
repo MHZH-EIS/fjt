@@ -66,8 +66,8 @@ define(function () {
       ignore: ['stId'],
       pageSize: 30,
       columns: [[{
-          field: 'name',
-          title: '标准名称',
+          field: 'stId',
+          title: '标准号',
           width: 30,
           editor: {
             type: 'validatebox',
@@ -92,7 +92,33 @@ define(function () {
         formatter: function (val) {
           return filterXSS(val);
         }
-      },{
+      },
+      {
+          field: 'switcher',
+          title: '格式转换',
+          width: 50,
+          editor: {
+            type: 'validatebox',
+            options: {
+              required: true
+            }
+          },
+          formatter: function (val) {
+            return filterXSS(val);
+          }
+        },
+  	   {
+          field: 'releaseDate',
+          title: '发布日期',
+          width: 50,
+          editor: {
+            type: 'datebox',
+            options: {
+              required: true
+            }
+          },
+          formatter:  formatDatebox
+        },{
           field: 'status',
           title: '标准状态',
           width: 30,
@@ -242,14 +268,14 @@ define(function () {
         height: 600,
         width: 420,
         collapsible:true,
-        href: '/resource/contract/form',
+        href: '/resource/standard/form',
         queryParams: {
           id: id
         },
         modal: true,
         onLoad: function () {
             //窗口表单加载成功时执行
-            form = $("#contract-form");
+            form = $("#standard-form");
           },
         onClose: function () {
           $(this).dialog("destroy");
@@ -267,7 +293,7 @@ define(function () {
           text: '保存',
           handler: function () {
         	  if (form.form('validate')) {
-              $.post("/resource/contract/save", form.serialize(), function (res) {
+              $.post("/resource/standard/save", form.serialize(), function (res) {
                 dg.datagrid('reload');
                 dialog.dialog('close');
               },"json")
