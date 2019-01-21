@@ -11,4 +11,6 @@ public interface EisDeviceService {
 
     List <EisDevice> queryByCondition(Map <String, String> map);
 
+    void deleteByPrimaryKey(Integer id);
+
 }

@@ -39,6 +39,13 @@ public class DeviceController {
         return deviceService.queryByCondition(map);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/delete")
+    public AjaxResult delete(Integer id) {
+        deviceService.deleteByPrimaryKey(id);
+        return new AjaxResult(true);
+    }
+
 
 }
 

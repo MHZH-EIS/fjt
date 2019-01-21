@@ -5,9 +5,11 @@
     <startEvent id="startevent1" name="Start"/>
     <userTask activiti:assignee="${manager}" activiti:exclusive="true" id="taskAllocat" name="任务分配"/>
     <userTask activiti:assignee="${charge}" activiti:exclusive="true" id="nextCard" name="下卡"/>
-    <userTask activiti:exclusive="true" id="exportReport" name="工程师出报告"/>
-    <userTask activiti:exclusive="true" id="verifiy" name="报告审核"/>
-    <userTask activiti:exclusive="true" id="send" name="报告邮寄"/>
+    <userTask activiti:assignee="${userA}" id="testA" name="${testA}"/>
+    <userTask activiti:assignee="${userB}" id="testB" name="${testB}"/>
+    <userTask activiti:assignee="${charge}" id="exportReport" name="工程师出报告"/>
+    <userTask  id="verifiy" name="报告审核"/>
+    <userTask activiti:assignee="${manager}" id="send" name="报告邮寄"/>
     <endEvent id="结束" name="End"/>
     <sequenceFlow id="flow4" sourceRef="taskAllocat" targetRef="nextCard"/>
     <parallelGateway gatewayDirection="Unspecified" id="parallelgateway1" name="Parallel Gateway"/>
@@ -17,8 +19,6 @@
     <sequenceFlow id="_3" sourceRef="startevent1" targetRef="taskAllocat"/>
     <parallelGateway gatewayDirection="Unspecified" id="_2" name="ParallelGateway"/>
     <sequenceFlow id="_4" sourceRef="nextCard" targetRef="parallelgateway1"/>
-    <userTask activiti:exclusive="true" id="testA" name="测试A"/>
-    <userTask activiti:exclusive="true" id="testB" name="测试B"/>
     <sequenceFlow id="_7" sourceRef="parallelgateway1" targetRef="testA"/>
     <sequenceFlow id="_8" sourceRef="parallelgateway1" targetRef="testB"/>
     <sequenceFlow id="_9" sourceRef="testA" targetRef="_2"/>
