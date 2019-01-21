@@ -44,7 +44,7 @@ define(function () {
     	url:'/resource/standard/item/list',
     	saveUrl:'/resource/standard/add',
     	updateUrl:'/resource/standard/add',
-    	destoryUrl:'/resource/standard/item/delete',
+    	destroyUrl:'/resource/standard/item/delete',
         onBeforeSave: function(index) {
       	  return true;
         },
@@ -56,14 +56,13 @@ define(function () {
       	   }
         },
         emptyMsg: "还未查到标准测试项",
-        idField: "stId",
+        idField: "itemId",
         fit: true,
         rownumbers: true,
         fitColumns: true,
         border: false,
         pagination: true,
         singleSelect: true,
-        ignore: ['stId'],
         pageSize: 10,
         columns: [[{
             field: 'stNo',
@@ -154,9 +153,10 @@ define(function () {
               handler: function () {
               	var row = itemdg.edatagrid('getSelected');
               	if (row) {
-              		alert(row.itemId);
+              		
               		itemdg.edatagrid('destroyRow');
-              		itemdg.datagrid('reload');
+              		alert(row.itemId);
+              		//itemdg.edatagrid('reload');
               	 }else {
               		$.messager.alert({title:'提示',msg:"请先选一个测试项",icon:'info'});
               	 }
@@ -348,7 +348,6 @@ define(function () {
             handler: function () {
             	var row = dg.edatagrid('getSelected');
             	if (row) {
-                    var rowIndex = dg.datagrid('getRowIndex', row);
                     dg.edatagrid('destroyRow');
             	 }
             	 
@@ -367,7 +366,7 @@ define(function () {
       createForm.call(this, this.dataset.id)
     }).on('click', "a.ctr-delete", function () {// 删除按钮事件
       var id = this.dataset.id;
-      $.messager.confirm("删除提醒", "确认删除此用户?", function (r) {
+      $.messager.confirm("删除提醒", "确认删除?", function (r) {
         if (r) {
           $.get("/resource/standard/remove", {id: id}, function () {
             // 数据操作成功后，对列表数据，进行刷新

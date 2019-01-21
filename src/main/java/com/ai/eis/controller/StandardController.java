@@ -169,7 +169,7 @@ public class StandardController {
 
     @ResponseBody
     @RequestMapping("/item/delete")
-    public AjaxResult deleteItem(@RequestParam(value = "itemId", defaultValue = "")  Integer itemId) {
+    public AjaxResult deleteItem(@RequestParam(value = "id", defaultValue = "")  Integer itemId) {
     	EisStItem item = sItemService.queryById(itemId);
         File file = new File(item.getTemplate());
         if (file.exists()) {
