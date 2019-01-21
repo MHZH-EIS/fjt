@@ -52,6 +52,12 @@ public class ResourceController {
     	return eisMenuResourceService.selectParentIsNull();
     }
 
+    @RequestMapping("/tree")
+    @ResponseBody
+    public Iterable<EisMenuResource> resourceTree() {
+       return eisMenuResourceService.getResourceTree(true);
+    }
+    
     @RequestMapping("form")
     public void form(Long id, Model model) {
         if (id != null) {
@@ -76,7 +82,11 @@ public class ResourceController {
             logger.error("对象校验失败：" + br.getAllErrors());
             return new AjaxResult(false).setData(br.getAllErrors());
         } else {
-            return eisMenuResourceService.addMenuResource(resource);
+        	if(resource.getId() != null) {
+         		return eisMenuResourceService.updateMenuResource(resource);
+        	}else {
+                return eisMenuResourceService.addMenuResource(resource);
+        	}
         }
     }
 

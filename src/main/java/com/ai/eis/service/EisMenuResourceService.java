@@ -13,8 +13,11 @@ import com.ai.eis.model.EisRoleMenuResource;
 public interface EisMenuResourceService  {
 	int addMenuResource(EisMenuResource role);
 	int deleteMenuResource(Long id);
+	int updateMenuResource(EisMenuResource role);
 	
     EisMenuResource   selectByMenuId(Long id);
+    
+    
 
     List<EisMenuResource>  selectByRoleId(Integer roleId);
     List<EisMenuResource>  selectAllResources();

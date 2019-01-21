@@ -14,11 +14,14 @@ public interface EisMenuResourceMapper {
 
     int insert(EisMenuResource record);
 
+    int update(EisMenuResource role);
+
     int insertSelective(EisMenuResource record);
 
     int updateByExampleSelective(@Param("record") EisMenuResource record, @Param("example") EisMenuResource example);
 
     int updateByExample(@Param("record") EisMenuResource record, @Param("example") EisMenuResource example);
+    
     
     List<EisMenuResource> selectAllResources();
     

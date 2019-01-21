@@ -71,7 +71,7 @@ define(function () {
           }
         }
       }),
-      url: '/system/resource/list'
+      url: '/system/resource/tree'
     });
 
 

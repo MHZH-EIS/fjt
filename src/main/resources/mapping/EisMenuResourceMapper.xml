@@ -80,6 +80,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+  
+  
   <insert id="insert" parameterType="com.ai.eis.model.EisMenuResource">
     insert into eis_menu_resource (id, fun_urls, menu_url, 
       res_key, res_name, res_type, 
@@ -90,6 +92,41 @@
       #{status,jdbcType=BIT}, #{parentId,jdbcType=BIGINT}, #{weight,jdbcType=INTEGER}
       )
   </insert>
+  
+ 
+ <update id="update" parameterType="com.ai.eis.model.EisMenuResource">
+    update eis_menu_resource
+    <set>
+      <if test="funUrls != null">
+        fun_urls = #{funUrls,jdbcType=VARCHAR},
+      </if>
+      <if test="menuUrl != null">
+        menu_url = #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resKey != null">
+        res_key = #{resKey,jdbcType=VARCHAR},
+      </if>
+      <if test="resName != null">
+        res_name = #{resName,jdbcType=VARCHAR},
+      </if>
+      <if test="resType != null">
+        res_type = #{resType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+    </set>
+      where  id = #{id,jdbcType=BIGINT}
+  </update>
+  
+ 
+ 
   <insert id="insertSelective" parameterType="com.ai.eis.model.EisMenuResource">
     insert into eis_menu_resource
     <trim prefix="(" suffix=")" suffixOverrides=",">
