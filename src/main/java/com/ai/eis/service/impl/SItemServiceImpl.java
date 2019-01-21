@@ -34,4 +34,10 @@ public class SItemServiceImpl implements SItemService {
     public void deleteByItemId(Integer id) {
         itemMapper.deleteByPrimaryKey(id);
     }
+
+	@Override
+	public EisStItem queryById(Integer id) {
+		// TODO Auto-generated method stub
+		return itemMapper.selectByPrimaryKey(id);
+	}
 }

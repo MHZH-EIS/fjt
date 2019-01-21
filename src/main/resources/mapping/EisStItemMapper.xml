@@ -99,7 +99,7 @@
   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
     <include refid="Base_Column_List"/>
-    from eis_standard
+    from eis_st_item
     <where>
       <if test="stId != null and stId != ''">
         ST_ID = #{stId,jdbcType=INTEGER}

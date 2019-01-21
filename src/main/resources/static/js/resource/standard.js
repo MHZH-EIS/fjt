@@ -38,6 +38,134 @@ define(function () {
     var searchFrom = $("#standard_search_from");
     var form;
     
+    var itemdg = $("#items_dg");
+    
+    itemdg.edatagrid({
+    	url:'/resource/standard/item/list',
+    	saveUrl:'/resource/standard/add',
+    	updateUrl:'/resource/standard/add',
+    	destoryUrl:'/resource/standard/item/delete',
+        onBeforeSave: function(index) {
+      	  return true;
+        },
+        onSave: function (index, row) {                    
+      	   if (itemdg.data('isSave')) {
+      	          //如果需要刷新，保存完后刷新
+      	         itemdg.edatagrid('reload');
+      	         itemdg.removeData('isSave');
+      	   }
+        },
+        emptyMsg: "还未查到标准测试项",
+        idField: "stId",
+        fit: true,
+        rownumbers: true,
+        fitColumns: true,
+        border: false,
+        pagination: true,
+        singleSelect: true,
+        ignore: ['stId'],
+        pageSize: 10,
+        columns: [[{
+            field: 'stNo',
+            title: '标准号',
+            width: 30,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true
+              }
+            },
+            formatter: function (val) {
+              return filterXSS(val);
+            }
+          },
+      	{
+          field: 'itemId',
+          title: '测试项ID',
+          width: 50,
+          editor: {
+            type: 'validatebox',
+            options: {
+              required: true
+            }
+          },
+          formatter: function (val) {
+            return filterXSS(val);
+          }
+        },
+        {
+            field: 'testName',
+            title: '测试项名',
+            width: 50,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true
+              }
+            },
+            formatter: function (val) {
+              return filterXSS(val);
+            }
+          },
+    	   {
+            field: 'clause',
+            title: '条款',
+            width: 50,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true
+              }
+            },
+            formatter:  formatDatebox
+          },{
+  	        field: 'remarks',
+  	        title: '备注',
+  	        width: 30,
+  	        editor: {
+  	          type: 'validatebox',
+  	          options: {
+  	            required: true
+  	          }
+  	        },
+  	        formatter: function (val) {
+  	          return filterXSS(val);
+  	        }
+  	      }
+        ]],
+        toolbar: authToolBar({
+          "standard-item-create": {
+            iconCls: 'fa fa-plus-square',
+            text: "新建测试项",
+            handler: function () {
+           	    var row = dg.edatagrid('getSelected');
+           	    if (!row) {
+     				 $.messager.alert({title:'提示',msg:"请先选一个标准",icon:'info'});
+           	    }else {
+                	createItemForm();
+           	    }
+
+            }
+          },
+ 
+          "standard-item-delete":{
+              iconCls: 'fa fa-trash',
+              text: "删除测试项",
+              handler: function () {
+              	var row = itemdg.edatagrid('getSelected');
+              	if (row) {
+              		alert(row.itemId);
+              		itemdg.edatagrid('destroyRow');
+              		itemdg.datagrid('reload');
+              	 }else {
+              		$.messager.alert({title:'提示',msg:"请先选一个测试项",icon:'info'});
+              	 }
+              	 
+              }
+          }
+        })
+    });
+    
     // 使用edatagrid，需要而外导入edatagrid扩展
     dg.edatagrid({
       url: '/resource/standard/list',
@@ -47,15 +175,22 @@ define(function () {
       onBeforeSave: function(index) {
     	  return true;
       },
-      onSave: function (index, row) {
-    	                       
-    	                          if (dg.data('isSave')) {
-    	                              //如果需要刷新，保存完后刷新
-    	                              dg.edatagrid('reload');
-    	                              dg.removeData('isSave');
-    	                          }
-                      },
-      emptyMsg: "还未新建标准",
+      onSave: function (index, row) {                    
+    	   if (dg.data('isSave')) {
+    	          //如果需要刷新，保存完后刷新
+    	         dg.edatagrid('reload');
+    	         dg.removeData('isSave');
+    	   }
+      },
+      onClickRow:function(index,data) {
+          var selectdata = data;
+          if (selectdata) {
+        	  itemdg.datagrid('loadData',{total:0,rows:[]})
+
+        	  itemdg.datagrid('reload', {stId: selectdata.stId});
+           }
+      },
+      emptyMsg: "还未查到标准",
       idField: "stId",
       fit: true,
       rownumbers: true,
@@ -66,7 +201,7 @@ define(function () {
       ignore: ['stId'],
       pageSize: 30,
       columns: [[{
-          field: 'stId',
+          field: 'stNo',
           title: '标准号',
           width: 30,
           editor: {
@@ -254,6 +389,69 @@ define(function () {
     });
 
 
+    function createItemForm(id) {
+    	 var row = dg.edatagrid('getSelected');
+    	  var dialog = $("<div/>", {class: 'flow'}).dialog({
+    	        title: (id ? "编辑" : "创建") + "测试项",
+    	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
+    	        height: 600,
+    	        width: 420,
+    	        collapsible:true,
+    	        href: '/resource/standard/items/form',
+    	        queryParams: {
+    	          id: row.stId
+    	        },
+    	        modal: true,
+    	        onLoad: function () {
+    	            //窗口表单加载成功时执行
+    	            form = $("#standard-item-form");
+    	          },
+    	        onClose: function () {
+    	          $(this).dialog("destroy");
+    	        },
+    	        sucess:function(result) {
+    	        	
+    	        },
+    	        buttons: [
+    	            {
+    	                iconCls: 'fa fa-trash-o',
+    	                text: '取消',
+    	                handler: function(){
+    	                	  dialog.dialog('close');
+    	                }
+    	            },	
+    	        {
+    	          iconCls: 'fa fa-save',
+    	          text: '保存',
+    	          handler: function () {
+    	        	  form.form('submit',{
+    	        		 type:"get",
+    	        		 url:"/resource/standard/item/add",
+    	        		 param:row.stId,
+    	        		 onSubmit: function (param) {        //表单提交前的回调函数 
+    	        	          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
+    	        	          if (!isValid) { 
+    	        	        	  $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
+    	        	          } 
+    	        	          param.stId = row.stId;
+    	        	          return isValid; // 如果验证不通过，返回false终止表单提交 
+    	        	     }, 
+    	        		 success:function(data) {
+    	        			 var obj = JSON.parse(data);
+    	        			 if (obj.success) {
+    	        				 $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+    	        				 dialog.dialog('close');
+    	        				 dg.datagrid('reload');
+    	        			 }else {
+    	        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+    	        			 }
+    	        		 }
+    	        	  });
+    	          }
+    	        }]
+    	      });
+    };
+    
     
 
     /**
