@@ -147,7 +147,7 @@ public class StandardController {
                 
  
                 File file = new File(path.getAbsolutePath()+ "/upload/standards" + File.separator
-                        +standard.getStNo()+File.separator+"items"+ multipartFile.getOriginalFilename());
+                        +standard.getStNo()+File.separator+"items"+File.separator+ multipartFile.getOriginalFilename());
                 if (!file.getParentFile().exists()) {
                     file.getParentFile().mkdirs();
                 }
