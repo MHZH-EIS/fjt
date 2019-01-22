@@ -63,7 +63,7 @@ public class SampleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("send/list")
+    @RequestMapping("/send/list")
     public List <EisSampleSend> listSendRecord(@RequestParam(value = "projectId", defaultValue = "") String pId) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
@@ -78,7 +78,7 @@ public class SampleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("sign/list")
+    @RequestMapping("/sign/list")
     public List <EisSampleSign> listSignRecord(@RequestParam(value = "projectId", defaultValue = "") String pId,
                                                @RequestParam(value = "sampleName") String name) {
         Map <String, String> map = new HashMap <>();
