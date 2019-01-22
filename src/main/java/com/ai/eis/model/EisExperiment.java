@@ -1,6 +1,9 @@
 package com.ai.eis.model;
 
 public class EisExperiment {
+
+    private Integer id;
+
     private Integer projectId;
 
     private Integer itemId;
@@ -12,6 +15,14 @@ public class EisExperiment {
     private String file;
 
     private String devId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getProjectId() {
         return projectId;

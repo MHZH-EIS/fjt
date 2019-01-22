@@ -113,9 +113,31 @@
   </select>
 
   <select id="listProject" resultType="java.util.HashMap" parameterType="Map">
-    SELECT a.PROJECT_ID,a.PROJECT_NAME ,a.SAMPLE_NUM, b.SEND_NUM,c.SING_NUM from eis_resource_contract a
-    LEFT JOIN eis_sample_send b on a.PROJECT_ID = b.PROJECT_ID
-    LEFT JOIN eis_sample_sign c on a.PROJECT_ID = c.PROJECT_ID
+    SELECT
+    a.PROJECT_ID,
+    a.PROJECT_NAME,
+    v1.SEND_TOTAL,
+    v2.SIGN_TOTAL
+    FROM
+    eis_resource_contract a
+    LEFT JOIN (
+    SELECT
+    b.PROJECT_ID,
+    SUM(b.SEND_NUM) AS SEND_TOTAL
+    FROM
+    eis_sample_send b
+    GROUP BY
+    b.PROJECT_ID
+    ) v1 ON v1.PROJECT_ID = a.PROJECT_ID
+    LEFT JOIN (
+    SELECT
+    c.PROJECT_ID,
+    SUM(c.SING_NUM) AS SIGN_TOTAL
+    FROM
+    eis_sample_sign c
+    GROUP BY
+    c.PROJECT_ID
+    ) v2 ON v2.PROJECT_ID = a.PROJECT_ID
     <where>
       <if test="name != null and name !=''">
         a.PROJECT_NAME like #{name}

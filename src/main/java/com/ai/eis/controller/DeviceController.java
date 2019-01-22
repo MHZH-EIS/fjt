@@ -1,6 +1,7 @@
 package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.Constants;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisDevice;
 import com.ai.eis.service.EisDeviceService;
@@ -19,48 +20,49 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/resource/device")
 public class DeviceController {
-	private Logger logger = LoggerFactory.getLogger(DeviceController.class);
+    private Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-	@Autowired
-	private EisDeviceService deviceService;
+    @Autowired
+    private EisDeviceService deviceService;
 
-	@RequestMapping
-	public void index() {
+    @RequestMapping
+    public void index() {
 
-	}
+    }
 
-	@RequestMapping("/form")
-	public void form(Long id) {
-	}
+    @RequestMapping("/form")
+    public void form(Long id) {
+    }
 
-	@RequestMapping(value = "/save")
-	@ResponseBody
-	public AjaxResult insertDevice(EisDevice device) {
-		deviceService.insert(device);
-		logger.info("添加了一个新设备{}", device.getName());
-		return new AjaxResult(true);
-	}
+    @RequestMapping(value = "/save")
+    @ResponseBody
+    public AjaxResult insertDevice(EisDevice device) {
+        device.setResourceId(Constants.DEVICE_RESOURCE_ID);
+        deviceService.insert(device);
+        logger.info("添加了一个新设备{}", device.getName());
+        return new AjaxResult(true);
+    }
 
-	@ResponseBody
-	@RequestMapping(value = "/list")
-	public List<EisDevice> list(@RequestParam(value = "deviceType", defaultValue = "") String deviceType,
-            @RequestParam(value = "name", defaultValue = "") String name) {
-		Map<String, String> map = new HashMap<>();
-		map.put("name", Tools.liker(name));
-		map.put("deviceType", Tools.liker(deviceType));
-		return deviceService.queryByCondition(map);
-	}
+    @ResponseBody
+    @RequestMapping(value = "/list")
+    public List <EisDevice> list(@RequestParam(value = "deviceType", defaultValue = "") String deviceType,
+                                 @RequestParam(value = "name", defaultValue = "") String name) {
+        Map <String, String> map = new HashMap <>();
+        map.put("name", Tools.liker(name));
+        map.put("deviceType", Tools.liker(deviceType));
+        return deviceService.queryByCondition(map);
+    }
 
-	@ResponseBody
-	@RequestMapping(value = "/remove")
-	public AjaxResult remove(@RequestParam(value = "id") Integer id) {
-		try {
-			deviceService.deleteByKey(id);
-			return new AjaxResult(true);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			return new AjaxResult(false).setData(e);
-		}
-	}
+    @ResponseBody
+    @RequestMapping(value = "/remove")
+    public AjaxResult remove(@RequestParam(value = "id") Integer id) {
+        try {
+            deviceService.deleteByKey(id);
+            return new AjaxResult(true);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new AjaxResult(false).setData(e);
+        }
+    }
 
 }

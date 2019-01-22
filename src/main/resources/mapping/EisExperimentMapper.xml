@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ai.eis.mapper.EisExperimentMapper" >
   <resultMap id="BaseResultMap" type="com.ai.eis.model.EisExperiment" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
     <result column="PROJECT_ID" property="projectId" jdbcType="INTEGER" />
     <result column="ITEM_ID" property="itemId" jdbcType="INTEGER" />
     <result column="REQUIREMENT" property="requirement" jdbcType="VARCHAR" />
@@ -61,4 +62,30 @@
       </if>
     </trim>
   </insert>
+
+  <delete id="deleteByCondition" parameterType="Map">
+    delete from eis_experiment
+    <where>
+      <if test="pId != null and pId != ''">
+        PROJECT_ID = #{pId}
+      </if>
+      <if test="id != null and id != ''">
+        and ID = #{id}
+      </if>
+    </where>
+  </delete>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+    select
+    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID
+    from eis_experiment
+    <where>
+      <if test="pId != null and pId != ''">
+        PROJECT_ID = #{pId}
+      </if>
+      <if test="id != null and id != ''">
+        and ID = #{id}
+      </if>
+    </where>
+  </select>
 </mapper>
