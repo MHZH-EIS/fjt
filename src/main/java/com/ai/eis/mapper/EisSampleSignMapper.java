@@ -10,7 +10,7 @@ public interface EisSampleSignMapper {
 
     int insertSelective(EisSampleSign record);
 
-    int getSampleNum(Integer projectId);
+    int deleteById(Integer id);
 
     List <Map <String, Object>> listProject(Map <String, String> map);
 

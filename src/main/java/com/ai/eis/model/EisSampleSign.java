@@ -3,103 +3,114 @@ package com.ai.eis.model;
 import java.util.Date;
 
 public class EisSampleSign {
-	private Integer projectId;
 
-	private String sampleName;
+    private Integer id;
 
-	private Integer singNum;
+    private Integer projectId;
 
-	private String company;
+    private String sampleName;
 
-	private String address;
+    private Integer singNum;
 
-	private String contact;
+    private String company;
 
-	private String phone;
+    private String address;
 
-	private Date signDate;
+    private String contact;
 
-	private String type;
+    private String phone;
 
-	private String status;
+    private Date signDate;
 
-	public Integer getProjectId() {
-		return projectId;
-	}
+    private String type;
 
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
+    private String status;
 
-	public String getSampleName() {
-		return sampleName;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setSampleName(String sampleName) {
-		this.sampleName = sampleName == null ? null : sampleName.trim();
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getSingNum() {
-		return singNum;
-	}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-	public void setSingNum(Integer singNum) {
-		this.singNum = singNum;
-	}
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 
-	public String getCompany() {
-		return company;
-	}
+    public String getSampleName() {
+        return sampleName;
+    }
 
-	public void setCompany(String company) {
-		this.company = company == null ? null : company.trim();
-	}
+    public void setSampleName(String sampleName) {
+        this.sampleName = sampleName == null ? null : sampleName.trim();
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public Integer getSingNum() {
+        return singNum;
+    }
 
-	public void setAddress(String address) {
-		this.address = address == null ? null : address.trim();
-	}
+    public void setSingNum(Integer singNum) {
+        this.singNum = singNum;
+    }
 
-	public String getContact() {
-		return contact;
-	}
+    public String getCompany() {
+        return company;
+    }
 
-	public void setContact(String contact) {
-		this.contact = contact == null ? null : contact.trim();
-	}
+    public void setCompany(String company) {
+        this.company = company == null ? null : company.trim();
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone == null ? null : phone.trim();
-	}
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
 
-	public Date getSignDate() {
-		return signDate;
-	}
+    public String getContact() {
+        return contact;
+    }
 
-	public void setSignDate(Date signDate) {
-		this.signDate = signDate;
-	}
+    public void setContact(String contact) {
+        this.contact = contact == null ? null : contact.trim();
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setType(String type) {
-		this.type = type == null ? null : type.trim();
-	}
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public Date getSignDate() {
+        return signDate;
+    }
 
-	public void setStatus(String status) {
-		this.status = status == null ? null : status.trim();
-	}
+    public void setSignDate(Date signDate) {
+        this.signDate = signDate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
 }

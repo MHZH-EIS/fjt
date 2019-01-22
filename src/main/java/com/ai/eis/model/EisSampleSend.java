@@ -3,73 +3,84 @@ package com.ai.eis.model;
 import java.util.Date;
 
 public class EisSampleSend {
-	private Integer projectId;
 
-	private Date sendDate;
+    private Integer id;
 
-	private String track;
+    private Integer projectId;
 
-	private String contact;
+    private Date sendDate;
 
-	private String phone;
+    private String track;
 
-	private Integer sendNum;
+    private String contact;
 
-	private String remarks;
+    private String phone;
 
-	public Integer getProjectId() {
-		return projectId;
-	}
+    private Integer sendNum;
 
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
+    private String remarks;
 
-	public Date getSendDate() {
-		return sendDate;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setSendDate(Date sendDate) {
-		this.sendDate = sendDate;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getTrack() {
-		return track;
-	}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-	public void setTrack(String track) {
-		this.track = track == null ? null : track.trim();
-	}
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 
-	public String getContact() {
-		return contact;
-	}
+    public Date getSendDate() {
+        return sendDate;
+    }
 
-	public void setContact(String contact) {
-		this.contact = contact == null ? null : contact.trim();
-	}
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getTrack() {
+        return track;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone == null ? null : phone.trim();
-	}
+    public void setTrack(String track) {
+        this.track = track == null ? null : track.trim();
+    }
 
-	public Integer getSendNum() {
-		return sendNum;
-	}
+    public String getContact() {
+        return contact;
+    }
 
-	public void setSendNum(Integer sendNum) {
-		this.sendNum = sendNum;
-	}
+    public void setContact(String contact) {
+        this.contact = contact == null ? null : contact.trim();
+    }
 
-	public String getRemarks() {
-		return remarks;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setRemarks(String remarks) {
-		this.remarks = remarks == null ? null : remarks.trim();
-	}
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public Integer getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(Integer sendNum) {
+        this.sendNum = sendNum;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
+    }
 }

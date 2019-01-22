@@ -12,7 +12,9 @@ public interface EisSampleService {
 
     int sign(EisSampleSign signSample);
 
-    int getSampleNum(Integer projectId);
+    int deleteSendById(Integer id);
+
+    int deleteSignById(Integer id);
 
     List <Map <String, Object>> listProject(Map <String, String> map);
 

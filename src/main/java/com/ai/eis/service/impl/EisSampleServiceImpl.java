@@ -31,12 +31,17 @@ public class EisSampleServiceImpl implements EisSampleService {
     }
 
     @Override
-    public int getSampleNum(Integer projectId) {
-        return signMapper.getSampleNum(projectId);
+    public int deleteSendById(Integer id) {
+        return sendMapper.deleteById(id);
     }
 
     @Override
-    public List<Map<String, Object>> listProject(Map <String, String> map) {
+    public int deleteSignById(Integer id) {
+        return signMapper.deleteById(id);
+    }
+
+    @Override
+    public List <Map <String, Object>> listProject(Map <String, String> map) {
         return signMapper.listProject(map);
     }
 

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ai.eis.mapper.EisSampleSendMapper">
   <resultMap id="BaseResultMap" type="com.ai.eis.model.EisSampleSend">
+    <result column="ID" javaType="INTEGER" property="id" />
     <result column="PROJECT_ID" jdbcType="INTEGER" property="projectId" />
     <result column="SEND_DATE" jdbcType="TIMESTAMP" property="sendDate" />
     <result column="TRACK" jdbcType="VARCHAR" property="track" />
@@ -68,9 +69,14 @@
     </trim>
   </insert>
 
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from eis_sample_send
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
   <select id="listSendRecord" resultMap="BaseResultMap" parameterType="Map">
     select
-    PROJECT_ID, SEND_DATE, TRACK,
+    ID, PROJECT_ID, SEND_DATE, TRACK,
     CONTACT, PHONE, SEND_NUM,
     REMARKS
     from eis_sample_send
