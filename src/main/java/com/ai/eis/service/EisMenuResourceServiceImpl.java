@@ -138,4 +138,9 @@ public class EisMenuResourceServiceImpl  implements EisMenuResourceService {
         });
     }
 
+	@Override
+	public int updateMenuResource(EisMenuResource role) {
+		return eisMenuResourceMapper.update(role);
+	}
+
 }

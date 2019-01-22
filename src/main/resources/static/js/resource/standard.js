@@ -65,7 +65,7 @@ define(function () {
         singleSelect: true,
         pageSize: 10,
         columns: [[{
-            field: 'stNo',
+            field: 'stId',
             title: '标准号',
             width: 30,
             editor: {
@@ -393,7 +393,7 @@ define(function () {
     	  var dialog = $("<div/>", {class: 'flow'}).dialog({
     	        title: (id ? "编辑" : "创建") + "测试项",
     	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
-    	        height: 600,
+    	        height: 480,
     	        width: 420,
     	        collapsible:true,
     	        href: '/resource/standard/items/form',
@@ -440,7 +440,7 @@ define(function () {
     	        			 if (obj.success) {
     	        				 $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
     	        				 dialog.dialog('close');
-    	        				 dg.datagrid('reload');
+    	        				 itemdg.datagrid('reload', {stId: row.stId});
     	        			 }else {
     	        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
     	        			 }
