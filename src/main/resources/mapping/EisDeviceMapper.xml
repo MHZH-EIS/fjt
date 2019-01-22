@@ -206,7 +206,10 @@
         from eis_resource_device
         <where>
             <if test="name != null and name != ''">
-                name like #{name}
+                NAME like #{name}
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+               and DEVICE_TYPE like #{deviceType}
             </if>
         </where>
     </select>
