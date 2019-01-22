@@ -25,8 +25,9 @@ public class EisDeviceServiceImpl implements EisDeviceService {
         return deviceMapper.queryByCondition(map);
     }
 
-    @Override
-    public void deleteByPrimaryKey(Integer id) {
-        deviceMapper.deleteByPrimaryKey(id);
-    }
+	@Override
+	public int deleteByKey(Integer id) {
+		return deviceMapper.deleteByPrimaryKey(id);
+		
+	}
 }

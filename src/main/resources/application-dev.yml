@@ -33,6 +33,7 @@ spring:
   check-process-definitions: false
   #全量历史记录
   history-level: full
+  async-executor-activate: false
   
 crm:
   system:

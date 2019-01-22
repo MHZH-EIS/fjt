@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -18,40 +19,48 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/resource/device")
 public class DeviceController {
-    private Logger logger = LoggerFactory.getLogger(DeviceController.class);
+	private Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-    @Autowired
-    private EisDeviceService deviceService;
+	@Autowired
+	private EisDeviceService deviceService;
 
-    @RequestMapping(value = "/save")
-    @ResponseBody
-    public AjaxResult insertDevice(EisDevice device) {
-        deviceService.insert(device);
-        logger.info("添加了一个新设备{}", device.getName());
-        return new AjaxResult(true);
-    }
+	@RequestMapping
+	public void index() {
 
-    @ResponseBody
-    @RequestMapping(value = "/list")
-    public List <EisDevice> list(String name) {
-        Map <String, String> map = new HashMap <>();
-        map.put("name", Tools.liker(name));
-        return deviceService.queryByCondition(map);
-    }
+	}
 
-    @ResponseBody
-    @RequestMapping(value = "/delete")
-    public AjaxResult delete(Integer id) {
-        deviceService.deleteByPrimaryKey(id);
-        return new AjaxResult(true);
-    }
+	@RequestMapping("/form")
+	public void form(Long id) {
+	}
 
+	@RequestMapping(value = "/save")
+	@ResponseBody
+	public AjaxResult insertDevice(EisDevice device) {
+		deviceService.insert(device);
+		logger.info("添加了一个新设备{}", device.getName());
+		return new AjaxResult(true);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/list")
+	public List<EisDevice> list(@RequestParam(value = "deviceType", defaultValue = "") String deviceType,
+            @RequestParam(value = "name", defaultValue = "") String name) {
+		Map<String, String> map = new HashMap<>();
+		map.put("name", Tools.liker(name));
+		map.put("deviceType", Tools.liker(deviceType));
+		return deviceService.queryByCondition(map);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/remove")
+	public AjaxResult remove(@RequestParam(value = "id") Integer id) {
+		try {
+			deviceService.deleteByKey(id);
+			return new AjaxResult(true);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new AjaxResult(false).setData(e);
+		}
+	}
 
 }
-
-
-
-
-
-
-

@@ -27,10 +27,13 @@
         from eis_resource_device
         where DEV_ID = #{devId,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from eis_resource_device
     where DEV_ID = #{devId,jdbcType=INTEGER}
   </delete>
+  
+  
     <insert id="insert" parameterType="com.ai.eis.model.EisDevice">
     insert into eis_resource_device (DEV_ID, RESOURCE_ID, NAME, 
       VERSION, DEVICE_TYPE, ADJUST, 

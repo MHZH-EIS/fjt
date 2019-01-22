@@ -8,6 +8,7 @@ import java.util.Map;
 public interface EisDeviceService {
 
     void insert(EisDevice device);
+    int deleteByKey(Integer id);
 
     List <EisDevice> queryByCondition(Map <String, String> map);
 
