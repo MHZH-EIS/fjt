@@ -80,7 +80,7 @@ public class SampleController {
     @ResponseBody
     @RequestMapping("/sign/list")
     public List <EisSampleSign> listSignRecord(@RequestParam(value = "projectId", defaultValue = "") String pId,
-                                               @RequestParam(value = "sampleName") String name) {
+                                               @RequestParam(value = "sampleName", defaultValue = "") String name) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("name", Tools.liker(name));

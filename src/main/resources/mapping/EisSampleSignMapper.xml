@@ -118,6 +118,7 @@
     SELECT
     a.PROJECT_ID,
     a.PROJECT_NAME,
+    a.SAMPLE_NUM,
     v1.SEND_TOTAL,
     v2.SIGN_TOTAL
     FROM
