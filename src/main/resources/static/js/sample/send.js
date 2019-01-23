@@ -34,16 +34,16 @@
 
 define(function () {
   return function () {
-    var dg = $("#device_dg");
-    var searchFrom = $("#device_search_from");
+    var dg = $("#send_dg");
+    var searchFrom = $("#sample_send_search_from");
     var form;
  
     // 使用edatagrid，需要而外导入edatagrid扩展
     dg.edatagrid({
-      url: '/resource/device/list',
-      saveUrl: '/resource/device/update',
-      updateUrl: '/resource/device/update',
-      destroyUrl: '/resource/device/remove',
+      url: '/resource/sample/send/list',
+      saveUrl: '/resource/sample/send/update',
+      updateUrl: '/resource/sample/send/update',
+      destroyUrl: '/resource/sample/send/remove',
       onBeforeSave: function(index) {
     	  return true;
       },
@@ -56,19 +56,19 @@ define(function () {
       },
       onClickRow:function(index,data) {
       },
-      emptyMsg: "还未查到设备",
-      idField: "devId",
+      emptyMsg: "还未查到发样记录",
+      idField: "id",
       fit: true,
       rownumbers: true,
       fitColumns: true,
       border: false,
       pagination: true,
       singleSelect: true,
-      ignore: ['devId'],
+      ignore: ['id'],
       pageSize: 30,
       columns: [[{
-          field: 'name',
-          title: '设备名称',
+          field: 'projectId',
+          title: '项目编号',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -81,11 +81,11 @@ define(function () {
           }
         },
     	{
-        field: 'version',
-        title: '规格型号',
+        field: 'sendDate',
+        title: '发样时间',
         width: 50,
         editor: {
-          type: 'validatebox',
+          type: 'datebox',
           options: {
             required: true
           }
@@ -95,8 +95,8 @@ define(function () {
         }
       },
       {
-          field: 'deviceType',
-          title: '设备类型',
+          field: 'track',
+          title: '快递单号',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -259,7 +259,7 @@ define(function () {
       var id = this.dataset.id;
       $.messager.confirm("删除提醒", "确认删除?", function (r) {
         if (r) {
-          $.get("/resource/device/remove", {id: id}, function () {
+          $.get("/resource/sample/send/remove", {id: id}, function () {
             // 数据操作成功后，对列表数据，进行刷新
             dg.datagrid("reload");
           });
@@ -292,7 +292,7 @@ define(function () {
         height: 600,
         width: 420,
         collapsible:true,
-        href: '/resource/device/form',
+        href: '/resource/sample/send/form',
         queryParams: {
           id: id
         },
@@ -321,7 +321,7 @@ define(function () {
           handler: function () {
         	  form.form('submit',{
         		 type:"post",
-        		 url:"/resource/device/save",
+        		 url:"/resource/sample/send/save",
         		 success:function(data) {
         			 var obj = JSON.parse(data);
         			 if (obj.success) {
