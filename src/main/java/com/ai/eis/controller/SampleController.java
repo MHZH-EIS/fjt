@@ -27,6 +27,26 @@ public class SampleController {
     @Autowired
     private EisSampleService sampleService;
 
+    @RequestMapping("/send")
+    public void sendIndex() {
+
+    }
+    
+    @RequestMapping("/sign")
+    public void signIndex() {
+
+    }
+
+    @RequestMapping("/send/form")
+    public void sendForm(Long id) {
+    
+    }
+    
+    @RequestMapping("/sign/form")
+    public void signForm(Long id) {
+    
+    }
+    
     /**
      * 发货
      *
