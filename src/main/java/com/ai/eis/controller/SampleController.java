@@ -2,6 +2,7 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Tools;
+import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisSampleSend;
 import com.ai.eis.model.EisSampleSign;
 import com.ai.eis.service.EisSampleService;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/resource/sample")
@@ -50,12 +55,18 @@ public class SampleController {
     /**
      * 发货
      *
-     * @param record
+     * @param record   
      * @return
      */
     @ResponseBody
-    @RequestMapping("/send/add")
-    public AjaxResult sendSample(@RequestBody EisSampleSend record) {
+    @Transactional
+    @RequestMapping({"/send/add","/send/save"})
+    public AjaxResult sendSample(@Valid EisSampleSend record,BindingResult br) {
+        if (br.hasErrors()) {
+            logger.error("对象校验失败：" + br.getAllErrors());
+            return new AjaxResult(false).setData(br.getAllErrors());
+        }
+        
         sampleService.send(record);
         logger.info("send {} smaple success,the project is{}", record.getSendNum(), record.getProjectId());
         return new AjaxResult(true);
@@ -68,8 +79,14 @@ public class SampleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/sign/add")
-    public AjaxResult signSample(@RequestBody EisSampleSign record) {
+    @Transactional
+    @RequestMapping({"/sign/add","/sign/save"})
+    public AjaxResult signSample(@Valid EisSampleSign record,BindingResult br) {
+        if (br.hasErrors()) {
+            logger.error("对象校验失败：" + br.getAllErrors());
+            return new AjaxResult(false).setData(br.getAllErrors());
+        }
+        
         sampleService.sign(record);
         logger.info("项目{}此次成功签收{}个样品", record.getProjectId(), record.getSingNum());
         return new AjaxResult(true);
@@ -84,9 +101,11 @@ public class SampleController {
      */
     @ResponseBody
     @RequestMapping("/send/list")
-    public List <EisSampleSend> listSendRecord(@RequestParam(value = "projectId", defaultValue = "") String pId) {
+    public List <EisSampleSend> listSendRecord(@RequestParam(value = "projectId", defaultValue = "") String pId,
+    		@RequestParam(value = "contact", defaultValue = "") String contact) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
+        map.put("contact", Tools.liker(contact));
         return sampleService.listSendRecord(map);
     }
 

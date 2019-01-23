@@ -29,21 +29,21 @@
             dt = new Date(value);
         }
      
-        return dt.format("yyyy-MM-dd"); //扩展的Date的format方法(上述插件实现)
+        return dt.format("yyyy-MM-dd hh:mm:ss"); //扩展的Date的format方法(上述插件实现)
 };
 
 define(function () {
   return function () {
-    var dg = $("#device_dg");
-    var searchFrom = $("#device_search_from");
+    var dg = $("#sign_dg");
+    var searchFrom = $("#sample_sign_search_from");
     var form;
  
     // 使用edatagrid，需要而外导入edatagrid扩展
     dg.edatagrid({
-      url: '/resource/device/list',
-      saveUrl: '/resource/device/update',
-      updateUrl: '/resource/device/update',
-      destroyUrl: '/resource/device/remove',
+      url: '/resource/sample/sign/list',
+      saveUrl: '/resource/sample/sign/update',
+      updateUrl: '/resource/sample/sign/update',
+      destroyUrl: '/resource/sample/sign/remove',
       onBeforeSave: function(index) {
     	  return true;
       },
@@ -56,19 +56,19 @@ define(function () {
       },
       onClickRow:function(index,data) {
       },
-      emptyMsg: "还未查到设备",
-      idField: "devId",
+      emptyMsg: "未查到签收信息",
+      idField: "id",
       fit: true,
       rownumbers: true,
       fitColumns: true,
       border: false,
       pagination: true,
       singleSelect: true,
-      ignore: ['devId'],
+      ignore: ['id'],
       pageSize: 30,
       columns: [[{
-          field: 'name',
-          title: '设备名称',
+          field: 'projectId',
+          title: '项目ID',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -81,8 +81,8 @@ define(function () {
           }
         },
     	{
-        field: 'version',
-        title: '规格型号',
+        field: 'sampleName',
+        title: '样品名称',
         width: 50,
         editor: {
           type: 'validatebox',
@@ -95,8 +95,8 @@ define(function () {
         }
       },
       {
-          field: 'deviceType',
-          title: '设备类型',
+          field: 'singNum',
+          title: '签收数量',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -109,8 +109,8 @@ define(function () {
           }
         },
   	   {
-          field: 'adjust',
-          title: '是否校准',
+          field: 'company',
+          title: '供样单位',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -120,20 +120,19 @@ define(function () {
           }
         },
    	   {
-           field: 'validityDate',
-           title: '有效期',
-           width: 50,
+           field: 'address',
+           title: '供样单位地址',
+           width: 60,
            editor: {
-             type: 'datebox',
+             type: 'validatebox',
              options: {
                required: true
              }
-           },
-           formatter:  formatDatebox
+           }
          },
          {
-          field: 'cycle',
-          title: '校准周期',
+          field: 'contact',
+          title: '供样人',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -143,8 +142,8 @@ define(function () {
           }
         },
         {
-          field: 'status',
-          title: '设备状态',
+          field: 'phone',
+          title: '联系电话',
           width: 30,
           editor: {
             type: 'validatebox',
@@ -157,34 +156,31 @@ define(function () {
           }
         },
         {
-            field: 'abnormalState',
-            title: '异常状态',
-            width: 30,
+            field: 'signDate',
+            title: '签收日期',
+            width: 60,
+            formatter:formatDatebox,
             editor: {
-              type: 'validatebox',
+              type: 'datebox',
               options: {
                 required: true
               }
-            },
-            formatter: function (val) {
-              return filterXSS(val);
-            }
+            } 
           },
       {
-          field: 'adjustDate',
-          title: '校准日期',
-          width: 50,
-          formatter:formatDatebox,
+          field: 'type',
+          title: '样品型号规格',
+          width: 60,
           editor: {
-            type: 'datebox',
+            type: 'validatebox',
             options: {
               editable: false
             }
            }
 			},     
       {
-          field: 'org',
-          title: '校准机构',
+          field: 'status',
+          title: '样品状态',
           width: 50,
           editor: {
             type: 'validatebox',
@@ -192,36 +188,12 @@ define(function () {
               required: true
             }
           }
-        },
-      {
-            field: 'enclosure',
-            title: '附件',
-            width: 50,
-            editor: {
-              type: 'validatebox',
-              options: {
-                editable: false
-              }
         }
-	 },{
-	        field: 'remarks',
-	        title: '备注',
-	        width: 30,
-	        editor: {
-	          type: 'validatebox',
-	          options: {
-	            required: true
-	          }
-	        },
-	        formatter: function (val) {
-	          return filterXSS(val);
-	        }
-	      }
       ]],
       toolbar: authToolBar({
         "device-create": {
           iconCls: 'fa fa-plus-square',
-          text: "新建设备",
+          text: "新建签收记录",
           handler: function () {
             createForm()
           }
@@ -235,7 +207,7 @@ define(function () {
         },*/
         "device-delete":{
             iconCls: 'fa fa-trash',
-            text: "删除设备",
+            text: "删除签收记录",
             handler: function () {
             	var row = dg.edatagrid('getSelected');
             	if (row) {
@@ -259,7 +231,7 @@ define(function () {
       var id = this.dataset.id;
       $.messager.confirm("删除提醒", "确认删除?", function (r) {
         if (r) {
-          $.get("/resource/device/remove", {id: id}, function () {
+          $.get("/resource/sample/sign/remove", {id: id}, function () {
             // 数据操作成功后，对列表数据，进行刷新
             dg.datagrid("reload");
           });
@@ -292,14 +264,14 @@ define(function () {
         height: 600,
         width: 420,
         collapsible:true,
-        href: '/resource/device/form',
+        href: '/resource/sample/sign/form',
         queryParams: {
           id: id
         },
         modal: true,
         onLoad: function () {
             //窗口表单加载成功时执行
-            form = $("#device-form");
+            form = $("#sample-sign-form");
           },
         onClose: function () {
           $(this).dialog("destroy");
@@ -321,11 +293,11 @@ define(function () {
           handler: function () {
         	  form.form('submit',{
         		 type:"post",
-        		 url:"/resource/device/save",
+        		 url:"/resource/sample/sign/add",
         		 success:function(data) {
         			 var obj = JSON.parse(data);
         			 if (obj.success) {
-        				 $.messager.alert({title:'提示',msg:"新建设备成功",icon:'info'});
+        				 $.messager.alert({title:'提示',msg:"新建签收记录成功",icon:'info'});
         				 dialog.dialog('close');
         				 dg.datagrid('reload');
         			 }else {

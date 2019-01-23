@@ -3,6 +3,8 @@ package com.ai.eis.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
@@ -50,6 +52,28 @@ public class EisContract implements Serializable  {
 	private String exCase;
 
 	private String remarks;
+	
+    @Transient
+    private String text;
+    
+    @Transient
+    private Integer id;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 
 	public Integer getProjectId() {
 		return projectId;

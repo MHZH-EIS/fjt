@@ -21,6 +21,8 @@ $(function () {
 
   center.panel('options').onLoad = function () {
     require([center.panel('options').href.substring(1)], function (model) {
+        // 此处加载js
+    	// alert(center.panel('options').href.substring(1));
       model && model(center);
     });
   };

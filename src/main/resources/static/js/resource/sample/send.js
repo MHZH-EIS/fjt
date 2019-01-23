@@ -1,5 +1,4 @@
-
-    Date.prototype.format = function (format) {
+Date.prototype.format = function (format) {
         var o = {
             "M+": this.getMonth() + 1, // month
             "d+": this.getDate(), // day
@@ -29,7 +28,7 @@
             dt = new Date(value);
         }
      
-        return dt.format("yyyy-MM-dd"); //扩展的Date的format方法(上述插件实现)
+        return dt.format("yyyy-MM-dd hh:mm:ss"); //扩展的Date的format方法(上述插件实现)
 };
 
 define(function () {
@@ -65,7 +64,7 @@ define(function () {
       pagination: true,
       singleSelect: true,
       ignore: ['id'],
-      pageSize: 30,
+      pageSize: 10,
       columns: [[{
           field: 'projectId',
           title: '项目编号',
@@ -84,14 +83,12 @@ define(function () {
         field: 'sendDate',
         title: '发样时间',
         width: 50,
+        formatter:formatDatebox,
         editor: {
           type: 'datebox',
           options: {
             required: true
           }
-        },
-        formatter: function (val) {
-          return filterXSS(val);
         }
       },
       {
@@ -108,43 +105,9 @@ define(function () {
             return filterXSS(val);
           }
         },
-  	   {
-          field: 'adjust',
-          title: '是否校准',
-          width: 50,
-          editor: {
-            type: 'validatebox',
-            options: {
-              required: true
-            }
-          }
-        },
-   	   {
-           field: 'validityDate',
-           title: '有效期',
-           width: 50,
-           editor: {
-             type: 'datebox',
-             options: {
-               required: true
-             }
-           },
-           formatter:  formatDatebox
-         },
-         {
-          field: 'cycle',
-          title: '校准周期',
-          width: 50,
-          editor: {
-            type: 'validatebox',
-            options: {
-              required: true
-            }
-          }
-        },
         {
-          field: 'status',
-          title: '设备状态',
+          field: 'contact',
+          title: '发货联系人',
           width: 30,
           editor: {
             type: 'validatebox',
@@ -157,8 +120,8 @@ define(function () {
           }
         },
         {
-            field: 'abnormalState',
-            title: '异常状态',
+            field: 'phone',
+            title: '联系电话',
             width: 30,
             editor: {
               type: 'validatebox',
@@ -171,39 +134,17 @@ define(function () {
             }
           },
       {
-          field: 'adjustDate',
-          title: '校准日期',
-          width: 50,
-          formatter:formatDatebox,
-          editor: {
-            type: 'datebox',
-            options: {
-              editable: false
-            }
-           }
-			},     
-      {
-          field: 'org',
-          title: '校准机构',
+          field: 'sendNum',
+          title: '发货数量',
           width: 50,
           editor: {
             type: 'validatebox',
             options: {
-              required: true
+              editable: false
             }
-          }
-        },
-      {
-            field: 'enclosure',
-            title: '附件',
-            width: 50,
-            editor: {
-              type: 'validatebox',
-              options: {
-                editable: false
-              }
-        }
-	 },{
+           }
+      }
+      ,{
 	        field: 'remarks',
 	        title: '备注',
 	        width: 30,
@@ -219,23 +160,16 @@ define(function () {
 	      }
       ]],
       toolbar: authToolBar({
-        "device-create": {
+        "sample-send-create": {
           iconCls: 'fa fa-plus-square',
-          text: "新建设备",
+          text: "新建发送记录",
           handler: function () {
             createForm()
           }
         },
-       /* "contract-update":{
-            iconCls: 'fa fa-pencil-square-o',
-            text: "保存修改",
-            handler: function () {
-                dg.data('isSave', true).edatagrid('saveRow');
-            }
-        },*/
-        "device-delete":{
+        "sample-send-delete":{
             iconCls: 'fa fa-trash',
-            text: "删除设备",
+            text: "删除发送记录",
             handler: function () {
             	var row = dg.edatagrid('getSelected');
             	if (row) {
@@ -299,7 +233,7 @@ define(function () {
         modal: true,
         onLoad: function () {
             //窗口表单加载成功时执行
-            form = $("#device-form");
+            form = $("#sample-send-form");
           },
         onClose: function () {
           $(this).dialog("destroy");
@@ -321,11 +255,11 @@ define(function () {
           handler: function () {
         	  form.form('submit',{
         		 type:"post",
-        		 url:"/resource/sample/send/save",
+        		 url:"/resource/sample/send/add",
         		 success:function(data) {
         			 var obj = JSON.parse(data);
         			 if (obj.success) {
-        				 $.messager.alert({title:'提示',msg:"新建设备成功",icon:'info'});
+        				 $.messager.alert({title:'提示',msg:"新建发送记录成功",icon:'info'});
         				 dialog.dialog('close');
         				 dg.datagrid('reload');
         			 }else {
