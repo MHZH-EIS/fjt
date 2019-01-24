@@ -89,6 +89,7 @@ public class ExperimentController {
     @ResponseBody
     @RequestMapping("/update")
     public AjaxResult update() {
+        // 暂不实现
         return new AjaxResult(true);
     }
 
