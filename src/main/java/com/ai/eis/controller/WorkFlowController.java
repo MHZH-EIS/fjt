@@ -97,6 +97,12 @@ public class WorkFlowController {
     }
 
 
+    /**
+     * 下卡
+     *
+     * @param list 子实验任务集合
+     * @return
+     */
     @RequestMapping("/discard")
     @ResponseBody
     public AjaxResult discard(List <EisExperiment> list) {
@@ -126,6 +132,11 @@ public class WorkFlowController {
         return new AjaxResult(true);
     }
 
+    /**
+     * 获取当前用户的任务集合
+     *
+     * @return
+     */
     @RequestMapping("/queryCurrentUserTask")
     @ResponseBody
     public List <EisUserTask> queryCurrentUserTask() {
@@ -156,6 +167,14 @@ public class WorkFlowController {
         return tasks;
     }
 
+    /**
+     * 获取流程高亮图
+     *
+     * @param id       项目编号
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/image")
     public AjaxResult getActivitiProccessImage(@RequestParam(value = "projectId", defaultValue = "") String id,
                                                HttpServletResponse response) throws IOException {
@@ -178,9 +197,9 @@ public class WorkFlowController {
                                                                         .map(HistoricActivityInstance::getActivityId)
                                                                         .collect(Collectors.toList());
 
-        List <String> flowIdList = new ArrayList <String>();
-        List <FlowNode> historicFlowNodeList = new LinkedList <FlowNode>();
-        List <HistoricActivityInstance> finishedActivityInstanceList = new LinkedList <HistoricActivityInstance>();
+        List <String> flowIdList = new ArrayList <>();
+        List <FlowNode> historicFlowNodeList = new LinkedList <>();
+        List <HistoricActivityInstance> finishedActivityInstanceList = new LinkedList <>();
         for (HistoricActivityInstance historicActivityInstance : historicActivityInstances) {
             FlowNode node = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
             historicFlowNodeList.add(node);
@@ -199,7 +218,7 @@ public class WorkFlowController {
                     }
                 }
             } else {
-                List <Map <String, String>> tempMapList = new LinkedList <Map <String, String>>();
+                List <Map <String, String>> tempMapList = new LinkedList <>();
                 for (SequenceFlow sequenceFlow : sequenceFlowList) {
                     for (HistoricActivityInstance activityInstance : historicActivityInstances) {
                         if (activityInstance.getActivityId().equals(sequenceFlow.getTargetRef())) {
