@@ -84,6 +84,12 @@
       <if test="pId != null and pId !=''">
         PROJECT_ID = #{pId}
       </if>
+       <if test="contact != null and contact !=''">
+        and CONTACT like  #{contact}
+      </if>
+      
+      
+      
     </where>
   </select>
 </mapper>

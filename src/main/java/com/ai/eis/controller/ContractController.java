@@ -63,6 +63,19 @@ public class ContractController {
         map.put("pName", Tools.liker(pName));
         return contractService.queryByCondition(map);
     }
+    
+    @ResponseBody
+    @RequestMapping(value = "/listwithtext")
+    public List <EisContract> queryCombo() {
+        Map <String, String> map = new HashMap <>();
+        List <EisContract> orgs = contractService.queryByCondition(map);
+        for (EisContract org: orgs) {
+        	org.setText(org.getProjectId()+":"+org.getProjectName());
+        	org.setId(org.getProjectId());
+        }
+        return orgs;
+    }
+    
 
     @ResponseBody
     @Transactional
