@@ -16,6 +16,17 @@ public class EisExperiment {
 
     private String devId;
 
+    // 前台传输测试工程师ID所用字段
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public Integer getId() {
         return id;
     }
