@@ -2,6 +2,8 @@ package com.ai.eis.model;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class EisDevice {
     private Integer devId;
 
@@ -31,7 +33,18 @@ public class EisDevice {
 
     private String remarks;
 
-    public Integer getDevId() {
+    @Transient
+    private Integer id;
+    
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getDevId() {
         return devId;
     }
 

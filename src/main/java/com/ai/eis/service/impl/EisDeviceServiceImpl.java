@@ -30,4 +30,15 @@ public class EisDeviceServiceImpl implements EisDeviceService {
         return deviceMapper.deleteByPrimaryKey(id);
 
     }
+
+	@Override
+	public EisDevice queryById(Integer id) {
+		return deviceMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public int updateDevice(EisDevice device) {
+		 
+		return deviceMapper.updateByPrimaryKeySelective(device);
+	}
 }

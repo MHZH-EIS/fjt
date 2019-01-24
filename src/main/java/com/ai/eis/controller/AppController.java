@@ -102,9 +102,6 @@ public class AppController {
         }
 
         EisLogin member = eisLoginService.selectByAccount(userName);
-        
- 
-
         // 校验密码
         if (member == null || member.getStatus() ==  1) {
             rAttributes.addFlashAttribute("error", "用户不存在或已被禁用！");

@@ -12,5 +12,9 @@ public interface EisDeviceService {
     int deleteByKey(Integer id);
 
     List <EisDevice> queryByCondition(Map <String, String> map);
+    
+    EisDevice queryById(Integer id);
+    
+    int updateDevice(EisDevice device);
 
 }

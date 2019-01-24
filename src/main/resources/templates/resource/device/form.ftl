@@ -14,7 +14,7 @@
     <input class="easyui-textbox" name="adjust" style="width:100%" data-options="label:'是否校准:',required:true ">
   </div>
    <div class="field">
-    <input class="easyui-datebox" name="clientCompany" style="width:100%" data-options="label:'有效期:',required:true ">
+    <input class="easyui-datebox" name="validityDate" style="width:100%" data-options="label:'有效期:',required:true ">
   </div>
    <div class="field">
     <input class="easyui-textbox" name="cycle" style="width:100%" data-options="label:'校准周期:',required:true ">
@@ -38,3 +38,13 @@
     <input class="easyui-textbox" name="remarks" style="width:100%" data-options="label:'备注:',required:false ">
   </div> 
 </form>
+
+
+<script>
+  $("#device-form").form("load",
+   <#if resource??> 
+    ${resource}
+	</#if>)
+</script>
+
+

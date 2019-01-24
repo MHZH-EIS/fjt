@@ -226,13 +226,18 @@ define(function () {
             createForm()
           }
         },
-       /* "contract-update":{
+       "contract-update":{
             iconCls: 'fa fa-pencil-square-o',
-            text: "保存修改",
+            text: "修改设备",
             handler: function () {
-                dg.data('isSave', true).edatagrid('saveRow');
+             	var row = dg.edatagrid('getSelected');
+             	if (!row) {
+   				   $.messager.alert({title:'提示',msg:"请先选择一个设备",icon:'info'});
+             	}else {
+                    createForm.call(this, row.devId);
+             	}
             }
-        },*/
+        },
         "device-delete":{
             iconCls: 'fa fa-trash',
             text: "删除设备",
@@ -325,7 +330,7 @@ define(function () {
         		 success:function(data) {
         			 var obj = JSON.parse(data);
         			 if (obj.success) {
-        				 $.messager.alert({title:'提示',msg:"新建设备成功",icon:'info'});
+        				 $.messager.alert({title:'提示',msg:"保存成功",icon:'info'});
         				 dialog.dialog('close');
         				 dg.datagrid('reload');
         			 }else {
