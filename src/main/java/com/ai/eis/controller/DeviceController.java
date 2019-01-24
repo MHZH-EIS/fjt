@@ -64,6 +64,7 @@ public class DeviceController {
         	 if (device.getId() != null) {
         		 device.setDevId(device.getId());
         		 deviceService.updateDevice(device);
+         	    logger.info("更新了一个新设备{}", device.getName());
         	 }else {
         		device.setResourceId(Constants.DEVICE_RESOURCE_ID);
         	    deviceService.insert(device);
