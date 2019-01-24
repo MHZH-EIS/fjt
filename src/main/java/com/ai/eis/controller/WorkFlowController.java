@@ -2,25 +2,38 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisUser;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import com.ai.eis.model.EisUserTask;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowNode;
+import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.engine.*;
+import org.activiti.engine.form.FormProperty;
+import org.activiti.engine.form.TaskFormData;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceBuilder;
 import org.activiti.engine.task.Task;
+import org.activiti.image.ProcessDiagramGenerator;
+import org.activiti.spring.ProcessEngineFactoryBean;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/workflow")
@@ -39,46 +52,178 @@ public class WorkFlowController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private HistoryService historyService;
+
+    @Autowired
+    private ProcessEngineFactoryBean processEngine;
+
+    @Autowired
+    private FormService formService;
+
+    /**
+     * 流程发布
+     *
+     * @return
+     */
     @RequestMapping("/deploy")
     @ResponseBody
-    public String deployProcess() {
+    public AjaxResult deployProcess() {
         repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
-        return "流程发布成功";
+        return new AjaxResult(true);
     }
 
+    /**
+     * 启动流程实例
+     *
+     * @param projectId 项目ID,必填参数
+     * @param charge    指派的项目经理ID，必填参数
+     * @return
+     */
     @RequestMapping("/start")
     @ResponseBody
-    public AjaxResult start(String projectId) {
-        HttpSession session = request.getSession();
-        EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-        System.out.println(user.getUserid());
-        ProcessInstanceBuilder processInstanceBuilder = runtimeService.createProcessInstanceBuilder();
-        ProcessInstance pi = processInstanceBuilder.businessKey(projectId)
-                                                   .processDefinitionKey("eisprocess")
-                                                   .variable("manager", user.getUserid())
-                                                   .start();
-        logger.info("项目流程创建成功，当前流程实例{},业务编码{}", pi.getId(), pi.getBusinessKey());
+    public AjaxResult start(@RequestParam(value = "projectId", defaultValue = "") String projectId,
+                            @RequestParam(value = "userId", defaultValue = "") String charge) {
+        if (StringUtils.isEmpty(projectId) || StringUtils.isEmpty(charge)) {
+            return new AjaxResult(false).setData("必须选择一个项目和一个项目经理");
+        }
+        ProcessInstance pi = runtimeService.createProcessInstanceBuilder()
+                                           .businessKey(projectId)
+                                           .processDefinitionKey("eisprocess")
+                                           .variable("manager", charge)
+                                           .start();
+        logger.info("项目流程创建成功，当前流程实例{},业务编码{},项目经理ID", pi.getId(), pi.getBusinessKey(), charge);
         return new AjaxResult(true);
     }
 
-    @RequestMapping("/taskAllocat")
+
+    @RequestMapping("/discard")
     @ResponseBody
-    public AjaxResult taskAllocat(String projectId, String charge) {
-        Task task = taskService.createTaskQuery().processInstanceBusinessKey(projectId).singleResult();
-        Map <String, Object> variables = new HashMap <>();
-        variables.put("charge", charge);
-        taskService.complete(task.getId(), variables);
+    public AjaxResult discard(List <EisExperiment> list) {
+        if (list.size() != 2) {
+            return new AjaxResult(false).setData("目前仅能接受两个子实验任务");
+        }
+        IntStream stream = list.stream().mapToInt(EisExperiment::getProjectId).distinct();
+        if (stream.count() != 1) {
+            return new AjaxResult(false).setData("发现子实验项不属于同一个项目，不能完成下卡");
+        }
+
+        Task task = taskService.createTaskQuery()
+                               .processInstanceBusinessKey(String.valueOf(stream.findFirst().getAsInt()))
+                               .singleResult();
+        if (task == null) {
+            return new AjaxResult(false).setData("找不到此流程的相关任务");
+        }
+        Map <String, String> map = new HashMap <>();
+        int index = 1;
+        for (EisExperiment experiment : list) {
+            map.put("item" + index, String.valueOf(experiment.getId()));
+            map.put("user" + index, experiment.getUserId());
+            map.put("experiment" + index, String.valueOf(experiment.getItemId()));
+            index++;
+        }
+        formService.submitTaskFormData(task.getId(), map);
         return new AjaxResult(true);
     }
 
-    @RequestMapping("/query")
+    @RequestMapping("/queryCurrentUserTask")
     @ResponseBody
-    public List <Task> queryTask() {
+    public List <EisUserTask> queryCurrentUserTask() {
+        List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-        return taskService.createTaskQuery()
-                          .taskAssignee(String.valueOf(user.getUserid()))
-                          .list();
+        List <Task> list = taskService.createTaskQuery()
+                                      .taskAssignee(String.valueOf(user.getUserid()))
+                                      .list();
+        for (Task task : list) {
+            EisUserTask userTask = new EisUserTask();
+            userTask.setTaskName(task.getName());
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                                                            .processInstanceId(task.getProcessInstanceId())
+                                                            .singleResult();
+            userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
+            TaskFormData taskFormData = formService.getTaskFormData(task.getId());
+            List <FormProperty> formProperties = taskFormData.getFormProperties();
+            if (formProperties != null) {
+                for (FormProperty formProperty : formProperties) {
+                    if (formProperty.getId().startsWith("item")) {
+                        userTask.setItemId(formProperty.getValue());
+                    }
+                }
+            }
+            tasks.add(userTask);
+        }
+        return tasks;
+    }
+
+    @RequestMapping("/image")
+    public AjaxResult getActivitiProccessImage(@RequestParam(value = "projectId", defaultValue = "") String id,
+                                               HttpServletResponse response) throws IOException {
+        if (StringUtils.isEmpty(id)) {
+            return new AjaxResult(false).setData("必须选择一个项目ID");
+        }
+        response.setHeader("Pragma", "No-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+                                                                        .processInstanceBusinessKey(id)
+                                                                        .singleResult();
+        List <HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
+                                                                                  .processInstanceId(historicProcessInstance.getId())
+                                                                                  .orderByHistoricActivityInstanceId()
+                                                                                  .asc()
+                                                                                  .list();
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
+        List <String> executedActivityIdList = historicActivityInstances.stream()
+                                                                        .map(HistoricActivityInstance::getActivityId)
+                                                                        .collect(Collectors.toList());
+
+        List <String> flowIdList = new ArrayList <String>();
+        List <FlowNode> historicFlowNodeList = new LinkedList <FlowNode>();
+        List <HistoricActivityInstance> finishedActivityInstanceList = new LinkedList <HistoricActivityInstance>();
+        for (HistoricActivityInstance historicActivityInstance : historicActivityInstances) {
+            FlowNode node = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
+            historicFlowNodeList.add(node);
+            if (historicActivityInstance.getEndTime() != null) {
+                finishedActivityInstanceList.add(historicActivityInstance);
+            }
+        }
+        for (HistoricActivityInstance historicActivityInstance : finishedActivityInstanceList) {
+            FlowNode currentFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
+            List <SequenceFlow> sequenceFlowList = currentFlowNode.getOutgoingFlows();
+            if (historicActivityInstance.getActivityType().equals("parallelGateway") || historicActivityInstance.getActivityType().equals("inclusiveGateway")) {
+                for (SequenceFlow sequenceFlow : sequenceFlowList) {
+                    FlowNode targetFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(sequenceFlow.getTargetRef(), true);
+                    if (historicFlowNodeList.contains(targetFlowNode)) {
+                        flowIdList.add(sequenceFlow.getId());
+                    }
+                }
+            } else {
+                List <Map <String, String>> tempMapList = new LinkedList <Map <String, String>>();
+                for (SequenceFlow sequenceFlow : sequenceFlowList) {
+                    for (HistoricActivityInstance activityInstance : historicActivityInstances) {
+                        if (activityInstance.getActivityId().equals(sequenceFlow.getTargetRef())) {
+                            Map <String, String> map = new HashMap <>();
+                            map.put("flowId", sequenceFlow.getId());
+                            map.put("activityStartTime", String.valueOf(historicActivityInstance.getStartTime().getTime()));
+                            tempMapList.add(map);
+                        }
+                    }
+                }
+                flowIdList.add(tempMapList.stream().min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime")))).get().get("flowId"));
+            }
+
+        }
+
+        ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator();
+        InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList, flowIdList, "宋体", "微软雅黑", "黑体", null, 2.0);
+
+        byte[] b = new byte[1024];
+        int len;
+        while ((len = imageStream.read(b, 0, 1024)) != -1) {
+            response.getOutputStream().write(b, 0, len);
+        }
+        return new AjaxResult(true);
     }
 
 
