@@ -22,12 +22,14 @@
         <result column="REGISTE_DATE" jdbcType="TIMESTAMP" property="registeDate"/>
         <result column="EX_CASE" jdbcType="VARCHAR" property="exCase"/>
         <result column="REMARKS" jdbcType="VARCHAR" property="remarks"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
     </resultMap>
     <sql id="Base_Column_List">
     PROJECT_ID, RESOURCE_ID, CLIENT_COMPANY, CLIENT_ADDRESS, CONTACT, CONTACT_WAY, VERIFY_METHOD, 
     PROJECT_NAME, PROJECT_VERSION, SAMPLE_NUM, CHEACK_TYPE, MF_NAME, MF_ADDRESS, REPORT_TYPE, 
-    TEST_COST, CF_COST, TOTAL_COST, REGISTE_DATE, EX_CASE, REMARKS
+    TEST_COST, CF_COST, TOTAL_COST, REGISTE_DATE, EX_CASE, REMARKS, STATUS
   </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -35,10 +37,11 @@
         where PROJECT_ID = #{projectId,jdbcType=INTEGER}
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from eis_resource_contract
     where PROJECT_ID = #{projectId,jdbcType=INTEGER}
   </delete>
+
     <insert id="insert" parameterType="com.ai.eis.model.EisContract">
     insert into eis_resource_contract (PROJECT_ID, RESOURCE_ID, CLIENT_COMPANY, 
       CLIENT_ADDRESS, CONTACT, CONTACT_WAY, 
@@ -46,14 +49,14 @@
       SAMPLE_NUM, CHEACK_TYPE, MF_NAME, 
       MF_ADDRESS, REPORT_TYPE, TEST_COST, 
       CF_COST, TOTAL_COST, REGISTE_DATE, 
-      EX_CASE, REMARKS)
+      EX_CASE, REMARKS, STATUS)
     values (#{projectId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{clientCompany,jdbcType=VARCHAR}, 
       #{clientAddress,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{contactWay,jdbcType=VARCHAR}, 
       #{verifyMethod,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{projectVersion,jdbcType=VARCHAR}, 
       #{sampleNum,jdbcType=INTEGER}, #{cheackType,jdbcType=VARCHAR}, #{mfName,jdbcType=VARCHAR}, 
       #{mfAddress,jdbcType=VARCHAR}, #{reportType,jdbcType=VARCHAR}, #{testCost,jdbcType=BIGINT}, 
       #{cfCost,jdbcType=BIGINT}, #{totalCost,jdbcType=BIGINT}, #{registeDate,jdbcType=TIMESTAMP}, 
-      #{exCase,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+      #{exCase,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.ai.eis.model.EisContract">
         insert into eis_resource_contract
@@ -118,6 +121,9 @@
             <if test="remarks != null">
                 REMARKS,
             </if>
+            <if test="status != null">
+                STATUS,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="projectId != null">
@@ -179,6 +185,9 @@
             </if>
             <if test="remarks != null">
                 #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -242,36 +251,12 @@
             <if test="remarks != null">
                 REMARKS = #{remarks,jdbcType=VARCHAR},
             </if>
+            <if test="status != null">
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
         </set>
         where PROJECT_ID = #{projectId,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisContract">
-    update eis_resource_contract
-    set RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
-      CLIENT_COMPANY = #{clientCompany,jdbcType=VARCHAR},
-      CLIENT_ADDRESS = #{clientAddress,jdbcType=VARCHAR},
-      CONTACT = #{contact,jdbcType=VARCHAR},
-      CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
-      VERIFY_METHOD = #{verifyMethod,jdbcType=VARCHAR},
-      PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
-      PROJECT_VERSION = #{projectVersion,jdbcType=VARCHAR},
-      SAMPLE_NUM = #{sampleNum,jdbcType=INTEGER},
-      CHEACK_TYPE = #{cheackType,jdbcType=VARCHAR},
-      MF_NAME = #{mfName,jdbcType=VARCHAR},
-      MF_ADDRESS = #{mfAddress,jdbcType=VARCHAR},
-      REPORT_TYPE = #{reportType,jdbcType=VARCHAR},
-      TEST_COST = #{testCost,jdbcType=BIGINT},
-      CF_COST = #{cfCost,jdbcType=BIGINT},
-      TOTAL_COST = #{totalCost,jdbcType=BIGINT},
-      REGISTE_DATE = #{registeDate,jdbcType=TIMESTAMP},
-      EX_CASE = #{exCase,jdbcType=VARCHAR},
-      REMARKS = #{remarks,jdbcType=VARCHAR}
-    where PROJECT_ID = #{projectId,jdbcType=INTEGER}
-  </update>
-
-    <select id="getTotalSampleNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-  		select SAMPLE_NUM from eis_resource_contract where PROJECT_ID = #{projectId}
-  </select>
 
     <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
         select
@@ -283,6 +268,9 @@
             </if>
             <if test="pName != null and pName != ''">
                 and PROJECT_NAME like #{pName}
+            </if>
+            <if test="status != null and status != ''">
+                and STATUS = #{status}
             </if>
         </where>
     </select>

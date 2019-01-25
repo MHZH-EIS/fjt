@@ -26,11 +26,6 @@ public class EisContractServiceImpl implements EisContractService {
     }
 
     @Override
-    public int getTotalSampleNum(Integer projectId) {
-        return contractMapper.getTotalSampleNum(projectId);
-    }
-
-    @Override
     public List <EisContract> queryByCondition(Map <String, String> map) {
         return contractMapper.queryByCondition(map);
     }

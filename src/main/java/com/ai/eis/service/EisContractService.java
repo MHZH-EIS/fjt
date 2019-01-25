@@ -11,8 +11,6 @@ public interface EisContractService {
 
     EisContract selectByPrimaryKey(Integer projectId);
 
-    int getTotalSampleNum(Integer projectId);
-
     List <EisContract> queryByCondition(Map <String, String> map);
 
     void deleteByPrimaryKey(Integer projectId);

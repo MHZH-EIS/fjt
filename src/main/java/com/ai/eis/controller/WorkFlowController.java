@@ -2,9 +2,11 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.model.EisUserTask;
+import com.ai.eis.service.EisContractService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -61,6 +63,9 @@ public class WorkFlowController {
     @Autowired
     private FormService formService;
 
+    @Autowired
+    private EisContractService contractService;
+
     /**
      * 流程发布
      *
@@ -92,6 +97,10 @@ public class WorkFlowController {
                                            .processDefinitionKey("eisprocess")
                                            .variable("manager", charge)
                                            .start();
+        EisContract contract = new EisContract();
+        contract.setStatus(Constants.PROJECT_PROCESSING);
+        contract.setProjectId(Integer.valueOf(projectId));
+        contractService.update(contract);
         logger.info("项目流程创建成功，当前流程实例{},业务编码{},项目经理ID", pi.getId(), pi.getBusinessKey(), charge);
         return new AjaxResult(true);
     }

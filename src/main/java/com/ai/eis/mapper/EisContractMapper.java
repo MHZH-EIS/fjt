@@ -17,10 +17,6 @@ public interface EisContractMapper {
 
     int updateByPrimaryKeySelective(EisContract record);
 
-    int updateByPrimaryKey(EisContract record);
-
-    int getTotalSampleNum(int projectId);
-
     List <EisContract> queryByCondition(Map <String, String> map);
 
 }
