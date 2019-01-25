@@ -116,11 +116,20 @@
 
   <select id="listProject" resultType="java.util.HashMap" parameterType="Map">
     SELECT
-    a.PROJECT_ID,
-    a.PROJECT_NAME,
-    a.SAMPLE_NUM,
-    v1.SEND_TOTAL,
-    v2.SIGN_TOTAL
+    a.PROJECT_ID as projectId,
+    a.PROJECT_NAME as projectName,
+    a.CLIENT_COMPANY as clientCompany,
+    a.CLIENT_ADDRESS as clientAddress,
+    a.CONTACT as contact,
+    a.CONTACT_WAY as contactWay,
+    a.SAMPLE_NUM as sampleNum,
+    a.MF_NAME as mfName,
+    a.TEST_COST as testCost,
+    a.CF_COST as cfCost,
+    a.TOTAL_COST as totalCost,
+    a.REGISTE_DATE as registeDate,
+    v1.SEND_TOTAL as sendTotal,
+    v2.SIGN_TOTAL as signTotal
     FROM
     eis_resource_contract a
     LEFT JOIN (

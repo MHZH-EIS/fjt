@@ -52,6 +52,11 @@ public class SampleController {
     
     }
     
+    @RequestMapping("/project") 
+    public void project(){
+    	
+    }
+    
     /**
      * 发货
      *
