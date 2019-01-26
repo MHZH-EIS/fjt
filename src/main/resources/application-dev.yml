@@ -35,10 +35,9 @@ spring:
   history-level: full
   async-executor-activate: false
   
-crm:
-  system:
-   super-user-id:1
- 
+ eis:
+   system:
+    super-user-id:1
  
  
  

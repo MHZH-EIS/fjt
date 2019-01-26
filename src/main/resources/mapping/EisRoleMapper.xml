@@ -6,7 +6,7 @@
     <result column="NAME" property="name" jdbcType="VARCHAR" />
     <result column="STATUS" property="status" jdbcType="BOOLEAN" />
     <result column="REMARKS" property="remarks" jdbcType="VARCHAR" />
-
+    <result column="ROLE_ID" property="id" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     ROLE_ID, NAME, REMARKS,STATUS
