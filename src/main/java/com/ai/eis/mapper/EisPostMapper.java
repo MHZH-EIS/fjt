@@ -1,5 +1,8 @@
 package com.ai.eis.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import com.ai.eis.model.EisPost;
 
 public interface EisPostMapper {
@@ -14,4 +17,6 @@ public interface EisPostMapper {
     int updateByPrimaryKeySelective(EisPost record);
 
     int updateByPrimaryKey(EisPost record);
+    
+    List<EisPost> selectConditions(Map<String,String> conditions);
 }

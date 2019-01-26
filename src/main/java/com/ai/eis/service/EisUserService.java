@@ -17,4 +17,6 @@ public interface EisUserService {
     
     int updateUser(EisUser loginUser) ;
     int deleteUser(Integer userid);
+    
+    int selectMaxUserId();
 }

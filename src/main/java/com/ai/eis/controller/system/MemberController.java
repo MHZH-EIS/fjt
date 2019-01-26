@@ -149,7 +149,7 @@ public class MemberController {
 				// 默认密码
 				loginInfo.setPassword(DigestUtils.sha256Hex("0000"));
 				userService.addUser(member);
-				loginService.add(member.getLoginInfo());
+				loginService.addLogin(member.getLoginInfo());
 				logger.info("创建用户:{} 登录名:{} 成功!",member.getName(),loginInfo.getAccount());
 			}
 

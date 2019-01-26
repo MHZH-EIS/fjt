@@ -103,7 +103,7 @@ public class AppController {
 
         EisLogin member = eisLoginService.selectByAccount(userName);
         // 校验密码
-        if (member == null || member.getStatus() ==  1) {
+        if (member == null || member.getStatus() ==  0) {
             rAttributes.addFlashAttribute("error", "用户不存在或已被禁用！");
             return "redirect:/login";
         } else if (!member.getPassword().equals(DigestUtils.sha256Hex(password))) {

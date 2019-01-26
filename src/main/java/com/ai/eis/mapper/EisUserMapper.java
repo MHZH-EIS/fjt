@@ -18,9 +18,12 @@ public interface EisUserMapper {
 
     int updateByPrimaryKey(EisUser record);
     
+    int selectMaxUserId();
+    
     List<EisUser> selectAllEisUsers();
     
     EisUser selectByName(String name);
     
     List<EisUser> queryByCondition(Map<String,String> map);
+    
 }

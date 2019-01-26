@@ -49,7 +49,7 @@ public class ResourceController {
     @ResponseBody
     public Iterable<EisMenuResource> parentTree() {
 
-    	return eisMenuResourceService.selectParentIsNull();
+    	   return eisMenuResourceService.getResourceTree(true);
     }
 
     @RequestMapping("/tree")

@@ -53,6 +53,12 @@
     where USERID = #{userid,jdbcType=INTEGER}
   </select>
   
+    <select id="selectMaxUserId"  resultType="java.lang.Integer" >
+    select 
+	max(userid)
+    from eis_user
+  </select>
+  
   
     <select id="selectAllEisUsers" resultMap="BaseResultMap"   >
     select 

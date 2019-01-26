@@ -40,7 +40,7 @@
          <table tableName="eis_role" domainObjectName="EisRole" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         
          <table tableName="eis_menu_resource" domainObjectName="EisMenuResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table>
-         <table tableName="eis_role_menu_resource" domainObjectName="EisRoleMenuResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table>
+         <table tableName="eis_role_menu_resource" domainObjectName="EisRoleMenuResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table> 
     </context>
 </generatorConfiguration>
 

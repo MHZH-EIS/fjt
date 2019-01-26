@@ -63,4 +63,9 @@ public class EisUserServiveImpl implements EisUserService {
 		return eisUserMapper.deleteByPrimaryKey(userid);
 	}
 
+	@Override
+	public int selectMaxUserId() {
+		return eisUserMapper.selectMaxUserId();
+	}
+
 }
