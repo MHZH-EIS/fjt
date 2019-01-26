@@ -157,6 +157,9 @@
       <if test="status != null and status !=''">
         and a.STATUS = #{status}
       </if>
+      <if test="pNo != null and pNo !=''">
+        and a.PROJECT_NO like #{pNo}
+      </if>
     </where>
   </select>
 

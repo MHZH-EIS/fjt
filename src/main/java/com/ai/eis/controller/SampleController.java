@@ -162,10 +162,12 @@ public class SampleController {
     @RequestMapping("/project/list")
     @ResponseBody
     public List <Map <String, Object>> listProject(@RequestParam(value = "projectName", defaultValue = "") String name,
-                                                   @RequestParam(value = "status", defaultValue = "") String status) {
+                                                   @RequestParam(value = "status", defaultValue = "") String status,
+                                                   @RequestParam(value = "projectNo", defaultValue = "") String pNo) {
         Map <String, String> map = new HashMap <>();
         map.put("name", Tools.liker(name));
         map.put("status", status);
+        map.put("pNo", pNo);
         return sampleService.listProject(map);
     }
 
