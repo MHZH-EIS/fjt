@@ -14,7 +14,7 @@ import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.MySpecification;
 import com.ai.eis.common.Tools;
 import com.ai.eis.common.MySpecification.Cnd;
-
+import com.ai.eis.controller.ContractController;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.model.Member;
 import com.ai.eis.service.EisLoginService;
@@ -26,7 +26,8 @@ import com.ai.eis.model.EisRole;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -54,7 +55,8 @@ import java.util.Map;
 @RequestMapping("/system/member")
 @Transactional(readOnly = true)
 public class MemberController {
-	Logger logger = Logger.getLogger(RoleController.class);
+    private Logger logger = LoggerFactory.getLogger(MemberController.class);
+ 
 
 	@Autowired
 	EisRoleService roleService;
@@ -67,7 +69,7 @@ public class MemberController {
 	/**
 	 * 超级管理员id
 	 */
-   @Value("${eis.system.super-user-id}")
+   //@Value("${eis.system.super-user-id}")
 	Integer superUserId = 1;
 
 	@RequestMapping
@@ -132,11 +134,23 @@ public class MemberController {
 					loginService.updateLogin(loginInfo);
 				}
 			} else {
+				Integer id = userService.selectMaxUserId();
+				if (id == null) {
+					id = 1;
+				}
 				loginInfo = member.getLoginInfo();
+				member.setUserid(id+1);
+				logger.info("name:{} sex:{}",member.getName(),member.getSex());
+				if (loginInfo == null) {
+					loginInfo = new EisLogin();
+					loginInfo.setStatus(0);
+					loginInfo.setUserid(member.getUserid());
+				}
 				// 默认密码
-				member.getLoginInfo().setPassword(DigestUtils.sha256Hex("0000"));
+				loginInfo.setPassword(DigestUtils.sha256Hex("0000"));
 				userService.addUser(member);
-				loginService.addLogin(member.getLoginInfo());
+				loginService.add(member.getLoginInfo());
+				logger.info("创建用户:{} 登录名:{} 成功!",member.getName(),loginInfo.getAccount());
 			}
 
 			return new AjaxResult();
