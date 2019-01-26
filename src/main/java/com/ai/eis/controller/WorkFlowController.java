@@ -185,6 +185,7 @@ public class WorkFlowController {
      * @throws IOException
      */
     @RequestMapping("/image")
+    @ResponseBody
     public AjaxResult getActivitiProccessImage(@RequestParam(value = "projectId", defaultValue = "") String id,
                                                HttpServletResponse response) throws IOException {
         if (StringUtils.isEmpty(id)) {
