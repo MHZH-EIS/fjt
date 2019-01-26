@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.ai.eis.model.EisContract">
         <id column="PROJECT_ID" jdbcType="INTEGER" property="projectId"/>
         <result column="RESOURCE_ID" jdbcType="INTEGER" property="resourceId"/>
+        <result column="PROJECT_NO" jdbcType="VARCHAR" property="projectNo"/>
         <result column="CLIENT_COMPANY" jdbcType="VARCHAR" property="clientCompany"/>
         <result column="CLIENT_ADDRESS" jdbcType="VARCHAR" property="clientAddress"/>
         <result column="CONTACT" jdbcType="VARCHAR" property="contact"/>
@@ -25,7 +26,7 @@
         <result column="STATUS" jdbcType="VARCHAR" property="status"/>
     </resultMap>
     <sql id="Base_Column_List">
-    PROJECT_ID, RESOURCE_ID, CLIENT_COMPANY, CLIENT_ADDRESS, CONTACT, CONTACT_WAY, VERIFY_METHOD, 
+    PROJECT_ID, RESOURCE_ID, PROJECT_NO, CLIENT_COMPANY, CLIENT_ADDRESS, CONTACT, CONTACT_WAY, VERIFY_METHOD,
     PROJECT_NAME, PROJECT_VERSION, SAMPLE_NUM, CHEACK_TYPE, MF_NAME, MF_ADDRESS, REPORT_TYPE, 
     TEST_COST, CF_COST, TOTAL_COST, REGISTE_DATE, EX_CASE, REMARKS, STATUS
   </sql>
@@ -43,14 +44,14 @@
   </delete>
 
     <insert id="insert" parameterType="com.ai.eis.model.EisContract">
-    insert into eis_resource_contract (PROJECT_ID, RESOURCE_ID, CLIENT_COMPANY, 
+    insert into eis_resource_contract (PROJECT_ID, RESOURCE_ID,PROJECT_NO, CLIENT_COMPANY,
       CLIENT_ADDRESS, CONTACT, CONTACT_WAY, 
       VERIFY_METHOD, PROJECT_NAME, PROJECT_VERSION, 
       SAMPLE_NUM, CHEACK_TYPE, MF_NAME, 
       MF_ADDRESS, REPORT_TYPE, TEST_COST, 
       CF_COST, TOTAL_COST, REGISTE_DATE, 
       EX_CASE, REMARKS, STATUS)
-    values (#{projectId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{clientCompany,jdbcType=VARCHAR}, 
+    values (#{projectId,jdbcType=INTEGER}, #{resourceId,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{clientCompany,jdbcType=VARCHAR},
       #{clientAddress,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{contactWay,jdbcType=VARCHAR}, 
       #{verifyMethod,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{projectVersion,jdbcType=VARCHAR}, 
       #{sampleNum,jdbcType=INTEGER}, #{cheackType,jdbcType=VARCHAR}, #{mfName,jdbcType=VARCHAR}, 
@@ -66,6 +67,9 @@
             </if>
             <if test="resourceId != null">
                 RESOURCE_ID,
+            </if>
+            <if test="projectId != null">
+                PROJECT_ID,
             </if>
             <if test="clientCompany != null">
                 CLIENT_COMPANY,
@@ -132,6 +136,9 @@
             <if test="resourceId != null">
                 #{resourceId,jdbcType=INTEGER},
             </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
             <if test="clientCompany != null">
                 #{clientCompany,jdbcType=VARCHAR},
             </if>
@@ -196,6 +203,9 @@
         <set>
             <if test="resourceId != null">
                 RESOURCE_ID = #{resourceId,jdbcType=INTEGER},
+            </if>
+            <if test="projectId != null">
+                PROJECT_ID = #{projectId,jdbcType=VARCHAR},
             </if>
             <if test="clientCompany != null">
                 CLIENT_COMPANY = #{clientCompany,jdbcType=VARCHAR},
@@ -265,6 +275,9 @@
         <where>
             <if test="pId != null and pId !=''">
                 PROJECT_ID = #{pId}
+            </if>
+            <if test="pNo != null and pNo != ''">
+                and PROJECT_NO like #{pNo}
             </if>
             <if test="pName != null and pName != ''">
                 and PROJECT_NAME like #{pName}

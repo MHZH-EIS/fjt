@@ -60,11 +60,13 @@ public class ContractController {
     @RequestMapping(value = "/list")
     public List <EisContract> postquery(@RequestParam(value = "projectId", defaultValue = "") String pId,
                                         @RequestParam(value = "projectName", defaultValue = "") String pName,
-                                        @RequestParam(value = "status", defaultValue = "") String status) {
+                                        @RequestParam(value = "status", defaultValue = "") String status,
+                                        @RequestParam(value = "projectNo", defaultValue = "") String pNo) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("pName", Tools.liker(pName));
         map.put("status", status);
+        map.put("pNo", Tools.liker(pNo));
         return contractService.queryByCondition(map);
     }
 

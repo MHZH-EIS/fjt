@@ -12,6 +12,8 @@ public class EisContract implements Serializable {
 
     private Integer resourceId;
 
+    private String projectNo;
+
     private String clientCompany;
 
     private String clientAddress;
@@ -90,6 +92,14 @@ public class EisContract implements Serializable {
 
     public void setResourceId(Integer resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public String getProjectNo() {
+        return projectNo;
+    }
+
+    public void setProjectNo(String projectNo) {
+        this.projectNo = projectNo;
     }
 
     public String getClientCompany() {
