@@ -2,6 +2,8 @@ package com.ai.eis.model;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 public class EisUser {
     private Integer userid;
 
@@ -33,11 +35,32 @@ public class EisUser {
 
     private String remarks;
     
+    private String account;
+    
     //目前只支持一个用户一个角色，后续一个用户可以有多个角色 
     //要改下表结构
+    @Transient
     private EisRole role;
+    
+    @Transient
+    private EisLogin loginInfo;
+    
+    private String password;
+    
+    private String roleName;
 
-    public Integer getUserid() {
+    private String status;
+    
+    
+    public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public Integer getUserid() {
         return userid;
     }
 
@@ -163,5 +186,37 @@ public class EisUser {
 
 	public void setRole(EisRole role) {
 		this.role = role;
+	}
+
+	public EisLogin getLoginInfo() {
+		return loginInfo;
+	}
+
+	public void setLoginInfo(EisLogin loginInfo) {
+		this.loginInfo = loginInfo;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

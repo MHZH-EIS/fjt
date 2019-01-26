@@ -115,8 +115,7 @@ define(function () {
               options: {
                 required: true
               }
-            },
-            formatter:  formatDatebox
+            } 
           },{
   	        field: 'remarks',
   	        title: '备注',

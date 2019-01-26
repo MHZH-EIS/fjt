@@ -25,6 +25,25 @@
   
   
   
+ 
+  
+   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+        select
+          a.USERID,a.NAME,a.SEX,b.ACCOUNT,a.PHONE,a.EMAIL,a.ENTRY_TIME,a.ROLE_ID,b.ACCOUNT,c.NAME AS roleName,b.Status
+          from eis_user a,eis_login b ,eis_role c 
+        <where>
+            a.userid = b.userid AND a.role_id=c.role_id 
+            <if test="account != null and account !=''">
+               and  b.ACCOUNT like #{account}
+            </if>
+            <if test="userName != null and userName != ''">
+                and a.NAME like #{userName}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and b.PHONE like #{telephone}
+            </if>
+        </where>
+    </select>
   
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

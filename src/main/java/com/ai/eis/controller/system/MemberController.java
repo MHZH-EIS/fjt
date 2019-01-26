@@ -12,12 +12,16 @@ package com.ai.eis.controller.system;
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.MySpecification;
+import com.ai.eis.common.Tools;
 import com.ai.eis.common.MySpecification.Cnd;
 
 import com.ai.eis.model.EisUser;
+import com.ai.eis.model.Member;
+import com.ai.eis.service.EisLoginService;
+import com.ai.eis.service.EisRoleService;
+import com.ai.eis.service.EisUserService;
 import com.ai.eis.model.EisLogin;
 import com.ai.eis.model.EisRole;
-
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,11 +36,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户管理控制器
@@ -47,136 +54,125 @@ import java.util.List;
 @RequestMapping("/system/member")
 @Transactional(readOnly = true)
 public class MemberController {
+	Logger logger = Logger.getLogger(RoleController.class);
 
-    Logger logger = Logger.getLogger(RoleController.class);
+	@Autowired
+	EisRoleService roleService;
+	@Autowired
+	EisUserService userService;
 
-//    @Autowired
-//    MemberDao memberDao;
-//
-//    @Autowired
-//    RoleDao roleDao;
-    
+	@Autowired
+	EisLoginService loginService;
+
+	/**
+	 * 超级管理员id
+	 */
+   @Value("${eis.system.super-user-id}")
+	Integer superUserId = 1;
+
+	@RequestMapping
+	public void index() {
+
+	}
+
+	@RequestMapping("/list")
+	@ResponseBody
+	public List<EisUser> list(  @RequestParam(value = "userName", defaultValue = "") String userName,
+			@RequestParam(value = "account", defaultValue = "") String account,
+			@RequestParam(value = "telephone", defaultValue = "") String telephone) {
  
+		// 使用了自定义的复杂查询，这就比原生的Specification的语法使用流畅多了
+		Map<String, String> conditions = new HashMap<>();
+		conditions.put("userName", Tools.liker(userName));
+		conditions.put("account", Tools.liker(account));
+		conditions.put("telephone", telephone);
 
-    /**
-     * 超级管理员id
-     */
- 
-    Long superUserId;
+		return userService.queryByCondition(conditions);
+	}
 
-    @RequestMapping
-    public void index() {
+	@RequestMapping("/form")
+	public void form(Long id, Model model) {
 
-    }
+	}
 
-    @RequestMapping("/list")
-    @ResponseBody
-    public DataGrid<EisUser> list(int page, int rows, String userName, String realName, String telephone) {
-        PageRequest pr = new PageRequest(page - 1, rows);
+	@RequestMapping("/check")
+	@ResponseBody
+	public boolean check(String account) {
+		return loginService.selectByAccount(account) == null;
+	}
 
-        //使用了自定义的复杂查询，这就比原生的Specification的语法使用流畅多了
-        Page pageData =  null;
-        return null;
-        //return new DataGrid<>(pageData);
-    }
+	@RequestMapping("/roles")
+	@ResponseBody
+	public List<EisRole> roles() {
+		return roleService.findAll();
+	}
 
-    @RequestMapping("/form")
-    public void form(Long id, Model model) {
-//        if (id != null) {
-//            ObjectMapper mapper = new ObjectMapper();
-//            Member member = memberDao.findOne(id);
-//            try {
-//                model.addAttribute("member", mapper.writeValueAsString(member));
-//            } catch (JsonProcessingException e) {
-//                logger.error("json转换错误", e);
-//            }
-//        }
-    }
+	@RequestMapping({ "/save", "/update" })
+	@Transactional
+	@ResponseBody
+	public AjaxResult save(@Valid EisUser member, Integer roleId, BindingResult br) {
+		if (br.hasErrors()) {
+			logger.error("对象校验失败：" + br.getAllErrors());
+			return new AjaxResult(false).setData(br.getAllErrors());
+		} else {
+			EisLogin loginInfo = null;
+			// 更新代码
+			if (member.getUserid() != null) {
+				// 不在这里更新角色和密码
+				EisUser orig = userService.selectByPrimaryKey(member.getUserid());
 
-    @RequestMapping("/check")
-    @ResponseBody
-    public boolean check(String userName) {
-        return false;
-    	// return memberDao.countByUserName(userName) == 0;
-    }
+				// 理论上这里一定是要找得到对象的
+				if (orig != null) {
+					// 处理角色的关联
+					if (roleId != null) {
+						member.setRoleId(roleId);
+					}
+					userService.updateUser(member);
+					loginInfo = orig.getLoginInfo();
+					loginService.updateLogin(loginInfo);
+				}
+			} else {
+				loginInfo = member.getLoginInfo();
+				// 默认密码
+				member.getLoginInfo().setPassword(DigestUtils.sha256Hex("0000"));
+				userService.addUser(member);
+				loginService.addLogin(member.getLoginInfo());
+			}
 
-    @RequestMapping("/roles")
-    @ResponseBody
-    public List<EisRole> roles() {
-        
-    	return null;
-    	//return roleDao.findByStatus(true);
-    }
+			return new AjaxResult();
+		}
+	}
 
-    @RequestMapping({"/save", "/update"})
+	/**
+	 * 重置密码
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/password/reset")
+	@Transactional
+	@ResponseBody
+	public AjaxResult resetPassword(Integer id) {
+		EisLogin login = loginService.selectByPrimaryKey(id);
+		login.setPassword(DigestUtils.sha256Hex("0000"));
+		AjaxResult rs = new AjaxResult();
+		rs.setSuccess(true);
+		return rs;
+	}
+
+	@RequestMapping("/delete")
     @Transactional
     @ResponseBody
-    public AjaxResult save(@Valid EisUser member, Long[] roles, BindingResult br) {
-        if (br.hasErrors()) {
-            logger.error("对象校验失败：" + br.getAllErrors());
-            return new AjaxResult(false).setData(br.getAllErrors());
-        } else {
-            /*
-        	if (member.getUserid() != null) {
-                // 不在这里更新角色和密码
-                Member orig = memberDao.findOne(member.getId());
-                // 理论上这里一定是要找得到对象的
-                if (orig != null) {
-                    member.setPassword(orig.getPassword());
-                }
-            } else {
-                // 默认密码
-                member.setPassword(DigestUtils.sha256Hex("0000"));
-            }
-
-            //处理角色的关联
-            if (roles != null && roles.length > 1) {
-                List<Role> rolesList = new ArrayList<>();
-                for (Long rid : roles) {
-                    if (rid != null) {
-                        rolesList.add(roleDao.findOne(rid));
-                    }
-                }
-                member.setRoles(rolesList);
-            }
-
-            memberDao.save(member);
-            */
-            return new AjaxResult();
-        }
-    }
-
-    /**
-     * 重置密码
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/password/reset")
-    @Transactional
-    @ResponseBody
-    public AjaxResult resetPassword(Long id) {
-    	/*
-        Member member = memberDao.findOne(id);
-        member.setPassword(DigestUtils.sha256Hex("0000"));
-        memberDao.save(member);*/
-        return new AjaxResult();
-    }
-
-    @RequestMapping("/delete")
-    @Transactional
-    @ResponseBody
-    public AjaxResult delete(Long id) {
-    	/*
+    public AjaxResult delete(Integer id) {
         try {
             if (superUserId != id) {
-                memberDao.delete(id);
+            	userService.deleteUser(id);
             } else {
                 return new AjaxResult(false, "管理员不能删除！");
             }
         } catch (Exception e) {
             return new AjaxResult(false).setMessage(e.getMessage());
-        }*/
+        }
         return new AjaxResult();
     }
 }

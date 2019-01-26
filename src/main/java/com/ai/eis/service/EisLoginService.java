@@ -11,4 +11,6 @@ public interface EisLoginService {
     
     EisLogin  selectByPrimaryKey(Integer userid);
     EisLogin  selectByAccount(String name);
+    
+    int updateLogin(EisLogin loginUser);
 }

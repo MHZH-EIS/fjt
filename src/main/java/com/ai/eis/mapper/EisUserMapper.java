@@ -1,8 +1,8 @@
 package com.ai.eis.mapper;
 
 import java.util.List;
+import java.util.Map;
 
- 
 import com.ai.eis.model.EisUser;
 
 public interface EisUserMapper {
@@ -21,4 +21,6 @@ public interface EisUserMapper {
     List<EisUser> selectAllEisUsers();
     
     EisUser selectByName(String name);
+    
+    List<EisUser> queryByCondition(Map<String,String> map);
 }

@@ -1,3 +1,37 @@
+
+    Date.prototype.format = function (format) {
+        var o = {
+            "M+": this.getMonth() + 1, // month
+            "d+": this.getDate(), // day
+            "h+": this.getHours(), // hour
+            "m+": this.getMinutes(), // minute
+            "s+": this.getSeconds(), // second
+            "q+": Math.floor((this.getMonth() + 3) / 3), // quarter
+            "S": this.getMilliseconds()
+            // millisecond
+        }
+        if (/(y+)/.test(format))
+            format = format.replace(RegExp.$1, (this.getFullYear() + "")
+                .substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(format))
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
+    }
+    function formatDatebox(value) {
+        if (value == null || value == '') {
+            return '';
+        }
+        var dt;
+        if (value instanceof Date) {
+            dt = value;
+        } else {
+            dt = new Date(value);
+        }
+     
+        return dt.format("yyyy-MM-dd"); //扩展的Date的format方法(上述插件实现)
+};
+
 define(function () {
   return function () {
     var dg = $("#member_dg");
@@ -8,7 +42,7 @@ define(function () {
     dg.datagrid({
       url: '/system/member/list',
       emptyMsg: "还未创建用户",
-      idField: "id",
+      idField: "userid",
       fit: true,
       rownumbers: true,
       fitColumns: true,
@@ -18,7 +52,7 @@ define(function () {
       ignore: ['roles'],
       pageSize: 30,
       columns: [[{
-        field: 'realName',
+        field: 'name',
         title: '姓名',
         width: 30,
         editor: {
@@ -31,7 +65,7 @@ define(function () {
           return filterXSS(val);
         }
       }, {
-        field: 'gender',
+        field: 'sex',
         title: '性别',
         align: 'center',
         width: 20,
@@ -40,10 +74,10 @@ define(function () {
           options: {
             data: [{
               text: '男',
-              value: "BOY"
+              value: "男"
             }, {
               text: '女',
-              value: "GIRL"
+              value: "女"
             }],
             editable: false,
             required: true,
@@ -57,21 +91,21 @@ define(function () {
           }[val];
         }
       }, {
-        field: 'userName',
+        field: 'account',
         title: '账号',
         width: 30,
         editor: {
           type: 'validatebox',
           options: {
             required: true,
-            validType: 'userName'
+            validType: 'account'
           }
         },
         formatter: function (val) {
           return filterXSS(val);
         }
       }, {
-        field: 'telephone',
+        field: 'phone',
         title: '电话',
         width: 50,
         editor: {
@@ -92,8 +126,9 @@ define(function () {
           }
         }
       }, {
-        field: 'hiredate',
+        field: 'entryTime',
         title: '入职日期',
+        formatter:formatDatebox,
         width: 50,
         editor: {
           type: 'datebox',
@@ -114,19 +149,12 @@ define(function () {
           }
         },
         formatter: function (val, row) {
-          return val ? "可用" : "禁用";
+          return val == 1 ? "可用" : "禁用";
         }
       }, {
-        field: 'roles',
-        title: '角色',
-        width: 80,
-        formatter: function (val, row, index) {
-          var roleList = [];
-          $.each(val, function () {
-            roleList.push(this.roleName);
-          });
-          return roleList.join(',');
-        }
+        field: 'roleName',
+        title: '角色名称',
+        width: 80
       },
         {
           field: 'test',
@@ -221,10 +249,10 @@ define(function () {
           form = $("#member-form");
 
           //这个字段比较特殊，有比较多的校验，所以单独拿出来实例化
-          $("#member_userName").textbox({
+          $("#member_account").textbox({
             label: '账号：',
             required: true,
-            validType: ['userName', 'length[6, 10]', "remote['/system/member/check','userName']"]
+            validType: ['account', 'length[6, 10]', "remote['/system/member/check','account']"]
           })
         },
         buttons: [{

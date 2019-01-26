@@ -1,4 +1,4 @@
-package com.ai.eis.service;
+package com.ai.eis.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ai.eis.mapper.EisMenuResourceMapper;
 
 import com.ai.eis.model.EisMenuResource;
+import com.ai.eis.service.EisMenuResourceService;
 
 @Service(value = "eisMenuResourceService")
 public class EisMenuResourceServiceImpl implements EisMenuResourceService {

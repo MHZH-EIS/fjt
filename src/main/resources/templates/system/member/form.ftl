@@ -1,22 +1,18 @@
 <form class="app-form" id="member-form">
-  <input type="hidden" name="id">
-<#if member??>
-  <input type="hidden" name="userName">
-</#if>
+  <input type="hidden" name="userid">
+ 
   <div class="field">
-    <input class="easyui-textbox" name="realName" style="width:80%" data-options="label:'姓名：',required:true">
+    <input class="easyui-textbox" name="name" style="width:80%" data-options="label:'姓名：',required:true">
     <select class="easyui-combobox" editable="false" data-options="panelHeight:'auto'" name="gender" style="width:18%">
       <option value="BOY">男</option>
       <option value="GIRL">女</option>
     </select>
   </div>
-<#if !member??>
-  <div class="field">
-    <input id="member_userName" name="userName" style="width:100%">
+   <div class="field">
+    <input class="easyui-textbox" name="account" style="width:100%" data-options="label:'账号：',required:true">
   </div>
-</#if>
   <div class="field">
-    <input class="easyui-textbox" name="telephone" style="width:100%" data-options="label:'电话：',required:true">
+    <input class="easyui-textbox" name="phone" style="width:100%" data-options="label:'电话：',required:true">
   </div>
   <div class="field">
     <input class="easyui-textbox" name="email" style="width:100%" data-options="label:'邮箱：',required:true,validType:'email'">

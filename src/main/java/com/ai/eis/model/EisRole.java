@@ -12,6 +12,7 @@ public class EisRole {
     
     private Boolean status;
     
+    private String id;
 
     public Integer getRoleId() {
         return roleId;
@@ -43,6 +44,14 @@ public class EisRole {
 
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 
