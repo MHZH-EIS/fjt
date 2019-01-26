@@ -1,40 +1,58 @@
 package com.ai.eis.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ai.eis.common.Tools;
+import com.ai.eis.mapper.EisRankMapper;
 import com.ai.eis.model.EisRank;
 import com.ai.eis.service.EisRankService;
 
+@Service(value = "EisRankService")
 public class EisRankServiceImpl implements EisRankService {
 
+    @Autowired
+    EisRankMapper eisrankMapper;
+    
+    
 	@Override
 	public int add(EisRank eisrank) {
 		 
-		return 0;
+		return eisrankMapper.insert(eisrank);
 	}
 
 	@Override
-	public List<EisRank> findAll(int pageNum, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EisRank>  queryByCondition(Map<String,String> conditions){
+ 
+		return eisrankMapper.queryByCondition(conditions);
 	}
 
 	@Override
-	public EisRank selectByPrimaryKey(Integer userid) {
-		// TODO Auto-generated method stub
-		return null;
+	public EisRank selectByPrimaryKey(Integer rankId) {
+ 
+		return eisrankMapper.selectByPrimaryKey(rankId);
 	}
 
 	@Override
-	public EisRank selectByAccount(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EisRank> selectByAccount(String name) {
+        Map<String,String> conds = new HashMap<>();
+        conds.put("account", Tools.liker(name));
+		return eisrankMapper.queryByCondition(conds);
 	}
 
 	@Override
-	public int updateLogin(EisRank loginUser) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(EisRank record) {
+		return eisrankMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public int delete(Integer rankId) {
+ 
+		return eisrankMapper.deleteByPrimaryKey(rankId);
 	}
 
 }

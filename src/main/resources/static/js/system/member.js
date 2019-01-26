@@ -201,12 +201,13 @@ define(function () {
      * 操作按钮绑定事件
      */
     dg.datagrid("getPanel").on('click', "a.ctr-edit", function () {// 编辑按钮事件
-      createForm.call(this, this.dataset.id)
+    	var row = dg.edatagrid('getSelected');
+        createForm.call(this, row.userid);
     }).on('click', "a.ctr-delete", function () {// 删除按钮事件
-      var id = this.dataset.id;
       $.messager.confirm("删除提醒", "确认删除此用户?", function (r) {
         if (r) {
-          $.get("/system/member/delete", {id: id}, function () {
+         var row = dg.edatagrid('getSelected');
+          $.get("/system/member/delete", {id: row.userid}, function () {
             // 数据操作成功后，对列表数据，进行刷新
             dg.datagrid("reload");
           });

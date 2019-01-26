@@ -309,10 +309,13 @@ define(function () {
       var id = this.dataset.id;
       $.messager.confirm("删除提醒", "确认删除此用户?", function (r) {
         if (r) {
-          $.get("/system/member/delete", {id: id}, function () {
-            // 数据操作成功后，对列表数据，进行刷新
+        	
+            dg.edatagrid('destroyRow');
             dg.datagrid("reload");
-          });
+          //$.get("/system/member/delete", {id: id}, function () {
+            // 数据操作成功后，对列表数据，进行刷新
+           // dg.datagrid("reload");
+          //});
         }
       });
     });

@@ -15,6 +15,22 @@
     from eis_post
     where POST_ID = #{postId,jdbcType=INTEGER}
   </select>
+  
+   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+        select
+        <include refid="Base_Column_List"/>
+        from eis_post
+        <where>
+            <if test="postId != null and postId !=''">
+                POST_ID = #{postId}
+            </if>
+            <if test="name != null and name != ''">
+                and NAME like #{name}
+            </if>
+        </where>
+    </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from eis_post
     where POST_ID = #{postId,jdbcType=INTEGER}

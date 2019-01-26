@@ -21,6 +21,7 @@ import com.ai.eis.service.EisLoginService;
 import com.ai.eis.service.EisRoleService;
 import com.ai.eis.service.EisUserService;
 import com.ai.eis.model.EisLogin;
+import com.ai.eis.model.EisPost;
 import com.ai.eis.model.EisRole;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,6 +43,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,8 +96,18 @@ public class MemberController {
 	}
 
 	@RequestMapping("/form")
-	public void form(Long id, Model model) {
-
+	public void form(  Integer id, Model model) {
+   	  if (id != null) {
+         ObjectMapper mapper = new ObjectMapper();
+         EisUser resource = userService.selectByPrimaryKey(id);
+         try {
+             model.addAttribute("resource", mapper.writeValueAsString(resource));
+         } catch (JsonProcessingException e) {
+             logger.error("json转换错误", e);
+         }
+      }else {
+    	  logger.info("id is null.");
+      }
 	}
 
 	@RequestMapping("/check")
@@ -145,11 +158,21 @@ public class MemberController {
 					loginInfo = new EisLogin();
 					loginInfo.setStatus(0);
 					loginInfo.setUserid(member.getUserid());
+					loginInfo.setAccount(member.getAccount());
+					Date date = new Date(); 
+					Calendar canlandar = Calendar.getInstance(); 
+					canlandar.add(canlandar.MONTH,2 ); 
+					if(member.getStatus().equals("true")) {
+						loginInfo.setStatus(1);
+					}else {
+						loginInfo.setStatus(0);
+					}
+					loginInfo.setExpiredTime(canlandar.getTime());
 				}
 				// 默认密码
 				loginInfo.setPassword(DigestUtils.sha256Hex("0000"));
 				userService.addUser(member);
-				loginService.addLogin(member.getLoginInfo());
+				loginService.addLogin(loginInfo);
 				logger.info("创建用户:{} 登录名:{} 成功!",member.getName(),loginInfo.getAccount());
 			}
 
@@ -180,6 +203,7 @@ public class MemberController {
     public AjaxResult delete(Integer id) {
         try {
             if (superUserId != id) {
+            	loginService.delete(id);
             	userService.deleteUser(id);
             } else {
                 return new AjaxResult(false, "管理员不能删除！");
@@ -187,6 +211,6 @@ public class MemberController {
         } catch (Exception e) {
             return new AjaxResult(false).setMessage(e.getMessage());
         }
-        return new AjaxResult();
+        return new AjaxResult(true);
     }
 }

@@ -9,12 +9,30 @@
   <sql id="Base_Column_List" >
     RANK_ID, NAME, REMARKS
   </sql>
+  
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from eis_rank
     where RANK_ID = #{rankId,jdbcType=INTEGER}
   </select>
+  
+      <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+        select
+        <include refid="Base_Column_List"/>
+        from eis_rank
+        <where>
+            <if test="rankId != null and rankId !=''">
+                RANK_ID = #{rankId}
+            </if>
+            <if test="name != null and name != ''">
+                and NAME like #{name}
+            </if>
+        </where>
+    </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from eis_rank
     where RANK_ID = #{rankId,jdbcType=INTEGER}

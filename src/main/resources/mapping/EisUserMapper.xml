@@ -40,7 +40,7 @@
                 and a.NAME like #{userName}
             </if>
             <if test="telephone != null and telephone != ''">
-                and b.PHONE like #{telephone}
+                and a.PHONE like #{telephone}
             </if>
         </where>
     </select>
@@ -81,8 +81,10 @@
   
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+ 
     delete from eis_user
-    where USERID = #{userid,jdbcType=INTEGER}
+    where USERID = #{id,jdbcType=INTEGER};
+
   </delete>
   <insert id="insert" parameterType="com.ai.eis.model.EisUser" >
     insert into eis_user (USERID, NAME, SEX, 

@@ -1,5 +1,9 @@
 package com.ai.eis.mapper;
 
+import java.util.List;
+import java.util.Map;
+
+ 
 import com.ai.eis.model.EisRank;
 
 public interface EisRankMapper {
@@ -14,4 +18,8 @@ public interface EisRankMapper {
     int updateByPrimaryKeySelective(EisRank record);
 
     int updateByPrimaryKey(EisRank record);
+    
+    List<EisRank> queryByCondition(Map<String,String> conditions);
+    
+    
 }

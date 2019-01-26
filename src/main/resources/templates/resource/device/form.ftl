@@ -39,7 +39,8 @@
   </div> 
 </form>
 
-
+ 
+	
 <script>
   $("#device-form").form("load",
    <#if resource??> 

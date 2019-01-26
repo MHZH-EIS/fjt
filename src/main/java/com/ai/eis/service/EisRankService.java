@@ -1,16 +1,19 @@
 package com.ai.eis.service;
 
 import java.util.List;
-
+import java.util.Map;
 
 import com.ai.eis.model.EisRank;
 
 public interface EisRankService {
 	int add(EisRank eisrank);
-    List<EisRank> findAll(int pageNum, int pageSize);
+    List<EisRank> queryByCondition(Map<String,String> conditions);
     
     EisRank  selectByPrimaryKey(Integer userid);
-    EisRank  selectByAccount(String name);
+    List<EisRank>  selectByAccount(String name);
     
-    int updateLogin(EisRank loginUser);
+    int update(EisRank loginUser);
+    
+    int delete(Integer rankId);
+    
 }

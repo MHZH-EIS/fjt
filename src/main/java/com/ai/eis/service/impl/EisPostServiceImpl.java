@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ai.eis.common.Tools;
 import com.ai.eis.mapper.EisPostMapper;
 import com.ai.eis.model.EisPost;
 import com.ai.eis.service.EisPostService;
 
+@Service(value = "EisPostService")
 public class EisPostServiceImpl implements EisPostService {
 
     @Autowired
@@ -24,8 +26,8 @@ public class EisPostServiceImpl implements EisPostService {
 	}
 
 	@Override
-	public List<EisPost> findAll(Map<String,String> conditions ) {
-		return eispostMapper.selectConditions(conditions);
+	public List<EisPost> queryByCondition(Map<String,String> conditions ) {
+		return eispostMapper.queryByCondition(conditions);
 	}
 
 	@Override
@@ -39,13 +41,19 @@ public class EisPostServiceImpl implements EisPostService {
   
         Map<String,String> conditions = new HashMap<>();
         conditions.put("name", Tools.liker(name));
-		return eispostMapper.selectConditions(conditions);
+		return eispostMapper.queryByCondition(conditions);
 	}
 
 	@Override
-	public int updateLogin(EisPost record) {
+	public int update(EisPost record) {
  
 		return eispostMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public int deletePost(Integer postId) {
+ 
+		return eispostMapper.deleteByPrimaryKey(postId);
 	}
 
 }

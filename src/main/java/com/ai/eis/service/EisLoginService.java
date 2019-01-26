@@ -13,4 +13,5 @@ public interface EisLoginService {
     EisLogin  selectByAccount(String name);
     
     int updateLogin(EisLogin loginUser);
+    int delete(Integer userid);
 }

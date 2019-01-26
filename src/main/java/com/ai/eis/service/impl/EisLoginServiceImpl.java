@@ -45,4 +45,10 @@ public class EisLoginServiceImpl implements EisLoginService{
 		return loginMapper.updateByPrimaryKey(loginUser);
 	}
 
+	@Override
+	public int delete(Integer userid) {
+ 
+		return loginMapper.deleteByPrimaryKey(userid);
+	}
+
 }

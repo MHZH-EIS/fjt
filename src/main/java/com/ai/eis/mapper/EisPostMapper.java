@@ -18,5 +18,5 @@ public interface EisPostMapper {
 
     int updateByPrimaryKey(EisPost record);
     
-    List<EisPost> selectConditions(Map<String,String> conditions);
+    List<EisPost> queryByCondition(Map<String,String> conditions);
 }
