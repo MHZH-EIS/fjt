@@ -15,6 +15,7 @@ import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.image.ProcessDiagramGenerator;
@@ -193,6 +194,33 @@ public class WorkFlowController {
                     }
                 }
             }
+            tasks.add(userTask);
+        }
+        return tasks;
+    }
+
+    /**
+     * 获取当前用户的历史任务集合
+     *
+     * @return
+     */
+    @RequestMapping("/queryCurrentUserHisTask")
+    @ResponseBody
+    public List <EisUserTask> queryCurrentUserHisTask() {
+        List <EisUserTask> tasks = new ArrayList <>();
+        HttpSession session = request.getSession();
+        EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+        List <HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                                                         .taskAssignee(String.valueOf(user.getUserid()))
+                                                         .list();
+        for (HistoricTaskInstance historicTaskInstance : list) {
+            EisUserTask userTask = new EisUserTask();
+            userTask.setTaskName(historicTaskInstance.getName());
+            userTask.setDate(historicTaskInstance.getCreateTime());
+            HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+                                                                            .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                                                                            .singleResult();
+            userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
             tasks.add(userTask);
         }
         return tasks;
