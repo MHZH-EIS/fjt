@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ai.eis.common.Constants;
 import com.ai.eis.mapper.EisUserMapper;
+import com.ai.eis.model.EisRole;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.service.EisUserService;
 import com.github.pagehelper.PageHelper;
@@ -66,6 +68,13 @@ public class EisUserServiveImpl implements EisUserService {
 	@Override
 	public int selectMaxUserId() {
 		return eisUserMapper.selectMaxUserId();
+	}
+
+    
+ 
+	@Override
+	public List<EisUser> queryEngineers(Integer roleId) {
+		return   eisUserMapper.queryRoles(roleId);
 	}
 
 }

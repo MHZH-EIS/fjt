@@ -2,11 +2,15 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.model.EisAssignTaskDisplay;
 import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.model.EisUserTask;
 import com.ai.eis.service.EisContractService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -25,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,6 +77,26 @@ public class WorkFlowController {
 
     }
 
+    
+    @RequestMapping("/item/form")
+    public void itemForm(@RequestParam(value = "projectId", defaultValue = "") String projectId ) {
+    	 
+    	/*if (projectId != null) {
+    	         ObjectMapper mapper = new ObjectMapper();
+    	         EisUser resource = userService.selectByPrimaryKey(id);
+    	         try {
+    	             model.addAttribute("resource", mapper.writeValueAsString(resource));
+    	         } catch (JsonProcessingException e) {
+    	             logger.error("json转换错误", e);
+    	         }
+    	      }else {
+    	    	  logger.info("id is null.");
+    	      }*/
+    }
+
+    
+    
+    
     /**
      * 流程发布
      *
@@ -162,6 +187,28 @@ public class WorkFlowController {
         return new AjaxResult(true);
     }
 
+    @RequestMapping("/task/display")
+    @ResponseBody
+    public List <EisAssignTaskDisplay> queryDisplayTasks() {
+        HttpSession session = request.getSession();
+    	List <EisAssignTaskDisplay> displayTasks = new ArrayList<>();
+        List <EisUserTask>  tasks = queryCurrentUserTask();
+    	
+        for (EisUserTask task :tasks) {
+    		 EisAssignTaskDisplay one = new EisAssignTaskDisplay();
+    		 one.setAssignName(task.getTaskName());
+    		 one.setAssignTime(task.getDate());
+    		 EisContract contract =  contractService.selectByPrimaryKey(task.getProjectId());
+    		 one.setProjectName(contract.getProjectName());
+    		 one.setProjectNo(contract.getProjectNo());
+    		 one.setProjectId(contract.getProjectId());
+    	     EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+    		 one.setAssignName(user.getName());
+    		 displayTasks.add(one);
+    	 }
+    	return displayTasks;
+    }
+    
 
     /**
      * 获取当前用户的任务集合
@@ -174,6 +221,7 @@ public class WorkFlowController {
         List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+        logger.info("=======userId:{}====",user.getUserid());
         List <Task> list = taskService.createTaskQuery()
                                       .taskAssignee(String.valueOf(user.getUserid()))
                                       .list();
@@ -198,6 +246,43 @@ public class WorkFlowController {
         }
         return tasks;
     }
+    
+    
+    @RequestMapping("/querytest")
+    @ResponseBody
+    public List <EisUserTask> testQuery( @RequestParam(value = "userid", defaultValue = "") Integer userid) {
+        List <EisUserTask> tasks = new ArrayList <>();
+ 
+        logger.info("=======userId:{}====",userid);
+        List <Task> list = taskService.createTaskQuery()
+                                      .taskAssignee(String.valueOf(userid))
+                                      .list();
+        for (Task task : list) {
+            EisUserTask userTask = new EisUserTask();
+            userTask.setTaskName(task.getName());
+            userTask.setDate(task.getCreateTime());
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                                                            .processInstanceId(task.getProcessInstanceId())
+                                                            .singleResult();
+            userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
+            TaskFormData taskFormData = formService.getTaskFormData(task.getId());
+            List <FormProperty> formProperties = taskFormData.getFormProperties();
+            if (formProperties != null) {
+                for (FormProperty formProperty : formProperties) {
+                    if (formProperty.getId().startsWith("item")) {
+                        userTask.setItemId(formProperty.getValue());
+                    }
+                }
+            }
+            tasks.add(userTask);
+        }
+        return tasks;
+    }
+    
+    
+    
+    
+    
 
     /**
      * 获取当前用户的历史任务集合

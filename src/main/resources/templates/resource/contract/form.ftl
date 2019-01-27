@@ -2,7 +2,9 @@
 <form class="app-form" id="contract-form">
 
   <input type="hidden" name="id">
- 
+    <div class="field">
+    <input class="easyui-textbox" name="projectNo" style="width:100%" data-options="label:'项目编号:',required:true">
+   </div>
     <div class="field">
     <input class="easyui-textbox" name="projectName" style="width:100%" data-options="label:'项目名称:',required:true">
    </div>

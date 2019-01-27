@@ -66,6 +66,20 @@ define(function () {
       ignore: ['projectId'],
       pageSize: 30,
       columns: [[{
+          field: 'projectNo',
+          title: '项目编号',
+          width: 50,
+          editor: {
+            type: 'validatebox',
+            options: {
+              required: true
+            }
+          },
+          formatter: function (val) {
+            return filterXSS(val);
+          }
+        },
+    	{
         field: 'projectName',
         title: '项目名称',
         width: 50,
@@ -78,20 +92,7 @@ define(function () {
         formatter: function (val) {
           return filterXSS(val);
         }
-      },{
-          field: 'projectVersion',
-          title: '项目标识',
-          width: 50,
-          editor: {
-            type: 'validatebox',
-            options: {
-              required: true
-            }
-          },
-          formatter: function (val) {
-            return filterXSS(val);
-          }
-        },
+      },
       {
         field: 'contact',
         title: '联系人',

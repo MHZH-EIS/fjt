@@ -2,7 +2,7 @@
 <div class="easyui-layout" fit="true">
   <div data-options="region:'north',border:false" style="height: 70px;padding: 10px;overflow: hidden;" title="合同管理">
     <form id="contract_search_from" class="searcher-form">
-      <input name="projectId" class="easyui-textbox field" label="项目编号:" labelWidth="80">
+      <input name="projectNo" class="easyui-textbox field" label="项目编号:" labelWidth="80">
       <input name="projectName" class="easyui-textbox field" label="项目名称:" labelWidth="80">
       <a class="easyui-linkbutton searcher" data-options="iconCls:'fa fa-search'">查询</a>
       <a class="easyui-linkbutton reset" data-options="iconCls:'fa fa-repeat'">刷新</a>

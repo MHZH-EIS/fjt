@@ -26,4 +26,6 @@ public interface EisUserMapper {
     
     List<EisUser> queryByCondition(Map<String,String> map);
     
+    List<EisUser>  queryRoles(Integer roleId);
+    
 }

@@ -15,4 +15,6 @@ public interface EisRoleService {
     EisRole  selectByPrimaryKey(Integer roleId);
     EisRole  selectByRoleName(String name);
     List<EisRole> findAll();
+    
+ 
 }

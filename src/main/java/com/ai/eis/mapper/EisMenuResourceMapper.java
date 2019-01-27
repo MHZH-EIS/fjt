@@ -22,6 +22,7 @@ public interface EisMenuResourceMapper {
 
     int updateByExample(@Param("record") EisMenuResource record, @Param("example") EisMenuResource example);
     
+    List<EisMenuResource>  selectByRoleId(Integer roleId);
     
     List<EisMenuResource> selectAllResources();
     

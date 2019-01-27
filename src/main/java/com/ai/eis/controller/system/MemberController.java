@@ -10,6 +10,7 @@ package com.ai.eis.controller.system;
 //import cn.gson.crm.model.domain.Role;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.Constants;
 import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.MySpecification;
 import com.ai.eis.common.Tools;
@@ -122,6 +123,14 @@ public class MemberController {
 		return roleService.findAll();
 	}
 
+	@RequestMapping("/engineers")
+	@ResponseBody
+	public List<EisUser> getEngineers() {
+		return userService.queryEngineers(Constants.ENGINEER_ROLE_ID);
+	}
+	
+	
+	
 	@RequestMapping({ "/save", "/update" })
 	@Transactional
 	@ResponseBody

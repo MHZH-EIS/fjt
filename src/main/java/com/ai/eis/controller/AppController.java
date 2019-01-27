@@ -23,7 +23,8 @@ import com.ai.eis.model.Member;
 import com.ai.eis.model.enums.ResourceType;
 
 import com.ai.eis.common.VerifyCodeUtils;
- 
+import com.ai.eis.controller.system.MemberController;
+
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
@@ -36,11 +37,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -48,6 +51,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ai.eis.handler.*;
  
@@ -55,7 +59,7 @@ import com.ai.eis.handler.*;
 
 @Controller
 public class AppController {
-    Logger logger = Logger.getLogger(AppController.class);
+    private Logger logger = LoggerFactory.getLogger(MemberController.class);
 
 	
 	@Autowired
@@ -79,6 +83,8 @@ public class AppController {
     @Autowired
     WebSocketHandler webSocketHandler;
     
+    private Integer userId;
+    
     @RequestMapping("/")
     public String index() {
         return "index";
@@ -92,9 +98,14 @@ public class AppController {
         return "login";
     }
     
+    @RequestMapping("/getUserId")
+	@ResponseBody
+    public String getUserId() {
+    	return String.valueOf(userId);
+    }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String doLoin(String userName, String password, RedirectAttributes rAttributes, HttpSession session) {
+    public String doLogin(String userName, String password, RedirectAttributes rAttributes,HttpServletRequest request, HttpSession session) {
         // 参数校验
         if (isEmpty(userName) || isEmpty(password)) {
             rAttributes.addFlashAttribute("error", "参数错误！");
@@ -118,6 +129,14 @@ public class AppController {
         }
         
         final List<EisMenuResource> allResources;
+        
+        Object sessionBrowser = session.getAttribute("browser");
+        if (sessionBrowser == null) {
+            logger.info("不存在session，设置browser=testbrower");
+            session.setAttribute("browser", "testbrower");
+        } else {
+        	logger.info("存在session，browser=" + sessionBrowser.toString());
+        }
 
 
         // 获取用户可用菜单,所有有权限的请求，所有资源key
@@ -135,7 +154,7 @@ public class AppController {
         userMember.setRealName(user.getName());
         userMember.setUserName(member.getAccount());
         userMember.setUserid(user.getUserid());
-        
+ 
         
         List<EisMenuResource> menus = new ArrayList<EisMenuResource>();
         Set<String> urls = new HashSet<>();
@@ -146,8 +165,10 @@ public class AppController {
             allResources = eisMenuResourceService.selectAllResources();
         } else {
             allResources = new ArrayList<>();
+            List<EisMenuResource>   resources =  eisMenuResourceService.selectByRoleId(role.getRoleId());
+           
             // forEach 1.8jdk才支持
-            allResources.addAll(eisMenuResourceService.selectByRoleId(role.getRoleId()));
+            allResources.addAll(resources);
         }
 
         for (EisMenuResource t : allResources) {
@@ -185,8 +206,11 @@ public class AppController {
         session.setAttribute("resourceKey", resourceKey);
         session.setAttribute(Constants.SESSION_MEMBER_KEY,  userMember);
         session.setAttribute(Constants.SESSION_EIS_KEY, user);
+        session.setAttribute("userId", userMember.getUserid());
+        userId = userMember.getUserid();
         // 是否是管理员
         session.setAttribute("isSuper", superUserId == member.getUserid());
+        logger.info("================userId:{}========", session.getAttribute("userId"));
         return "redirect:/";
     }
 

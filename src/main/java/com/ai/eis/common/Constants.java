@@ -25,4 +25,7 @@ public interface Constants {
      * 归档状态
      */
     String PROJECT_FINISH = "3";
+    
+    /*检验工程师固定为3 这个角色*/
+    int    ENGINEER_ROLE_ID= 3;
 }

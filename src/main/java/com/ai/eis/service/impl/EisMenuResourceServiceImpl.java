@@ -26,7 +26,7 @@ public class EisMenuResourceServiceImpl implements EisMenuResourceService {
 	@Override
 	public List<EisMenuResource> selectByRoleId(Integer roleId) {
 
-		return null;
+		return eisMenuResourceMapper.selectByRoleId(roleId);
 	}
 
 	@Override

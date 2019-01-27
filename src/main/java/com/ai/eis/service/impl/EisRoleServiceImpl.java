@@ -1,10 +1,13 @@
 package com.ai.eis.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ai.eis.common.Constants;
 import com.ai.eis.mapper.EisRoleMapper;
  
 import com.ai.eis.model.EisRole;
@@ -64,5 +67,7 @@ public class EisRoleServiceImpl implements EisRoleService {
  
 		return eisRoleMapper.updateByPrimaryKey(record);
 	}
+
+	
 
 }

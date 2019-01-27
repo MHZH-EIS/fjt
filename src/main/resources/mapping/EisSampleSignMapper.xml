@@ -128,6 +128,7 @@
     a.CF_COST as cfCost,
     a.TOTAL_COST as totalCost,
     a.REGISTE_DATE as registeDate,
+    a.STATUS as status,
     v1.SEND_TOTAL as sendTotal,
     v2.SIGN_TOTAL as signTotal
     FROM
