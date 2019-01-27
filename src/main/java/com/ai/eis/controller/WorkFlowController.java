@@ -66,6 +66,11 @@ public class WorkFlowController {
     @Autowired
     private EisContractService contractService;
 
+    @RequestMapping("/assign")
+    public void assign(@RequestParam(value = "id", defaultValue = "") String id) {
+
+    }
+
     /**
      * 流程发布
      *
@@ -140,6 +145,22 @@ public class WorkFlowController {
         formService.submitTaskFormData(task.getId(), map);
         return new AjaxResult(true);
     }
+
+
+    @ResponseBody
+    @RequestMapping("/completeTask")
+    public AjaxResult completeTask(@RequestParam(value = "taskId", defaultValue = "") String taskId) {
+        Task task = taskService.createTaskQuery()
+                               .taskId(taskId)
+                               .singleResult();
+
+        if (task == null) {
+            return new AjaxResult(false).setData("找不到此任务");
+        }
+        taskService.complete(taskId);
+        return new AjaxResult(true);
+    }
+
 
     /**
      * 获取当前用户的任务集合
