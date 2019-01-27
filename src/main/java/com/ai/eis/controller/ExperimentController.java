@@ -1,17 +1,22 @@
 package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.FileUtil;
 import com.ai.eis.model.EisExperiment;
+import com.ai.eis.model.EisStItem;
 import com.ai.eis.service.EisExperimentService;
+import com.ai.eis.service.SItemService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +29,9 @@ public class ExperimentController {
 
     @Autowired
     private EisExperimentService experimentService;
+
+    @Autowired
+    private SItemService sItemService;
 
     @RequestMapping
     public void index() {
@@ -38,6 +46,18 @@ public class ExperimentController {
     @ResponseBody
     public AjaxResult add(EisExperiment experiment) {
         try {
+            EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
+            if (eisStItem == null) {
+                return new AjaxResult(false).setData("找不到此标准测试项");
+            }
+            File template = new File(eisStItem.getTemplate());
+            if (!template.exists()) {
+                return new AjaxResult(false).setData("找不到此标准测试项的模板文件");
+            }
+            File path = new File(ClassUtils.getDefaultClassLoader().getResource("").getPath());
+            File target = new File(path + "/upload/project/experiment/" + template.getName());
+            FileUtil.nioTransferCopy(template, target);
+            experiment.setFile(target.getAbsolutePath());
             experimentService.insert(experiment);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -78,6 +98,13 @@ public class ExperimentController {
         map.put("pId", pId);
         map.put("id", id);
         try {
+            List <EisExperiment> list = list(pId, id);
+            for (EisExperiment experiment : list) {
+                File file = new File(experiment.getFile());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
             experimentService.deleteByCondition(map);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
