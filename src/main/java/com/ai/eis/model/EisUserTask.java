@@ -1,5 +1,7 @@
 package com.ai.eis.model;
 
+import java.util.Date;
+
 public class EisUserTask {
 
     private String taskName;
@@ -7,6 +9,8 @@ public class EisUserTask {
     private int projectId;
 
     private String itemId;
+
+    private Date date;
 
     public String getItemId() {
         return itemId;
@@ -30,5 +34,13 @@ public class EisUserTask {
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

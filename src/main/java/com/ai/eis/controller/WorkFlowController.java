@@ -179,6 +179,7 @@ public class WorkFlowController {
         for (Task task : list) {
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
+            userTask.setDate(task.getCreateTime());
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                                                             .processInstanceId(task.getProcessInstanceId())
                                                             .singleResult();
