@@ -105,7 +105,8 @@ public class AppController {
     }
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String doLogin(String userName, String password, RedirectAttributes rAttributes,HttpServletRequest request, HttpSession session) {
+    public String doLogin(String userName, String password, RedirectAttributes rAttributes,
+    		HttpServletRequest request, HttpSession session) {
         // 参数校验
         if (isEmpty(userName) || isEmpty(password)) {
             rAttributes.addFlashAttribute("error", "参数错误！");

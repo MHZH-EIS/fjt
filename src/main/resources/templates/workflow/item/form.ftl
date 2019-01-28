@@ -1,11 +1,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
 <form class="app-form" id="workflow-item-form">
-  <input type="hidden" name="id">
+ 
+      <div class="field">
+    <input class="easyui-textbox" id="projectId" name="projectId" style="width:100%" data-options="label:'项目ID:',required:true,readonly:true">
+   </div>
     <div class="field">
-    <input class="easyui-textbox" name="name" style="width:100%" data-options="label:'项目编号:',required:true">
+    <input class="easyui-textbox" id="projectNo" name="projectNo" style="width:100%" data-options="label:'项目编号:',required:true,readonly:true">
    </div>
    <div class="field">
-    <input class="easyui-textbox" name="version" style="width:100%" data-options="label:'项目名称:',required:true ">
+    <input class="easyui-textbox" id="projectName"  name="projectName" style="width:100%" data-options="label:'项目名称:',required:true,readonly:true ">
    </div> 
     <div class="field">
     <input id="standard-form" class="easyui-combobox" style="width:100%" name="stId" data-options="label:'标准选择：',valueField:'stId',panelMaxHeight:200,panelHeight:'auto',textField:'name',url:'/resource/standard/list',editable:false">

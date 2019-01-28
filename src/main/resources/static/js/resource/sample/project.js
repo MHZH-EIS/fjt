@@ -282,8 +282,12 @@ define(function () {
                 }
                 if (row.status != '1') {
                     $.messager.alert({title:'提示',msg:"项目已经启动不能再次启动!",icon:'info'});	
+                    userId = $.session.get("userId");
+                    alert(userId);
                     return;
                 }
+   
+                
                 createAssignForm(row.projectId);
                 //var userId = null;
                 /*$.ajax({
@@ -295,8 +299,7 @@ define(function () {
                     	userId = result;
                  }
                  });
-                
-                alert(userId);
+             
                 $.post("/workflow/start", {projectId:row.projectId,userId: userId}, function (res) {
                     dg.datagrid('reload');
                   },"json");*/

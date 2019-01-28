@@ -3,6 +3,7 @@ package com.ai.eis.controller;
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.FileUtil;
 import com.ai.eis.model.EisExperiment;
+import com.ai.eis.model.EisExperimentDisplay;
 import com.ai.eis.model.EisStItem;
 import com.ai.eis.service.EisExperimentService;
 import com.ai.eis.service.SItemService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +50,11 @@ public class ExperimentController {
         try {
             EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
             if (eisStItem == null) {
-                return new AjaxResult(false).setData("找不到此标准测试项");
+                return new AjaxResult(false).setMessage("找不到此标准测试项");
             }
             File template = new File(eisStItem.getTemplate());
             if (!template.exists()) {
-                return new AjaxResult(false).setData("找不到此标准测试项的模板文件");
+                return new AjaxResult(false).setMessage("找不到此标准测试项的模板文件");
             }
             File path = new File(ClassUtils.getDefaultClassLoader().getResource("").getPath());
             File target = new File(path + "/upload/project/experiment/" + template.getName());
@@ -80,6 +82,40 @@ public class ExperimentController {
         map.put("id", id);
         return experimentService.queryByCondition(map);
     }
+    
+    
+    /**
+     * @param pId 项目ID，列出所有此项目关联的子测试项
+     * @param id  实验项目ID
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/display/list")
+    public List <EisExperimentDisplay> displyList(@RequestParam(value = "projectId", defaultValue = "") String pId,
+                                     @RequestParam(value = "id", defaultValue = "") String id) {
+        Map <String, String> map = new HashMap <>();
+        map.put("pId", pId);
+        map.put("id", id);
+        
+        List<EisExperimentDisplay> displays = new ArrayList<>();
+        List <EisExperiment> lst = experimentService.queryByCondition(map);
+        for(EisExperiment one: lst) {
+        	EisExperimentDisplay display = new EisExperimentDisplay();
+        	EisStItem item = sItemService.queryById(one.getItemId());
+        	
+        	display.setClause(item.getClause());
+        	display.setTestId(one.getItemId());
+        	display.setRequirement(one.getRequirement());
+        	display.setTestName(item.getTestName());
+        	displays.add(display);
+        }
+        
+        return displays;
+    }
+    
+    
+    
+    
 
     /**
      * @param pId 项目ID，传入项目ID，则删除此项目关联的所有的子测试项目

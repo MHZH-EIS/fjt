@@ -164,7 +164,7 @@ define(function () {
     
     
     itemdg.datagrid({
-    	url:'/resource/contract/experiment/list',
+    	url:'/resource/contract/experiment/display/list',
         destroyUrl: '/resource/contract/experiment/remove',
         updateUrl: '/resource/contract/experiment/update',
         saveUrl: '/resource/contract/experiment/update',
@@ -188,8 +188,22 @@ define(function () {
         singleSelect: true,
         pageSize: 10,
         columns: [[{
+            field: 'testId',
+            title: '测试项ID',
+            width: 50,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true
+              }
+            },
+            formatter: function (val) {
+              return filterXSS(val);
+            }
+          },
+          {
             field: 'testName',
-            title: '测试项名字',
+            title: '测试项名',
             width: 30,
             editor: {
               type: 'validatebox',
@@ -215,20 +229,6 @@ define(function () {
             return filterXSS(val);
           }
         },
-        {
-            field: 'testName',
-            title: '测试项名',
-            width: 50,
-            editor: {
-              type: 'validatebox',
-              options: {
-                required: true
-              }
-            },
-            formatter: function (val) {
-              return filterXSS(val);
-            }
-          },
     	   {
             field: 'clause',
             title: '条款',
@@ -306,6 +306,9 @@ define(function () {
     	        onLoad: function () {
     	            //窗口表单加载成功时执行
     	            form = $("#workflow-item-form");
+    	            $("#projectNo").textbox('setValue',row.projectNo); 
+    	            $("#projectName").textbox('setValue',row.projectName); 
+    	            $("#projectId").textbox("setValue",row.projectId);
     	          },
     	        onClose: function () {
     	          $(this).dialog("destroy");
@@ -328,13 +331,11 @@ define(function () {
     	        	  form.form('submit',{
     	        		 type:"get",
     	        		 url:"/resource/contract/experiment/save",
-    	        		 param:row.stId,
     	        		 onSubmit: function (param) {        //表单提交前的回调函数 
     	        	          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
     	        	          if (!isValid) { 
     	        	        	  $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
     	        	          } 
-    	        	          param.stId = row.stId;
     	        	          return isValid; // 如果验证不通过，返回false终止表单提交 
     	        	     }, 
     	        		 success:function(data) {
@@ -342,12 +343,12 @@ define(function () {
     	        			 if (obj.success) {
     	        				 $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
     	        				 dialog.dialog('close');
-    	        				 itemdg.datagrid('reload', {stId: row.stId});
+    	        				 itemdg.datagrid('reload', {projectId: row.projectId});
     	        			 }else {
     	        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
     	        			 }
     	        		 }
-    	        	  });
+    	        	  },'json');
     	          }
     	        }]
     	      });
