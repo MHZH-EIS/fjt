@@ -14,11 +14,41 @@
     <input id="test-items-form" class="easyui-combobox" style="width:100%" name="itemId" data-options="label:'测试项选择：',valueField:'itemId',panelMaxHeight:200,panelHeight:'auto',textField:'testName',url:'/resource/standard/item/list',editable:false">
     </div>
 </form>
-<script>
-  $("#device-form").form("load",
-   <#if resource??> 
-    ${resource}
-	</#if>)
+<script>	
+ 
+  $('#test-items-form').combobox({
+  	 onLoadSuccess:function(data){
+        var array=$(this).combobox("getData");
+        for(var item in array[0])
+        {
+                  if(item=="itemId")
+                  {
+                    $(this).combobox('select',array[0][item]);
+                  }
+        }
+    }
+    }
+  ); 
+
+  $("#standard-form").combobox({
+  	onSelect:function() {
+  	      var item = $("#test-items-form");
+  	      var id =   $("#standard-form").combobox("getValue")
+  		  item.combobox("clear");
+  		  var url = "/resource/standard/item/list?"+"stId=" +id;
+          item.combobox('reload', url);
+  	},
+  	 onLoadSuccess:function(data) {
+               //默认选中第一个
+          var array=$(this).combobox("getData");
+               for(var item in array[0]){
+                  if(item=="stId"){
+                    $(this).combobox('select',array[0][item]);
+                  }
+      }
+     }
+  }
+  )
 </script>
 
 
