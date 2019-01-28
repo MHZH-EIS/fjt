@@ -9,13 +9,14 @@
     <result column="RESULT" property="result" jdbcType="VARCHAR" />
     <result column="FILE" property="file" jdbcType="VARCHAR" />
     <result column="DEV_ID" property="devId" jdbcType="VARCHAR" />
+    <result column="EX_NAME" property="exName" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.ai.eis.model.EisExperiment" >
     insert into eis_experiment (PROJECT_ID, ITEM_ID, REQUIREMENT, 
-      RESULT, FILE, DEV_ID
+      RESULT, FILE, DEV_ID, EX_NAME
       )
     values (#{projectId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{requirement,jdbcType=VARCHAR}, 
-      #{result,jdbcType=VARCHAR}, #{file,jdbcType=VARCHAR}, #{devId,jdbcType=VARCHAR}
+      #{result,jdbcType=VARCHAR}, #{file,jdbcType=VARCHAR}, #{devId,jdbcType=VARCHAR}, #{exName,jdbcType=VARCHAR}
       )
   </insert>
 
@@ -40,6 +41,9 @@
       <if test="devId != null" >
         DEV_ID,
       </if>
+      <if test="exName != null" >
+        EX_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="projectId != null" >
@@ -59,6 +63,9 @@
       </if>
       <if test="devId != null" >
         #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="exName != null" >
+        #{exName,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
@@ -85,6 +92,9 @@
       </if>
       <if test="id != null and id != ''">
         and ID = #{id}
+      </if>
+      <if test="exName != null and exName != ''">
+        and EX_NAME like #{exName}
       </if>
     </where>
   </select>

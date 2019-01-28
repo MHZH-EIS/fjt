@@ -14,7 +14,7 @@
         <activiti:formProperty id="item2" name="测试项目2"></activiti:formProperty>
       </extensionElements>
 	</userTask>
-    <serviceTask activiti:class="com.ai.eis.common.ServiceTask" activiti:exclusive="true" id="report" name="系统生成报告"/>
+    <serviceTask activiti:delegateExpression="${ServiceTask}" activiti:exclusive="true" id="report" name="系统生成报告"/>
 	<userTask activiti:exclusive="true" activiti:assignee="${manager}" id="modifyReport" name="修改报告"/>
     <userTask activiti:exclusive="false" id="verifiy" name="报告审核"/>
     <userTask activiti:exclusive="false" id="send" name="报告邮寄"/>

@@ -2,6 +2,7 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.FileUtil;
+import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisExperimentDisplay;
 import com.ai.eis.model.EisStItem;
@@ -76,10 +77,12 @@ public class ExperimentController {
     @ResponseBody
     @RequestMapping(value = "/list")
     public List <EisExperiment> list(@RequestParam(value = "projectId", defaultValue = "") String pId,
-                                     @RequestParam(value = "id", defaultValue = "") String id) {
+                                     @RequestParam(value = "id", defaultValue = "") String id,
+                                     @RequestParam(value = "exName", defaultValue = "") String exName) {
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("id", id);
+        map.put("exName", Tools.liker(exName));
         return experimentService.queryByCondition(map);
     }
     
@@ -134,7 +137,7 @@ public class ExperimentController {
         map.put("pId", pId);
         map.put("id", id);
         try {
-            List <EisExperiment> list = list(pId, id);
+            List <EisExperiment> list = list(pId, id, "");
             for (EisExperiment experiment : list) {
                 File file = new File(experiment.getFile());
                 if (file.exists()) {
