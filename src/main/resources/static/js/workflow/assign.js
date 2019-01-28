@@ -293,7 +293,7 @@ define(function () {
               iconCls: 'fa fa-user-circle-o',
               text: "分配试验项目",
               handler: function () {
- 
+    
               }
           }
         })
