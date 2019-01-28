@@ -179,7 +179,7 @@ define(function () {
       	   }
         },
         emptyMsg: "还未查到试验项目",
-        idField: "itemId",
+        idField: "testId",
         fit: true,
         rownumbers: true,
         fitColumns: true,
@@ -273,14 +273,27 @@ define(function () {
               iconCls: 'fa fa-trash',
               text: "删除试验项目",
               handler: function () {
-              	var row = itemdg.edatagrid('getSelected');
+              	var row = itemdg.datagrid('getSelected');
               	if (row) {
-              		itemdg.edatagrid('destroyRow');
-              		alert(row.itemId);
+                      $.messager.confirm("删除提醒", "确认删除此实验项?", function (r) {
+                        if (r) {
+                          $.get("/resource/contract/experiment/remove", {id: row.testId}, function () {
+                            // 数据操作成功后，对列表数据，进行刷新
+                        	  itemdg.datagrid("reload");
+                          });
+                        }
+                      });
               	 }else {
               		$.messager.alert({title:'提示',msg:"请先选一个试验项目",icon:'info'});
               	 }
               	 
+              }
+          },
+          "test-item-assign":{
+              iconCls: 'fa fa-user-circle-o',
+              text: "分配试验项目",
+              handler: function () {
+ 
               }
           }
         })

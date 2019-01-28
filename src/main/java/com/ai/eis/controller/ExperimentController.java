@@ -104,7 +104,7 @@ public class ExperimentController {
         	EisStItem item = sItemService.queryById(one.getItemId());
         	
         	display.setClause(item.getClause());
-        	display.setTestId(one.getItemId());
+        	display.setTestId(one.getId());
         	display.setRequirement(one.getRequirement());
         	display.setTestName(item.getTestName());
         	displays.add(display);
