@@ -16,6 +16,8 @@ public class EisExperiment {
 
     private String devId;
 
+    private String exName;
+
     // 前台传输测试工程师ID所用字段
     private String userId;
 
@@ -81,5 +83,13 @@ public class EisExperiment {
 
     public void setDevId(String devId) {
         this.devId = devId == null ? null : devId.trim();
+    }
+
+    public String getExName() {
+        return exName;
+    }
+
+    public void setExName(String exName) {
+        this.exName = exName;
     }
 }
