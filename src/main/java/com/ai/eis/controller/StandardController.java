@@ -2,6 +2,7 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisStItem;
 import com.ai.eis.model.EisStandard;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,7 +46,7 @@ public class StandardController {
     @RequestMapping("/form")
     public void form(Long id) {
     }
-    
+
     @RequestMapping("/items/form")
     public void itemsform(Long id) {
     }
@@ -74,15 +74,8 @@ public class StandardController {
         MultipartFile multipartFile = standard.getEnclosureFile();
         try {
             if (!multipartFile.isEmpty()) {
-                File path = new File(ClassUtils.getDefaultClassLoader().getResource("").getPath());
-                File file = new File(path.getAbsolutePath() + "/upload/standards" + File.separator
-                        +standard.getStNo()+File.separator+ multipartFile.getOriginalFilename());
-                
-                
+                File file = FileModel.generateStandard(standard.getStNo(), multipartFile.getOriginalFilename());
                 logger.info("save file path:{}", file.getAbsolutePath());
-                if (!file.getParentFile().exists()) {
-                    file.getParentFile().mkdirs();
-                }
                 multipartFile.transferTo(file);
                 logger.info("标准附件上传成功，地址为{}", file.getAbsolutePath());
                 standard.setEnclosure(file.getAbsolutePath());
@@ -122,7 +115,7 @@ public class StandardController {
     @ResponseBody
     @RequestMapping("/item/list")
     public List <EisStItem> listItem(@RequestParam(value = "stId", defaultValue = "") String stId,
-    		@RequestParam(value = "testName", defaultValue = "") String name) {
+                                     @RequestParam(value = "testName", defaultValue = "") String name) {
         Map <String, String> map = new HashMap <>();
         map.put("stId", stId);
         map.put("name", Tools.liker(name));
@@ -132,32 +125,24 @@ public class StandardController {
     @ResponseBody
     @RequestMapping("/item/add")
     @Transactional
-    public AjaxResult addItem(@Valid EisStItem item,  BindingResult br) {
+    public AjaxResult addItem(@Valid EisStItem item, BindingResult br) {
         if (br.hasErrors()) {
             logger.error("对象校验失败：" + br.getAllErrors());
             return new AjaxResult(false).setData(br.getAllErrors());
         }
-        
+
         MultipartFile multipartFile = item.getTemplateFile();
         EisStandard standard = standardService.queryById(item.getStId());
         try {
             if (standard != null) {
                 logger.info("当前测试项对应的标准为{}", standard.getName());
-                File path = new File(ClassUtils.getDefaultClassLoader().getResource("").getPath());
-                
- 
-                File file = new File(path.getAbsolutePath()+ "/upload/standards" + File.separator
-                        +standard.getStNo()+File.separator+"items"+File.separator+ multipartFile.getOriginalFilename());
-                if (!file.getParentFile().exists()) {
-                    file.getParentFile().mkdirs();
-                }
+                File file = FileModel.generateItem(standard.getStNo(), multipartFile.getOriginalFilename());
                 multipartFile.transferTo(file);
                 logger.info("附件上传成功,地址为{}", file.getAbsolutePath());
                 item.setTemplate(file.getAbsolutePath());
                 sItemService.add(item);
                 logger.info("测试项目{}添加成功", item.getTestName());
             } else {
-            	
                 return new AjaxResult(false).setMessage("标准资源不存在").setData("找不到对应的标准资源");
             }
         } catch (IOException e) {
@@ -169,8 +154,8 @@ public class StandardController {
 
     @ResponseBody
     @RequestMapping("/item/delete")
-    public AjaxResult deleteItem(@RequestParam(value = "id", defaultValue = "")  Integer itemId) {
-    	EisStItem item = sItemService.queryById(itemId);
+    public AjaxResult deleteItem(@RequestParam(value = "id", defaultValue = "") Integer itemId) {
+        EisStItem item = sItemService.queryById(itemId);
         File file = new File(item.getTemplate());
         if (file.exists()) {
             file.delete();
