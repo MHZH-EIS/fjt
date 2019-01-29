@@ -85,18 +85,6 @@ public class WorkFlowController {
 
 	@RequestMapping("item/taskform")
 	public void taskForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
-		/*
-		if (projectId != null) {
-			ObjectMapper mapper = new ObjectMapper();
-			EisUser resource = userService.selectByPrimaryKey(id);
-			try {
-				model.addAttribute("resource", mapper.writeValueAsString(resource));
-			} catch (JsonProcessingException e) {
-				logger.error("json转换错误", e);
-			}
-		} else {
-			logger.info("id is null.");
-		}*/
 	}
 
 	/**
@@ -243,33 +231,7 @@ public class WorkFlowController {
 		return tasks;
 	}
 
-	@RequestMapping("/querytest")
-	@ResponseBody
-	public List<EisUserTask> testQuery(@RequestParam(value = "userid", defaultValue = "") Integer userid) {
-		List<EisUserTask> tasks = new ArrayList<>();
-
-		logger.info("=======userId:{}====", userid);
-		List<Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(userid)).list();
-		for (Task task : list) {
-			EisUserTask userTask = new EisUserTask();
-			userTask.setTaskName(task.getName());
-			userTask.setDate(task.getCreateTime());
-			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-					.processInstanceId(task.getProcessInstanceId()).singleResult();
-			userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
-			TaskFormData taskFormData = formService.getTaskFormData(task.getId());
-			List<FormProperty> formProperties = taskFormData.getFormProperties();
-			if (formProperties != null) {
-				for (FormProperty formProperty : formProperties) {
-					if (formProperty.getId().startsWith("item")) {
-						userTask.setItemId(formProperty.getValue());
-					}
-				}
-			}
-			tasks.add(userTask);
-		}
-		return tasks;
-	}
+	
 
 	/**
 	 * 获取当前用户的历史任务集合
