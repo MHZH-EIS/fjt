@@ -1,5 +1,5 @@
 <form class="app-form" id="task-form">
-    <input   id="testid" name="id"  type="hidden" style="width:80%" data-options="required:true">
+   <input type="hidden" id="testid" name="id" class="easyui-textbox" >
   <div class="field">
     <input class="easyui-textbox" id="testName" name="testName" style="width:80%" data-options="label:'测试名称：',required:true">
   </div>

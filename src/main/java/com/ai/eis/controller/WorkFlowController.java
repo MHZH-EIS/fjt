@@ -155,7 +155,9 @@ public class WorkFlowController {
 		if (stream.count() != 1) {
 			return new AjaxResult(false).setData("发现子实验项不属于同一个项目，不能完成下卡");
 		}
-
+		stream = list.stream().mapToInt(EisExperiment::getProjectId).distinct();
+		
+		
 		Task task = taskService.createTaskQuery()
 				.processInstanceBusinessKey(String.valueOf(stream.findFirst().getAsInt())).singleResult();
 		if (task == null) {

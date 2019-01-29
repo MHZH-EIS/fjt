@@ -250,7 +250,7 @@ define(function () {
           //窗口表单加载成功时执行
           form = $("#member-form");
           $("#member_account").textbox('setValue',row.account); 
-          $("#role").combobox('setValue',row.roleName);
+         // $("#role").combobox('setValue',row.roleName);
           
           //这个字段比较特殊，有比较多的校验，所以单独拿出来实例化
           $("#member_account").textbox({
