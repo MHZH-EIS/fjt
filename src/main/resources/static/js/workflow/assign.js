@@ -187,7 +187,22 @@ define(function () {
         pagination: true,
         singleSelect: true,
         pageSize: 10,
-        columns: [[{
+        ignore: ['itemId'],
+        columns: [[   {
+            field: 'projectId',
+            title: '项目ID',
+            width: 30,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true,
+                hidden:true
+              }
+            },
+            formatter: function (val) {
+              return filterXSS(val);
+            }
+          },{
             field: 'testId',
             title: '测试项ID',
             width: 50,
@@ -215,23 +230,25 @@ define(function () {
               return filterXSS(val);
             }
           },
-      	{                
-          field: 'testClause',
-          title: '测试条款',
-          width: 50,
-          editor: {
-            type: 'validatebox',
-            options: {
-              required: true
-            }
-          },
-          formatter: function (val) {
-            return filterXSS(val);
-          }
-        },
+         
+              {
+                  field: 'requirement',
+                  title: '测试要求',
+                  width: 30,
+                  editor: {
+                    type: 'validatebox',
+                    options: {
+                      required: true,
+                      hidden:true
+                    }
+                  },
+                  formatter: function (val) {
+                    return filterXSS(val);
+                  }
+             },
     	   {
             field: 'clause',
-            title: '条款',
+            title: '测试条款',
             width: 50,
             editor: {
               type: 'validatebox',
@@ -240,19 +257,6 @@ define(function () {
               }
             } 
           },{
-  	        field: 'requirement',           
-  	        title: '试验要求',
-  	        width: 30,
-  	        editor: {
-  	          type: 'validatebox',
-  	          options: {
-  	            required: true
-  	          }
-  	        },
-  	        formatter: function (val) {
-  	          return filterXSS(val);
-  	        }
-  	      },{
   	        field: 'assign',           
   	        title: '分配测试工程师',
   	        width: 50,
@@ -264,7 +268,8 @@ define(function () {
   	        },
   	        formatter: function (val) {
   	          if(val == null || val == "") {
-                val = "未指定工程师";
+                val = '<span style="color:red"> 未指定工程师 </span>'
+                return val;
               }   
   	          return filterXSS(val);
   	        }
@@ -288,11 +293,10 @@ define(function () {
             handler: function () {
            	    var row = dg.edatagrid('getSelected');
            	    if (!row) {
-     				 $.messager.alert({title:'提示',msg:"请先选一个下卡任务",icon:'info'});
+     				        $.messager.alert({title:'提示',msg:"请先选一个下卡任务",icon:'info'});
            	    }else {
                 	createTestItemForm();
            	    }
-
             }
           },
  
@@ -321,30 +325,61 @@ define(function () {
               text: "分配试验项目",
               handler: function () {
                 var itemrows = itemdg.datagrid("getRows"); 
-            	  createAssignForm(itemrows);
+                var row = dg.edatagrid('getSelected');
+                if (!row) {
+                  $.messager.alert({title:'提示',msg:"请先选一个下卡任务",icon:'info'});
+                }else {
+                  if (itemrows.length == 0) {
+                	  $.messager.alert({title:'提示',msg:"还未给此任务分配试验项目",icon:'info'});
+                	  return;
+                  }
+                  for (var i = 0; i < itemrows.length;i++) {
+                    if (itemrows[i].assign == null) {
+                      $.messager.alert({title:'提示',msg:"请先给所有测试项分配好工程师后才可以分配试验项目!",icon:'info'});
+                      return;
+                    }
+                  }
+                  var postJson = "["
+                  for (var i = 0; i < itemrows.length;i++) {
+                	  postJson = "{'id':'"+itemrows[i].testId+"',"+"'projectId':'"+itemrows[i].projectId+"',"+"'itemId':'"+itemrows[i].itemId+"'," +
+                	  "'userId':'"+itemrows[i].userId+"'}";
+                	  if (i  != itemrows.length-1) {
+                		  postJson =postJson+","
+                	  }
+                    }
+                  postJson = postJson+"]";
+                  $.post("/workflow/discard",postJson,function(data){
+                	  var obj = JSON.parse(data);
+                      if (obj.success) {
+                        $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
+                      }else {
+                        $.messager.alert({title:'提示',msg:"下卡失败:"+obj.message,icon:'error'});
+                      }
+                  });
+                }
               }
           }
         })
     });
     
+    
+    /**
+     * 操作按钮绑定事件
+     */
+    itemdg.datagrid("getPanel").on('click', "a.ctr-edit", function () {// 编辑按钮事件
+        var itemrows = itemdg.datagrid("getRows"); 
+       	createAssignForm(itemrows);
+    });
+    
   
     function createAssignForm(itemrows) {
-    	 var row = dg.edatagrid('getSelected');
-    	 if (itemrows) {
-        var form = $("<form class='app-form' id='task-form'>")
-
-        for(var i = 0; i < itemrows.length; i++){
-          var field0 = $('<div class="field"><input class="easyui-textbox" name="testId" value='+ itemrows[i].testId+' style="width:80%" data-options="label:\'测试名：\',required:true"></div>')
-
-          form.append(field0);
-
-        }
-
-        /*
+    	 var row = dg.datagrid('getSelected');
+    	 var rowitem = itemdg.datagrid('getSelected');
+        if (row) {
         var dialog = $("<div/>", {class: 'flow'}).dialog({
           title: "分配任务",
           iconCls: 'fa fa-user-circle-o',
-          height: 480,
+          height: 380,
           width: 420,
           collapsible:true,
           href: '/workflow/item/taskform',
@@ -355,6 +390,9 @@ define(function () {
           onLoad: function () {
               //窗口表单加载成功时执行
               form = $("#task-form");
+ 	          $("#testName").textbox('setValue',rowitem.testName); 
+	          $("#clause").textbox('setValue',rowitem.clause); 
+	          $("#testid").textbox('setValue',rowitem.testId);
             },
           onClose: function () {
             $(this).dialog("destroy");
@@ -376,7 +414,7 @@ define(function () {
             handler: function () {
               form.form('submit',{
                type:"get",
-               url:"/workflow/discard",
+               url:"/resource/contract/experiment/update",
                onSubmit: function (param) {        //表单提交前的回调函数 
                       var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
                       if (!isValid) { 
@@ -387,7 +425,7 @@ define(function () {
                success:function(data) {
                  var obj = JSON.parse(data);
                  if (obj.success) {
-                   $.messager.alert({title:'提示',msg:"分配校验成功",icon:'info'});
+                   $.messager.alert({title:'提示',msg:"分配成功",icon:'info'});
                    dialog.dialog('close');
                    itemdg.datagrid('reload', {projectId: row.projectId});
                  }else {
@@ -397,7 +435,7 @@ define(function () {
               },'json');
             }
           }]
-        });*/
+        }); 
     	 }else {
     			$.messager.alert({title:'提示',msg:"请先选一个任务再进行分配",icon:'info'});
     	 }

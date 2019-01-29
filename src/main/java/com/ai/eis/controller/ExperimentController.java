@@ -7,7 +7,9 @@ import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisExperimentDisplay;
 import com.ai.eis.model.EisStItem;
+import com.ai.eis.model.EisUser;
 import com.ai.eis.service.EisExperimentService;
+import com.ai.eis.service.EisUserService;
 import com.ai.eis.service.SItemService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -36,6 +38,9 @@ public class ExperimentController {
     @Autowired
     private SItemService sItemService;
 
+	@Autowired
+	EisUserService userService;
+	
     @RequestMapping
     public void index() {
 
@@ -102,9 +107,17 @@ public class ExperimentController {
         List <EisExperimentDisplay> displays = new ArrayList <>();
         List <EisExperiment> lst = experimentService.queryByCondition(map);
         for (EisExperiment one : lst) {
+        	EisUser user = null;
             EisExperimentDisplay display = new EisExperimentDisplay();
             EisStItem item = sItemService.queryById(one.getItemId());
-
+            logger.info("userid:{}",one.getUserId());
+            if (one.getUserId() != null) {
+            	user = userService.selectByPrimaryKey(Integer.parseInt(one.getUserId()));
+                //加上ID防止重名
+                display.setAssign(user.getUserid()+":"+user.getName());
+            }
+            display.setItemId(one.getItemId());
+            display.setProjectId(one.getProjectId());
             display.setClause(item.getClause());
             display.setTestId(one.getId());
             display.setRequirement(one.getRequirement());
@@ -150,8 +163,8 @@ public class ExperimentController {
 
     @ResponseBody
     @RequestMapping("/update")
-    public AjaxResult update() {
-        // 暂不实现
+    public AjaxResult update(EisExperiment experiment) {
+    	experimentService.update(experiment);
         return new AjaxResult(true);
     }
 

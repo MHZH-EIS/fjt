@@ -10,6 +10,7 @@
     <result column="FILE" property="file" jdbcType="VARCHAR" />
     <result column="DEV_ID" property="devId" jdbcType="VARCHAR" />
     <result column="EX_NAME" property="exName" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.ai.eis.model.EisExperiment" >
     insert into eis_experiment (PROJECT_ID, ITEM_ID, REQUIREMENT, 
@@ -19,6 +20,40 @@
       #{result,jdbcType=VARCHAR}, #{file,jdbcType=VARCHAR}, #{devId,jdbcType=VARCHAR}, #{exName,jdbcType=VARCHAR}
       )
   </insert>
+  
+  
+  
+    <update id="updateSelective" parameterType="com.ai.eis.model.EisExperiment" >
+    update eis_experiment
+    <set >
+	<if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+       PROJECT_ID =  #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="requirement != null" >
+      REQUIREMENT =   #{requirement,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+      RESULT =   #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="file != null" >
+       FILE =  #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="devId != null" >
+       DEV_ID =  #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="exName != null" >
+      EX_NAME =   #{exName,jdbcType=VARCHAR}
+      </if>
+     <if test="userId != null" >
+      USER_ID =   #{userId,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+ 
 
   <insert id="insertSelective" parameterType="com.ai.eis.model.EisExperiment" >
     insert into eis_experiment
@@ -84,7 +119,7 @@
 
   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
-    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID
+    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,USER_ID
     from eis_experiment
     <where>
       <if test="pId != null and pId != ''">

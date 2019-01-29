@@ -28,4 +28,7 @@ public interface Constants {
     
     /*检验工程师固定为3 这个角色*/
     int    ENGINEER_ROLE_ID= 3;
+    
+    /*测试工程师角色*/
+    int TEST_ENGINEER_ROLE_ID = 4;
 }

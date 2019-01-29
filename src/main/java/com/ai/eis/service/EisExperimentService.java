@@ -12,5 +12,6 @@ public interface EisExperimentService {
     int deleteByCondition(Map <String, String> map);
 
     List <EisExperiment> queryByCondition(Map <String, String> map);
-
+    
+    int update(EisExperiment experiment);
 }

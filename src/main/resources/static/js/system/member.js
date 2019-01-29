@@ -232,10 +232,11 @@ define(function () {
      * @returns
      */
     function createForm(id) {
+      var row = dg.datagrid('getSelected');
       var dialog = $("<div/>", {class: 'noflow'}).dialog({
         title: (id ? "编辑" : "创建") + "用户",
         iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
-        height: id ? 380 : 420,
+        height: id ? 600 : 600,
         width: 420,
         href: '/system/member/form',
         queryParams: {
@@ -248,12 +249,14 @@ define(function () {
         onLoad: function () {
           //窗口表单加载成功时执行
           form = $("#member-form");
-
+          $("#member_account").textbox('setValue',row.account); 
+          $("#role").combobox('setValue',row.roleName);
+          
           //这个字段比较特殊，有比较多的校验，所以单独拿出来实例化
           $("#member_account").textbox({
             label: '账号：',
             required: true,
-            validType: ['account', 'length[6, 10]', "remote['/system/member/check','account']"]
+            validType: ['account', 'length[6, 15]', "remote['/system/member/check','account']"]
           })
         },
         buttons: [{

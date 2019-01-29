@@ -130,6 +130,13 @@ public class MemberController {
 	}
 	
 	
+	@RequestMapping("/testengineers")
+	@ResponseBody
+	public List<EisUser> getTestEngineers() {
+		return userService.queryEngineers(Constants.TEST_ENGINEER_ROLE_ID);
+	}
+	
+	
 	
 	@RequestMapping({ "/save", "/update" })
 	@Transactional
@@ -153,7 +160,14 @@ public class MemberController {
 					}
 					userService.updateUser(member);
 					loginInfo = orig.getLoginInfo();
+					if(loginInfo == null) {
+						loginInfo =  new EisLogin();
+					}
+					loginInfo.setUserid(member.getRoleId());
+					loginInfo.setAccount(member.getAccount());
+					
 					loginService.updateLogin(loginInfo);
+					logger.info("更新用户{} 账号:{} roleId:{} ",member.getName(),member.getAccount(),roleId);
 				}
 			} else {
 				Integer id = userService.selectMaxUserId();

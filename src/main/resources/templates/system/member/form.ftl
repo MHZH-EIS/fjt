@@ -1,6 +1,5 @@
 <form class="app-form" id="member-form">
   <input type="hidden" name="userid">
- 
   <div class="field">
     <input class="easyui-textbox" name="name" style="width:80%" data-options="label:'姓名：',required:true">
     <select class="easyui-combobox" editable="false" data-options="panelHeight:'auto'" name="sex" style="width:18%">
@@ -27,14 +26,14 @@
     <input id="rank" class="easyui-combobox" style="width:100%" name="postId" data-options="label:'岗位：',valueField:'postId',panelMaxHeight:200,panelHeight:'auto',textField:'name',url:'/system/post/list',editable:false">
   </div>
   <div class="field">
-    <input id="cc" class="easyui-combobox" style="width:100%" name="roleId" data-options="label:'用户角色：',valueField:'roleId',panelMaxHeight:200,panelHeight:'auto',textField:'name',url:'/system/member/roles',editable:false">
+    <input id="role" class="easyui-combobox" style="width:100%" name="roleId" data-options="label:'用户角色：',valueField:'roleId',panelMaxHeight:200,panelHeight:'auto',textField:'name',url:'/system/member/roles',editable:true">
   </div>
   <div class="field">
     <label class="textbox-label textbox-label-before">状态：</label>
     <input class="easyui-switchbutton" name="status" data-options="onText:'启用',offText:'禁用',checked:true" value="true">
   </div>
     <div class="field">
-    <input class="easyui-datebox" name="remarks" style="width:100%" data-options="label:'备注：',editable:false">
+    <input class="easyui-textbox" name="remarks" style="width:100%" data-options="label:'备注：',editable:true">
   </div>
   <div class="field">
     新建用户，默认密码：0000
@@ -44,5 +43,5 @@
   $("#member-form").form("load",
    <#if resource??> 
     ${resource}
-	</#if>)
+	</#if>);
 </script>

@@ -152,14 +152,31 @@
     </set>
     where USERID = #{userid,jdbcType=INTEGER}
   </update>
+  
+  
+  
   <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisLogin" >
     update eis_login
-    set ACCOUNT = #{account,jdbcType=VARCHAR},
-      PASSWORD = #{password,jdbcType=VARCHAR},
-      EXPIRED_TIME = #{expiredTime,jdbcType=TIMESTAMP},
-      LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
-      LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
-      STATUS = #{status,jdbcType=INTEGER}
+    <set >
+      <if test="account != null" >
+        ACCOUNT = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredTime != null" >
+        EXPIRED_TIME = #{expiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
     where USERID = #{userid,jdbcType=INTEGER}
   </update>
 </mapper>

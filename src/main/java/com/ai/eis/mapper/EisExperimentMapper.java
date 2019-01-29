@@ -15,4 +15,5 @@ public interface EisExperimentMapper {
 
     List <EisExperiment> queryByCondition(Map <String, String> map);
 
+    int updateSelective(EisExperiment record);
 }
