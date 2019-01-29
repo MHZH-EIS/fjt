@@ -1,85 +1,27 @@
 package com.ai.eis.common;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.Range;
-import org.apache.poi.xwpf.usermodel.*;
+import org.docx4j.Docx4J;
+import org.docx4j.TraversalUtil;
+import org.docx4j.XmlUtils;
+import org.docx4j.finders.ClassFinder;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.wml.ContentAccessor;
+import org.docx4j.wml.Tbl;
 import org.docx4j.wml.Text;
+import org.docx4j.wml.Tr;
 
 import javax.xml.bind.JAXBElement;
-import java.io.*;
-import java.util.*;
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WordCommon {
-
-    public static void replace(String src, String dest, Map <String, String> map) throws IOException {
-        InputStream in = new FileInputStream(src);
-        FileOutputStream out = new FileOutputStream(dest);
-        XWPFDocument document = new XWPFDocument(in);
-        Iterator <XWPFParagraph> itPara = document.getParagraphsIterator();
-        String text;
-        Set <String> set;
-        XWPFParagraph paragraph;
-        List <XWPFRun> run;
-        String key;
-
-        while (itPara.hasNext()) {
-            paragraph = itPara.next();
-            set = map.keySet();
-            Iterator <String> iterator = set.iterator();
-            while (iterator.hasNext()) {
-                key = iterator.next();
-                run = paragraph.getRuns();
-                for (int i = 0, runSie = run.size(); i < runSie; i++) {
-                    text = run.get(i).getText(run.get(i).getTextPosition());
-                    if (text != null && text.equals(key)) {
-                        run.get(i).setText(map.get(key), 0);
-                    }
-
-                }
-            }
-        }
-
-        //2. 替换表格中的指定文字
-        Iterator <XWPFTable> itTable = document.getTablesIterator();
-        XWPFTable table;
-        int rowsCount;
-        while (itTable.hasNext()) {
-            table = itTable.next();
-            rowsCount = table.getNumberOfRows();
-            for (int i = 0; i < rowsCount; i++) {
-                XWPFTableRow row = table.getRow(i);
-                List <XWPFTableCell> cells = row.getTableCells();
-                for (XWPFTableCell cell : cells) {
-                    for (Map.Entry <String, String> e : map.entrySet()) {
-                        if (cell.getText().equals(e.getKey())) {
-                            cell.removeParagraph(0);
-                            cell.setText(e.getValue());
-                        }
-                    }
-                }
-            }
-        }
-
-        document.write(out);
-        in.close();
-        out.close();
-
-    }
-
-    public static void searchAndReplace(String srcPath, String destPath, Map <String, String> map) throws IOException {
-        InputStream inputStream = new FileInputStream(srcPath);
-        HWPFDocument document = new HWPFDocument(inputStream);
-        Range range = document.getRange();
-        for (Map.Entry <String, String> entry : map.entrySet()) {
-            range.replaceText(entry.getKey(), entry.getValue());
-
-        }
-        OutputStream outputStream = new FileOutputStream(destPath);
-        document.write(outputStream);
-    }
 
     public static void replacePlaceholder(String srcPath, String destPath, Map <String, String> map) throws FileNotFoundException, Docx4JException {
         WordprocessingMLPackage template = WordprocessingMLPackage.load(new FileInputStream(new File(srcPath)));
@@ -109,12 +51,41 @@ public class WordCommon {
         return result;
     }
 
+    /**
+     * @param template
+     * @param dest
+     * @param dataList
+     * @throws Docx4JException
+     * @throws JAXBException
+     */
+    public static void createWordTable(File template, File dest, List <Map <String, Object>> dataList) throws Docx4JException, JAXBException {
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(template);
+        ClassFinder find = new ClassFinder(Tbl.class);
+        new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), find);
+        Tbl table = (Tbl) find.results.get(0);
+        Tr dynamicTr = (Tr) table.getContent().get(1);
+        String dynamicTrXml = XmlUtils.marshaltoString(dynamicTr);
+        for (Map <String, Object> dataMap : dataList) {
+            Tr newTr = (Tr) XmlUtils.unmarshallFromTemplate(dynamicTrXml, dataMap);
+            table.getContent().add(newTr);
+        }
+        table.getContent().remove(1);
+        Docx4J.save(wordMLPackage, dest);
 
-    public static void main(String[] args) throws IOException, Docx4JException {
-        Map <String, String> map = new HashMap <>();
-        map.put("projectNo", "SASD323");
-        map.put("name", "cyony");
-        replacePlaceholder("D:\\temp\\test1.docx", "D:\\temp\\total.docx", map);
+    }
+
+
+    public static void main(String[] args) throws JAXBException, Docx4JException {
+        List <Map <String, Object>> list = new ArrayList <>();
+        for (int i = 1; i < 10; i++) {
+            Map <String, Object> map = new HashMap <>();
+            map.put("index", i);
+            map.put("experiment", "光学测试" + i);
+            map.put("clause", "3.10." + i);
+            map.put("result", "合格");
+            list.add(map);
+        }
+        createWordTable(new File("D:\\temp\\2.docx"), new File("D:\\temp\\total.docx"), list);
     }
 
 

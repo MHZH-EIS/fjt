@@ -30,4 +30,9 @@ public class EisExperimentServiceImpl implements EisExperimentService {
     public List <EisExperiment> queryByCondition(Map <String, String> map) {
         return experimentMapper.queryByCondition(map);
     }
+
+    @Override
+    public List <Map <String, Object>> queryExperimentBrief(Integer projectId) {
+        return experimentMapper.queryExperimentBrief(projectId);
+    }
 }
