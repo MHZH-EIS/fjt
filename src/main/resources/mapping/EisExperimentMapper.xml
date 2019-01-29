@@ -134,7 +134,7 @@
     </where>
   </select>
 
-  <select id="queryExperimentBrief" resultMap="java.util.HashMap" parameterType="java.lang.Integer">
+  <select id="queryExperimentBrief" resultType="java.util.HashMap" parameterType="java.lang.Integer">
    SELECT
 	a.RESULT as result,
 	a.FILE as file,
