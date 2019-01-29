@@ -47,348 +47,332 @@ import java.util.stream.IntStream;
 @RequestMapping("/workflow")
 public class WorkFlowController {
 
-    private Logger logger = LoggerFactory.getLogger(WorkFlowController.class);
-    @Autowired
-    private HttpServletRequest request;
+	private Logger logger = LoggerFactory.getLogger(WorkFlowController.class);
+	@Autowired
+	private HttpServletRequest request;
 
-    @Autowired
-    private RepositoryService repositoryService;
+	@Autowired
+	private RepositoryService repositoryService;
 
-    @Autowired
-    private RuntimeService runtimeService;
+	@Autowired
+	private RuntimeService runtimeService;
 
-    @Autowired
-    private TaskService taskService;
+	@Autowired
+	private TaskService taskService;
 
-    @Autowired
-    private HistoryService historyService;
+	@Autowired
+	private HistoryService historyService;
 
-    @Autowired
-    private ProcessEngineFactoryBean processEngine;
+	@Autowired
+	private ProcessEngineFactoryBean processEngine;
 
-    @Autowired
-    private FormService formService;
+	@Autowired
+	private FormService formService;
 
-    @Autowired
-    private EisContractService contractService;
+	@Autowired
+	private EisContractService contractService;
 
-    @RequestMapping("/assign")
-    public void assign(@RequestParam(value = "id", defaultValue = "") String id) {
+	@RequestMapping("/assign")
+	public void assign(@RequestParam(value = "id", defaultValue = "") String id) {
 
-    }
+	}
 
-    
-    @RequestMapping("/item/form")
-    public void itemForm(@RequestParam(value = "projectId", defaultValue = "") String projectId ) {
-    	 
-    	/*if (projectId != null) {
-    	         ObjectMapper mapper = new ObjectMapper();
-    	         EisUser resource = userService.selectByPrimaryKey(id);
-    	         try {
-    	             model.addAttribute("resource", mapper.writeValueAsString(resource));
-    	         } catch (JsonProcessingException e) {
-    	             logger.error("json转换错误", e);
-    	         }
-    	      }else {
-    	    	  logger.info("id is null.");
-    	      }*/
-    }
-
-    
-    
-    
-    /**
-     * 流程发布
-     *
-     * @return
-     */
-    @RequestMapping("/deploy")
-    @ResponseBody
-    public AjaxResult deployProcess() {
-        repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
-        return new AjaxResult(true);
-    }
-
-    /**
-     * 启动流程实例
-     *
-     * @param projectId 项目ID,必填参数
-     * @param charge    指派的项目经理ID，必填参数
-     * @return
-     */
-    @RequestMapping("/start")
-    @ResponseBody
-    public AjaxResult start(@RequestParam(value = "projectId", defaultValue = "") String projectId,
-                            @RequestParam(value = "userId", defaultValue = "") String charge) {
-        if (StringUtils.isEmpty(projectId) || StringUtils.isEmpty(charge)) {
-            return new AjaxResult(false).setData("必须选择一个项目和一个项目经理");
-        }
-        ProcessInstance pi = runtimeService.createProcessInstanceBuilder()
-                                           .businessKey(projectId)
-                                           .processDefinitionKey("eisprocess")
-                                           .variable("manager", charge)
-                                           .start();
-        EisContract contract = new EisContract();
-        contract.setStatus(Constants.PROJECT_PROCESSING);
-        contract.setProjectId(Integer.valueOf(projectId));
-        contractService.update(contract);
-        logger.info("项目流程创建成功，当前流程实例{},业务编码{},项目经理ID", pi.getId(), pi.getBusinessKey(), charge);
-        return new AjaxResult(true);
-    }
-
-
-    /**
-     * 下卡
-     *
-     * @param list 子实验任务集合
-     * @return
-     */
-    @RequestMapping("/discard")
-    @ResponseBody
-    public AjaxResult discard(List <EisExperiment> list) {
-        if (list.size() != 2) {
-            return new AjaxResult(false).setData("目前仅能接受两个子实验任务");
-        }
-        IntStream stream = list.stream().mapToInt(EisExperiment::getProjectId).distinct();
-        if (stream.count() != 1) {
-            return new AjaxResult(false).setData("发现子实验项不属于同一个项目，不能完成下卡");
-        }
-
-        Task task = taskService.createTaskQuery()
-                               .processInstanceBusinessKey(String.valueOf(stream.findFirst().getAsInt()))
-                               .singleResult();
-        if (task == null) {
-            return new AjaxResult(false).setData("找不到此流程的相关任务");
-        }
-        Map <String, String> map = new HashMap <>();
-        int index = 1;
-        for (EisExperiment experiment : list) {
-            map.put("item" + index, String.valueOf(experiment.getId()));
-            map.put("user" + index, experiment.getUserId());
-            map.put("experiment" + index, String.valueOf(experiment.getItemId()));
-            index++;
-        }
-        formService.submitTaskFormData(task.getId(), map);
-        return new AjaxResult(true);
-    }
-
-
-    @ResponseBody
-    @RequestMapping("/completeTask")
-    public AjaxResult completeTask(@RequestParam(value = "taskId", defaultValue = "") String taskId) {
-        Task task = taskService.createTaskQuery()
-                               .taskId(taskId)
-                               .singleResult();
-
-        if (task == null) {
-            return new AjaxResult(false).setData("找不到此任务");
-        }
-        taskService.complete(taskId);
-        return new AjaxResult(true);
-    }
-
-    @RequestMapping("/task/display")
-    @ResponseBody
-    public List <EisAssignTaskDisplay> queryDisplayTasks() {
-        HttpSession session = request.getSession();
-    	List <EisAssignTaskDisplay> displayTasks = new ArrayList<>();
-        List <EisUserTask>  tasks = queryCurrentUserTask();
-    	
-        for (EisUserTask task :tasks) {
-    		 EisAssignTaskDisplay one = new EisAssignTaskDisplay();
-    		 one.setAssignName(task.getTaskName());
-    		 one.setAssignTime(task.getDate());
-    		 EisContract contract =  contractService.selectByPrimaryKey(task.getProjectId());
-    		 one.setProjectName(contract.getProjectName());
-    		 one.setProjectNo(contract.getProjectNo());
-    		 one.setProjectId(contract.getProjectId());
-    	     EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-    		 one.setAssignName(user.getName());
-    		 displayTasks.add(one);
-    	 }
-    	return displayTasks;
-    }
-    
-
-    /**
-     * 获取当前用户的任务集合
-     *
-     * @return
-     */
-    @RequestMapping("/queryCurrentUserTask")
-    @ResponseBody
-    public List <EisUserTask> queryCurrentUserTask() {
-        List <EisUserTask> tasks = new ArrayList <>();
-        HttpSession session = request.getSession();
-        EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-        logger.info("=======userId:{}====",user.getUserid());
-        List <Task> list = taskService.createTaskQuery()
-                                      .taskAssignee(String.valueOf(user.getUserid()))
-                                      .list();
-        for (Task task : list) {
-            EisUserTask userTask = new EisUserTask();
-            userTask.setTaskName(task.getName());
-            userTask.setDate(task.getCreateTime());
-            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                                                            .processInstanceId(task.getProcessInstanceId())
-                                                            .singleResult();
-            userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
-            TaskFormData taskFormData = formService.getTaskFormData(task.getId());
-            List <FormProperty> formProperties = taskFormData.getFormProperties();
-            if (formProperties != null) {
-                for (FormProperty formProperty : formProperties) {
-                    if (formProperty.getId().startsWith("item")) {
-                        userTask.setItemId(formProperty.getValue());
-                    }
-                }
-            }
-            tasks.add(userTask);
-        }
-        return tasks;
-    }
-    
-    
-    @RequestMapping("/querytest")
-    @ResponseBody
-    public List <EisUserTask> testQuery( @RequestParam(value = "userid", defaultValue = "") Integer userid) {
-        List <EisUserTask> tasks = new ArrayList <>();
+	@RequestMapping("/item/form")
+	public void itemForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
  
-        logger.info("=======userId:{}====",userid);
-        List <Task> list = taskService.createTaskQuery()
-                                      .taskAssignee(String.valueOf(userid))
-                                      .list();
-        for (Task task : list) {
-            EisUserTask userTask = new EisUserTask();
-            userTask.setTaskName(task.getName());
-            userTask.setDate(task.getCreateTime());
-            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                                                            .processInstanceId(task.getProcessInstanceId())
-                                                            .singleResult();
-            userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
-            TaskFormData taskFormData = formService.getTaskFormData(task.getId());
-            List <FormProperty> formProperties = taskFormData.getFormProperties();
-            if (formProperties != null) {
-                for (FormProperty formProperty : formProperties) {
-                    if (formProperty.getId().startsWith("item")) {
-                        userTask.setItemId(formProperty.getValue());
-                    }
-                }
-            }
-            tasks.add(userTask);
-        }
-        return tasks;
-    }
-    
-    
-    
-    
-    
+	}
 
-    /**
-     * 获取当前用户的历史任务集合
-     *
-     * @return
-     */
-    @RequestMapping("/queryCurrentUserHisTask")
-    @ResponseBody
-    public List <EisUserTask> queryCurrentUserHisTask() {
-        List <EisUserTask> tasks = new ArrayList <>();
-        HttpSession session = request.getSession();
-        EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-        List <HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                                                         .taskAssignee(String.valueOf(user.getUserid()))
-                                                         .list();
-        for (HistoricTaskInstance historicTaskInstance : list) {
-            EisUserTask userTask = new EisUserTask();
-            userTask.setTaskName(historicTaskInstance.getName());
-            userTask.setDate(historicTaskInstance.getCreateTime());
-            HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                                                                            .processInstanceId(historicTaskInstance.getProcessInstanceId())
-                                                                            .singleResult();
-            userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
-            tasks.add(userTask);
-        }
-        return tasks;
-    }
+	@RequestMapping("item/taskform")
+	public void taskForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
+		/*
+		if (projectId != null) {
+			ObjectMapper mapper = new ObjectMapper();
+			EisUser resource = userService.selectByPrimaryKey(id);
+			try {
+				model.addAttribute("resource", mapper.writeValueAsString(resource));
+			} catch (JsonProcessingException e) {
+				logger.error("json转换错误", e);
+			}
+		} else {
+			logger.info("id is null.");
+		}*/
+	}
 
-    /**
-     * 获取流程高亮图
-     *
-     * @param id       项目编号
-     * @param response
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping("/image")
-    @ResponseBody
-    public AjaxResult getActivitiProccessImage(@RequestParam(value = "projectId", defaultValue = "") String id,
-                                               HttpServletResponse response) throws IOException {
-        if (StringUtils.isEmpty(id)) {
-            return new AjaxResult(false).setData("必须选择一个项目ID");
-        }
-        response.setHeader("Pragma", "No-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                                                                        .processInstanceBusinessKey(id)
-                                                                        .singleResult();
-        List <HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
-                                                                                  .processInstanceId(historicProcessInstance.getId())
-                                                                                  .orderByHistoricActivityInstanceId()
-                                                                                  .asc()
-                                                                                  .list();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
-        List <String> executedActivityIdList = historicActivityInstances.stream()
-                                                                        .map(HistoricActivityInstance::getActivityId)
-                                                                        .collect(Collectors.toList());
+	/**
+	 * 流程发布
+	 *
+	 * @return
+	 */
+	@RequestMapping("/deploy")
+	@ResponseBody
+	public AjaxResult deployProcess() {
+		repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
+		return new AjaxResult(true);
+	}
 
-        List <String> flowIdList = new ArrayList <>();
-        List <FlowNode> historicFlowNodeList = new LinkedList <>();
-        List <HistoricActivityInstance> finishedActivityInstanceList = new LinkedList <>();
-        for (HistoricActivityInstance historicActivityInstance : historicActivityInstances) {
-            FlowNode node = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
-            historicFlowNodeList.add(node);
-            if (historicActivityInstance.getEndTime() != null) {
-                finishedActivityInstanceList.add(historicActivityInstance);
-            }
-        }
-        for (HistoricActivityInstance historicActivityInstance : finishedActivityInstanceList) {
-            FlowNode currentFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
-            List <SequenceFlow> sequenceFlowList = currentFlowNode.getOutgoingFlows();
-            if (historicActivityInstance.getActivityType().equals("parallelGateway") || historicActivityInstance.getActivityType().equals("inclusiveGateway")) {
-                for (SequenceFlow sequenceFlow : sequenceFlowList) {
-                    FlowNode targetFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(sequenceFlow.getTargetRef(), true);
-                    if (historicFlowNodeList.contains(targetFlowNode)) {
-                        flowIdList.add(sequenceFlow.getId());
-                    }
-                }
-            } else {
-                List <Map <String, String>> tempMapList = new LinkedList <>();
-                for (SequenceFlow sequenceFlow : sequenceFlowList) {
-                    for (HistoricActivityInstance activityInstance : historicActivityInstances) {
-                        if (activityInstance.getActivityId().equals(sequenceFlow.getTargetRef())) {
-                            Map <String, String> map = new HashMap <>();
-                            map.put("flowId", sequenceFlow.getId());
-                            map.put("activityStartTime", String.valueOf(historicActivityInstance.getStartTime().getTime()));
-                            tempMapList.add(map);
-                        }
-                    }
-                }
-                flowIdList.add(tempMapList.stream().min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime")))).get().get("flowId"));
-            }
+	/**
+	 * 启动流程实例
+	 *
+	 * @param projectId
+	 *            项目ID,必填参数
+	 * @param charge
+	 *            指派的项目经理ID，必填参数
+	 * @return
+	 */
+	@RequestMapping("/start")
+	@ResponseBody
+	public AjaxResult start(@RequestParam(value = "projectId", defaultValue = "") String projectId,
+			@RequestParam(value = "userId", defaultValue = "") String charge) {
+		if (StringUtils.isEmpty(projectId) || StringUtils.isEmpty(charge)) {
+			return new AjaxResult(false).setData("必须选择一个项目和一个项目经理");
+		}
+		ProcessInstance pi = runtimeService.createProcessInstanceBuilder().businessKey(projectId)
+				.processDefinitionKey("eisprocess").variable("manager", charge).start();
+		EisContract contract = new EisContract();
+		contract.setStatus(Constants.PROJECT_PROCESSING);
+		contract.setProjectId(Integer.valueOf(projectId));
+		contractService.update(contract);
+		logger.info("项目流程创建成功，当前流程实例{},业务编码{},项目经理ID", pi.getId(), pi.getBusinessKey(), charge);
+		return new AjaxResult(true);
+	}
 
-        }
+	/**
+	 * 下卡
+	 *
+	 * @param list
+	 *            子实验任务集合
+	 * @return
+	 */
+	@RequestMapping("/discard")
+	@ResponseBody
+	public AjaxResult discard(List<EisExperiment> list) {
+		if (list.size() != 2) {
+			return new AjaxResult(false).setData("目前仅能接受两个子实验任务");
+		}
+		IntStream stream = list.stream().mapToInt(EisExperiment::getProjectId).distinct();
+		if (stream.count() != 1) {
+			return new AjaxResult(false).setData("发现子实验项不属于同一个项目，不能完成下卡");
+		}
 
-        ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator();
-        InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList, flowIdList, "宋体", "微软雅黑", "黑体", null, 2.0);
+		Task task = taskService.createTaskQuery()
+				.processInstanceBusinessKey(String.valueOf(stream.findFirst().getAsInt())).singleResult();
+		if (task == null) {
+			return new AjaxResult(false).setData("找不到此流程的相关任务");
+		}
+		Map<String, String> map = new HashMap<>();
+		int index = 1;
+		for (EisExperiment experiment : list) {
+			map.put("item" + index, String.valueOf(experiment.getId()));
+			map.put("user" + index, experiment.getUserId());
+			map.put("experiment" + index, String.valueOf(experiment.getItemId()));
+			index++;
+		}
+		formService.submitTaskFormData(task.getId(), map);
+		return new AjaxResult(true);
+	}
 
-        byte[] b = new byte[1024];
-        int len;
-        while ((len = imageStream.read(b, 0, 1024)) != -1) {
-            response.getOutputStream().write(b, 0, len);
-        }
-        return new AjaxResult(true);
-    }
+	@ResponseBody
+	@RequestMapping("/completeTask")
+	public AjaxResult completeTask(@RequestParam(value = "taskId", defaultValue = "") String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
+		if (task == null) {
+			return new AjaxResult(false).setData("找不到此任务");
+		}
+		taskService.complete(taskId);
+		return new AjaxResult(true);
+	}
+
+	@RequestMapping("/task/display")
+	@ResponseBody
+	public List<EisAssignTaskDisplay> queryDisplayTasks() {
+		HttpSession session = request.getSession();
+		List<EisAssignTaskDisplay> displayTasks = new ArrayList<>();
+		List<EisUserTask> tasks = queryCurrentUserTask();
+
+		for (EisUserTask task : tasks) {
+			EisAssignTaskDisplay one = new EisAssignTaskDisplay();
+			one.setAssignName(task.getTaskName());
+			one.setAssignTime(task.getDate());
+			EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
+			one.setProjectName(contract.getProjectName());
+			one.setProjectNo(contract.getProjectNo());
+			one.setProjectId(contract.getProjectId());
+			EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+			one.setAssignName(user.getName());
+			displayTasks.add(one);
+		}
+		return displayTasks;
+	}
+
+	/**
+	 * 获取当前用户的任务集合
+	 *
+	 * @return
+	 */
+	@RequestMapping("/queryCurrentUserTask")
+	@ResponseBody
+	public List<EisUserTask> queryCurrentUserTask() {
+		List<EisUserTask> tasks = new ArrayList<>();
+		HttpSession session = request.getSession();
+		EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+		logger.info("=======userId:{}====", user.getUserid());
+		List<Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
+		for (Task task : list) {
+			EisUserTask userTask = new EisUserTask();
+			userTask.setTaskName(task.getName());
+			userTask.setDate(task.getCreateTime());
+			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+					.processInstanceId(task.getProcessInstanceId()).singleResult();
+			userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
+			TaskFormData taskFormData = formService.getTaskFormData(task.getId());
+			List<FormProperty> formProperties = taskFormData.getFormProperties();
+			if (formProperties != null) {
+				for (FormProperty formProperty : formProperties) {
+					if (formProperty.getId().startsWith("item")) {
+						userTask.setItemId(formProperty.getValue());
+					}
+				}
+			}
+			tasks.add(userTask);
+		}
+		return tasks;
+	}
+
+	@RequestMapping("/querytest")
+	@ResponseBody
+	public List<EisUserTask> testQuery(@RequestParam(value = "userid", defaultValue = "") Integer userid) {
+		List<EisUserTask> tasks = new ArrayList<>();
+
+		logger.info("=======userId:{}====", userid);
+		List<Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(userid)).list();
+		for (Task task : list) {
+			EisUserTask userTask = new EisUserTask();
+			userTask.setTaskName(task.getName());
+			userTask.setDate(task.getCreateTime());
+			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+					.processInstanceId(task.getProcessInstanceId()).singleResult();
+			userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
+			TaskFormData taskFormData = formService.getTaskFormData(task.getId());
+			List<FormProperty> formProperties = taskFormData.getFormProperties();
+			if (formProperties != null) {
+				for (FormProperty formProperty : formProperties) {
+					if (formProperty.getId().startsWith("item")) {
+						userTask.setItemId(formProperty.getValue());
+					}
+				}
+			}
+			tasks.add(userTask);
+		}
+		return tasks;
+	}
+
+	/**
+	 * 获取当前用户的历史任务集合
+	 *
+	 * @return
+	 */
+	@RequestMapping("/queryCurrentUserHisTask")
+	@ResponseBody
+	public List<EisUserTask> queryCurrentUserHisTask() {
+		List<EisUserTask> tasks = new ArrayList<>();
+		HttpSession session = request.getSession();
+		EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+		List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+				.taskAssignee(String.valueOf(user.getUserid())).list();
+		for (HistoricTaskInstance historicTaskInstance : list) {
+			EisUserTask userTask = new EisUserTask();
+			userTask.setTaskName(historicTaskInstance.getName());
+			userTask.setDate(historicTaskInstance.getCreateTime());
+			HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+					.processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
+			userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
+			tasks.add(userTask);
+		}
+		return tasks;
+	}
+
+	/**
+	 * 获取流程高亮图
+	 *
+	 * @param id
+	 *            项目编号
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/image")
+	@ResponseBody
+	public AjaxResult getActivitiProccessImage(@RequestParam(value = "projectId", defaultValue = "") String id,
+			HttpServletResponse response) throws IOException {
+		if (StringUtils.isEmpty(id)) {
+			return new AjaxResult(false).setData("必须选择一个项目ID");
+		}
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setDateHeader("Expires", 0);
+		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+				.processInstanceBusinessKey(id).singleResult();
+		List<HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
+				.processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceId().asc().list();
+		BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
+		List<String> executedActivityIdList = historicActivityInstances.stream()
+				.map(HistoricActivityInstance::getActivityId).collect(Collectors.toList());
+
+		List<String> flowIdList = new ArrayList<>();
+		List<FlowNode> historicFlowNodeList = new LinkedList<>();
+		List<HistoricActivityInstance> finishedActivityInstanceList = new LinkedList<>();
+		for (HistoricActivityInstance historicActivityInstance : historicActivityInstances) {
+			FlowNode node = (FlowNode) bpmnModel.getMainProcess()
+					.getFlowElement(historicActivityInstance.getActivityId(), true);
+			historicFlowNodeList.add(node);
+			if (historicActivityInstance.getEndTime() != null) {
+				finishedActivityInstanceList.add(historicActivityInstance);
+			}
+		}
+		for (HistoricActivityInstance historicActivityInstance : finishedActivityInstanceList) {
+			FlowNode currentFlowNode = (FlowNode) bpmnModel.getMainProcess()
+					.getFlowElement(historicActivityInstance.getActivityId(), true);
+			List<SequenceFlow> sequenceFlowList = currentFlowNode.getOutgoingFlows();
+			if (historicActivityInstance.getActivityType().equals("parallelGateway")
+					|| historicActivityInstance.getActivityType().equals("inclusiveGateway")) {
+				for (SequenceFlow sequenceFlow : sequenceFlowList) {
+					FlowNode targetFlowNode = (FlowNode) bpmnModel.getMainProcess()
+							.getFlowElement(sequenceFlow.getTargetRef(), true);
+					if (historicFlowNodeList.contains(targetFlowNode)) {
+						flowIdList.add(sequenceFlow.getId());
+					}
+				}
+			} else {
+				List<Map<String, String>> tempMapList = new LinkedList<>();
+				for (SequenceFlow sequenceFlow : sequenceFlowList) {
+					for (HistoricActivityInstance activityInstance : historicActivityInstances) {
+						if (activityInstance.getActivityId().equals(sequenceFlow.getTargetRef())) {
+							Map<String, String> map = new HashMap<>();
+							map.put("flowId", sequenceFlow.getId());
+							map.put("activityStartTime",
+									String.valueOf(historicActivityInstance.getStartTime().getTime()));
+							tempMapList.add(map);
+						}
+					}
+				}
+				flowIdList.add(tempMapList.stream()
+						.min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime")))).get().get("flowId"));
+			}
+
+		}
+
+		ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration()
+				.getProcessDiagramGenerator();
+		InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList,
+				flowIdList, "宋体", "微软雅黑", "黑体", null, 2.0);
+
+		byte[] b = new byte[1024];
+		int len;
+		while ((len = imageStream.read(b, 0, 1024)) != -1) {
+			response.getOutputStream().write(b, 0, len);
+		}
+		return new AjaxResult(true);
+	}
 
 }

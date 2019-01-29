@@ -252,7 +252,34 @@ define(function () {
   	        formatter: function (val) {
   	          return filterXSS(val);
   	        }
-  	      }
+  	      },{
+  	        field: 'assign',           
+  	        title: '分配测试工程师',
+  	        width: 50,
+  	        editor: {
+  	          type: 'validatebox',
+  	          options: {
+  	            required: true
+  	          }
+  	        },
+  	        formatter: function (val) {
+  	          if(val == null || val == "") {
+                val = "未指定工程师";
+              }   
+  	          return filterXSS(val);
+  	        }
+  	      },
+          {
+  	          field: 'test',
+  	          title: '操作',
+  	          width: 50,
+  	          align: 'center',
+  	          formatter: function (value, row, index) {
+  	            return authToolBar({
+  	              "assign-test": '<a data-id="' + row.id + '" class="ctr ctr-edit">指定测试人员</a>'
+  	            }).join("");
+  	          }
+  	        }
         ]],
         toolbar: authToolBar({
           "test-item-create": {
@@ -293,22 +320,94 @@ define(function () {
               iconCls: 'fa fa-user-circle-o',
               text: "分配试验项目",
               handler: function () {
-       
+                var itemrows = itemdg.datagrid("getRows"); 
+            	  createAssignForm(itemrows);
               }
           }
         })
     });
     
   
-    function createAssignForm() {
-    	
-    }
+    function createAssignForm(itemrows) {
+    	 var row = dg.edatagrid('getSelected');
+    	 if (itemrows) {
+        var form = $("<form class='app-form' id='task-form'>")
+
+        for(var i = 0; i < itemrows.length; i++){
+          var field0 = $('<div class="field"><input class="easyui-textbox" name="testId" value='+ itemrows[i].testId+' style="width:80%" data-options="label:\'测试名：\',required:true"></div>')
+
+          form.append(field0);
+
+        }
+
+        /*
+        var dialog = $("<div/>", {class: 'flow'}).dialog({
+          title: "分配任务",
+          iconCls: 'fa fa-user-circle-o',
+          height: 480,
+          width: 420,
+          collapsible:true,
+          href: '/workflow/item/taskform',
+          queryParams: {
+            projectId: row.projectId
+          },
+          modal: true,
+          onLoad: function () {
+              //窗口表单加载成功时执行
+              form = $("#task-form");
+            },
+          onClose: function () {
+            $(this).dialog("destroy");
+          },
+          sucess:function(result) {
+            
+          },
+          buttons: [
+              {
+                  iconCls: 'fa fa-trash-o',
+                  text: '取消',
+                  handler: function(){
+                      dialog.dialog('close');
+                  }
+              },	
+          {
+            iconCls: 'fa fa-save',
+            text: '保存',
+            handler: function () {
+              form.form('submit',{
+               type:"get",
+               url:"/workflow/discard",
+               onSubmit: function (param) {        //表单提交前的回调函数 
+                      var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
+                      if (!isValid) { 
+                        $.messager.alert({title:'提示',msg:"分配校验失败请检查",icon:'error'});
+                      } 
+                      return isValid; // 如果验证不通过，返回false终止表单提交 
+                 }, 
+               success:function(data) {
+                 var obj = JSON.parse(data);
+                 if (obj.success) {
+                   $.messager.alert({title:'提示',msg:"分配校验成功",icon:'info'});
+                   dialog.dialog('close');
+                   itemdg.datagrid('reload', {projectId: row.projectId});
+                 }else {
+                   $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+                 }
+               }
+              },'json');
+            }
+          }]
+        });*/
+    	 }else {
+    			$.messager.alert({title:'提示',msg:"请先选一个任务再进行分配",icon:'info'});
+    	 }
+    };
 
 
 
     function createTestItemForm(id) {
     	 var row = dg.edatagrid('getSelected');
-    	  var dialog = $("<div/>", {class: 'flow'}).dialog({
+    	 var dialog = $("<div/>", {class: 'flow'}).dialog({
     	        title: (id ? "编辑" : "创建") + "测试项",
     	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
     	        height: 480,
