@@ -89,4 +89,41 @@ public class FileModel {
         return FileUtil.createSpoolAndFile(sb.toString());
     }
 
+    /**
+     * 获取实验项清单模板文件
+     *
+     * @return
+     */
+    public static File getExperimentBriefTemplate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("common");
+        sb.append(File.separator);
+        sb.append("template");
+        sb.append(File.separator);
+        sb.append("ex_brief.docx");
+        return new File(sb.toString());
+    }
+
+    /**
+     * 获取实验项目清单存放路径
+     *
+     * @param projectId 项目ID
+     * @return
+     */
+    public static File generateExperimentBrief(String projectId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(projectId);
+        sb.append(File.separator);
+        sb.append("experiment");
+        sb.append(File.separator);
+        sb.append("list");
+        sb.append(File.separator);
+        sb.append("ex_brief.docx");
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+
 }

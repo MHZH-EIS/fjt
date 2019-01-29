@@ -119,7 +119,11 @@
 
   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
+<<<<<<< HEAD
     ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,USER_ID
+=======
+    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID, EX_NAME
+>>>>>>> branch 'master' of git@github.com:MHZH-EIS/fjt.git
     from eis_experiment
     <where>
       <if test="pId != null and pId != ''">
@@ -132,5 +136,19 @@
         and EX_NAME like #{exName}
       </if>
     </where>
+  </select>
+
+  <select id="queryExperimentBrief" resultMap="java.util.HashMap" parameterType="java.lang.Integer">
+   SELECT
+	a.RESULT as result,
+	a.FILE as file,
+	a.DEV_ID as devId,
+	b.TEST_NAME as experiment,
+	b.CLAUSE as clause
+    FROM
+	eis_experiment a
+    LEFT JOIN eis_st_item b ON a.ITEM_ID = b.ITEM_ID
+    WHERE
+	a.PROJECT_ID = #{projectId}
   </select>
 </mapper>

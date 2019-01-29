@@ -36,4 +36,8 @@ public class EisExperimentServiceImpl implements EisExperimentService {
  
 		return experimentMapper.updateSelective(experiment);
 	}
+	    @Override
+    public List <Map <String, Object>> queryExperimentBrief(Integer projectId) {
+        return experimentMapper.queryExperimentBrief(projectId);
+    }
 }
