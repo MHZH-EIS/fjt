@@ -119,11 +119,7 @@
 
   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
-<<<<<<< HEAD
-    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,USER_ID
-=======
-    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID, EX_NAME
->>>>>>> branch 'master' of git@github.com:MHZH-EIS/fjt.git
+    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID
     from eis_experiment
     <where>
       <if test="pId != null and pId != ''">

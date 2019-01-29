@@ -51,10 +51,9 @@ public class FileModel {
      * 生成合并测试项报告路径
      *
      * @param pId      项目ID
-     * @param fileName 文件名
      * @return
      */
-    public static File generateMergeExperiment(String pId, String fileName) {
+    public static File generateMergeExperiment(String pId) {
         StringBuilder sb = new StringBuilder();
         sb.append(BASE_PATH);
         sb.append("project");
@@ -65,7 +64,7 @@ public class FileModel {
         sb.append(File.separator);
         sb.append("merge");
         sb.append(File.separator);
-        sb.append(fileName);
+        sb.append("merge.docx");
         return FileUtil.createSpoolAndFile(sb.toString());
     }
 
