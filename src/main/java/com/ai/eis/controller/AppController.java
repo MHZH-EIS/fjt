@@ -1,9 +1,11 @@
 package com.ai.eis.controller;
 
+import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+ 
 import com.ai.eis.common.Constants;
 
 import com.ai.eis.common.SocketMessage;
@@ -48,10 +50,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ai.eis.handler.*;
  
@@ -131,14 +135,6 @@ public class AppController {
         
         final List<EisMenuResource> allResources;
         
-        Object sessionBrowser = session.getAttribute("browser");
-        if (sessionBrowser == null) {
-            logger.info("不存在session，设置browser=testbrower");
-            session.setAttribute("browser", "testbrower");
-        } else {
-        	logger.info("存在session，browser=" + sessionBrowser.toString());
-        }
-
 
         // 获取用户可用菜单,所有有权限的请求，所有资源key
         Integer userid = member.getUserid();
@@ -155,6 +151,7 @@ public class AppController {
         userMember.setRealName(user.getName());
         userMember.setUserName(member.getAccount());
         userMember.setUserid(user.getUserid());
+        userMember.setPassword(member.getPassword());
  
         
         List<EisMenuResource> menus = new ArrayList<EisMenuResource>();
@@ -247,6 +244,46 @@ public class AppController {
         session.invalidate();
         return "redirect:/login";
     }
+    
+    /**
+     * 修改密码
+     */
+    @RequestMapping("/change/password")
+    public String changePassword() {
+        return "password";
+    }
+    
+    
+    /**
+     * 修改密码
+     */
+    @RequestMapping(value = "/change/password", method = RequestMethod.POST)
+    @Transactional
+    @ResponseBody
+    public AjaxResult doChangePassword(@SessionAttribute(name = "s_member") Member member, String oldPassword, String newPassword1, String newPassword2) {
+        if (isEmpty(oldPassword) || isEmpty(newPassword1) || isEmpty(newPassword2)) {
+            return new AjaxResult(false).setMessage("参数错误！");
+        }
+
+        if (member == null)  {
+        	logger.warn("Member is null.");
+        }
+        if (!member.getPassword().equals(DigestUtils.sha256Hex(oldPassword))) {
+            return new AjaxResult(false).setMessage("原密码错误！");
+        }
+
+        if (!DigestUtils.sha256Hex(newPassword1).equals(DigestUtils.sha256Hex(newPassword2))) {
+            return new AjaxResult(false).setMessage("新密码，两次不匹配！");
+        }
+ 
+        EisLogin loginUser =  eisLoginService.selectByPrimaryKey(member.getUserid());
+ 
+        loginUser.setPassword(DigestUtils.sha256Hex(newPassword1));
+        eisLoginService.updateLogin(loginUser);
+        return new AjaxResult();
+    }
+
+    
     
     /**
      * 权限resource的js资源

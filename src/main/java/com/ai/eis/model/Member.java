@@ -4,6 +4,7 @@ public class Member {
     private Integer userid;
     private String userName;
     private String realName;
+    private String password;
     
     
 	public Integer getUserid() {
@@ -23,6 +24,12 @@ public class Member {
 	}
 	public void setRealName(String realName) {
 		this.realName = realName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	 
 }
