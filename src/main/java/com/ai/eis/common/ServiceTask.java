@@ -62,9 +62,8 @@ public class ServiceTask implements JavaDelegate {
             //生成使用设备清单
 
 
-
             //合并实验报告
-            File target = FileModel.generateMergeExperiment(projectId, "merge.docx");
+            File target = FileModel.generateMergeExperiment(projectId);
             FileUtil.mergeWord(files, target);
             if (target.exists()) {
                 logger.info("子实验项目报告合并成功");

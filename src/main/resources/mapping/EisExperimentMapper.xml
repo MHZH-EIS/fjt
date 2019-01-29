@@ -119,7 +119,7 @@
 
   <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
-    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,USER_ID, EX_NAME
+   ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID
     from eis_experiment
     <where>
       <if test="pId != null and pId != ''">
