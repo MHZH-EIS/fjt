@@ -339,23 +339,25 @@ define(function () {
                       return;
                     }
                   }
-                  var postJson = "["
+                  var postDatas = [];
                   for (var i = 0; i < itemrows.length;i++) {
-                	  postJson = "{'id':'"+itemrows[i].testId+"',"+"'projectId':'"+itemrows[i].projectId+"',"+"'itemId':'"+itemrows[i].itemId+"'," +
-                	  "'userId':'"+itemrows[i].userId+"'}";
-                	  if (i  != itemrows.length-1) {
-                		  postJson =postJson+","
-                	  }
-                    }
-                  postJson = postJson+"]";
-                  $.post("/workflow/discard",postJson,function(data){
+                    var objectData = {
+                                          id: itemrows[i].testId,
+                                          projectId: itemrows[i].projectId,
+                                          itemId: itemrows[i].itemId,
+                                          userId: itemrows[i].assign.split(":")[0] 
+                                      };
+                    postDatas.push(objectData);
+                  }
+ 
+                  $.post("/workflow/discard",{"jsonStr":JSON.stringify(postDatas)},function(data){
                 	  var obj = JSON.parse(data);
                       if (obj.success) {
                         $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
                       }else {
                         $.messager.alert({title:'提示',msg:"下卡失败:"+obj.message,icon:'error'});
                       }
-                  });
+                  },'json');
                 }
               }
           }

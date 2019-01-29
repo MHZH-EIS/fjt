@@ -8,6 +8,7 @@ import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.model.EisUserTask;
 import com.ai.eis.service.EisContractService;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -145,7 +146,8 @@ public class WorkFlowController {
 	 */
 	@RequestMapping("/discard")
 	@ResponseBody
-	public AjaxResult discard(List<EisExperiment> list) {
+	public AjaxResult discard(@RequestParam("jsonStr")String listJSON) {
+		List<EisExperiment> list  = JSON.parseArray(listJSON,EisExperiment.class);
 		if (list.size() != 2) {
 			return new AjaxResult(false).setData("目前仅能接受两个子实验任务");
 		}
