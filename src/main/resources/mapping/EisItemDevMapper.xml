@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.eis.mapper.EisItemDevMapper" >
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisItemDev" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DEV_ID" property="devId" jdbcType="INTEGER" />
+    <result column="EXPERIEMNT_ID" property="experiemntId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, DEV_ID, EXPERIEMNT_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from eis_item_dev
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from eis_item_dev
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ai.eis.model.EisItemDev" >
+    insert into eis_item_dev (ID, DEV_ID, EXPERIEMNT_ID
+      )
+    values (#{id,jdbcType=INTEGER}, #{devId,jdbcType=INTEGER}, #{experiemntId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisItemDev" >
+    insert into eis_item_dev
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="devId != null" >
+        DEV_ID,
+      </if>
+      <if test="experiemntId != null" >
+        EXPERIEMNT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=INTEGER},
+      </if>
+      <if test="experiemntId != null" >
+        #{experiemntId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisItemDev" >
+    update eis_item_dev
+    <set >
+      <if test="devId != null" >
+        DEV_ID = #{devId,jdbcType=INTEGER},
+      </if>
+      <if test="experiemntId != null" >
+        EXPERIEMNT_ID = #{experiemntId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisItemDev" >
+    update eis_item_dev
+    set DEV_ID = #{devId,jdbcType=INTEGER},
+      EXPERIEMNT_ID = #{experiemntId,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

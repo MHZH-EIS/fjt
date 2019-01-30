@@ -39,7 +39,6 @@ public class ServiceTask implements JavaDelegate {
                                              .getBusinessKey();
             List <Map <String, Object>> experiments = experimentService.queryExperimentBrief(Integer.valueOf(projectId));
 
-
             List <File> files = new ArrayList <>();
             List <Map <String, Object>> briefs = new ArrayList <>();
             for (int i = 0; i < experiments.size(); i++) {

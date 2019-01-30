@@ -1,8 +1,7 @@
 package com.ai.eis.model;
 
-import java.util.Date;
-
 import javax.persistence.Transient;
+import java.util.Date;
 
 public class EisDevice {
     private Integer devId;
@@ -33,18 +32,20 @@ public class EisDevice {
 
     private String remarks;
 
+    private String devNo;
+
     @Transient
     private Integer id;
-    
+
     public Integer getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getDevId() {
+    public Integer getDevId() {
         return devId;
     }
 
@@ -154,5 +155,13 @@ public class EisDevice {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
+    }
+
+    public String getDevNo() {
+        return devNo;
+    }
+
+    public void setDevNo(String devNo) {
+        this.devNo = devNo;
     }
 }
