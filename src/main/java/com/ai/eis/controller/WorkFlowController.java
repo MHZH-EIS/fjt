@@ -106,8 +106,11 @@ public class WorkFlowController {
         if (StringUtils.isEmpty(projectId) || StringUtils.isEmpty(charge)) {
             return new AjaxResult(false).setData("必须选择一个项目和一个项目经理");
         }
-        ProcessInstance pi = runtimeService.createProcessInstanceBuilder().businessKey(projectId)
-                                           .processDefinitionKey("eisprocess").variable("manager", charge).start();
+        ProcessInstance pi = runtimeService.createProcessInstanceBuilder()
+                                           .businessKey(projectId)
+                                           .processDefinitionKey("eisprocess")
+                                           .variable("manager", charge)
+                                           .start();
         EisContract contract = new EisContract();
         contract.setStatus(Constants.PROJECT_PROCESSING);
         contract.setProjectId(Integer.valueOf(projectId));
@@ -203,7 +206,8 @@ public class WorkFlowController {
             userTask.setTaskName(task.getName());
             userTask.setDate(task.getCreateTime());
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                                                            .processInstanceId(task.getProcessInstanceId()).singleResult();
+                                                            .processInstanceId(task.getProcessInstanceId())
+                                                            .singleResult();
             userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
             TaskFormData taskFormData = formService.getTaskFormData(task.getId());
             List <FormProperty> formProperties = taskFormData.getFormProperties();
@@ -232,13 +236,15 @@ public class WorkFlowController {
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
         List <HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
-                                                         .taskAssignee(String.valueOf(user.getUserid())).list();
+                                                         .taskAssignee(String.valueOf(user.getUserid()))
+                                                         .list();
         for (HistoricTaskInstance historicTaskInstance : list) {
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(historicTaskInstance.getName());
             userTask.setDate(historicTaskInstance.getCreateTime());
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                                                                            .processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
+                                                                            .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                                                                            .singleResult();
             userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
             tasks.add(userTask);
         }
@@ -264,33 +270,35 @@ public class WorkFlowController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                                                                        .processInstanceBusinessKey(id).singleResult();
+                                                                        .processInstanceBusinessKey(id)
+                                                                        .singleResult();
         List <HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery()
-                                                                                  .processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceId().asc().list();
+                                                                                  .processInstanceId(historicProcessInstance.getId())
+                                                                                  .orderByHistoricActivityInstanceId()
+                                                                                  .asc()
+                                                                                  .list();
         BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
         List <String> executedActivityIdList = historicActivityInstances.stream()
-                                                                        .map(HistoricActivityInstance::getActivityId).collect(Collectors.toList());
+                                                                        .map(HistoricActivityInstance::getActivityId)
+                                                                        .collect(Collectors.toList());
 
         List <String> flowIdList = new ArrayList <>();
         List <FlowNode> historicFlowNodeList = new LinkedList <>();
         List <HistoricActivityInstance> finishedActivityInstanceList = new LinkedList <>();
         for (HistoricActivityInstance historicActivityInstance : historicActivityInstances) {
-            FlowNode node = (FlowNode) bpmnModel.getMainProcess()
-                                                .getFlowElement(historicActivityInstance.getActivityId(), true);
+            FlowNode node = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
             historicFlowNodeList.add(node);
             if (historicActivityInstance.getEndTime() != null) {
                 finishedActivityInstanceList.add(historicActivityInstance);
             }
         }
         for (HistoricActivityInstance historicActivityInstance : finishedActivityInstanceList) {
-            FlowNode currentFlowNode = (FlowNode) bpmnModel.getMainProcess()
-                                                           .getFlowElement(historicActivityInstance.getActivityId(), true);
+            FlowNode currentFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(historicActivityInstance.getActivityId(), true);
             List <SequenceFlow> sequenceFlowList = currentFlowNode.getOutgoingFlows();
             if (historicActivityInstance.getActivityType().equals("parallelGateway")
                     || historicActivityInstance.getActivityType().equals("inclusiveGateway")) {
                 for (SequenceFlow sequenceFlow : sequenceFlowList) {
-                    FlowNode targetFlowNode = (FlowNode) bpmnModel.getMainProcess()
-                                                                  .getFlowElement(sequenceFlow.getTargetRef(), true);
+                    FlowNode targetFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(sequenceFlow.getTargetRef(), true);
                     if (historicFlowNodeList.contains(targetFlowNode)) {
                         flowIdList.add(sequenceFlow.getId());
                     }
@@ -302,20 +310,22 @@ public class WorkFlowController {
                         if (activityInstance.getActivityId().equals(sequenceFlow.getTargetRef())) {
                             Map <String, String> map = new HashMap <>();
                             map.put("flowId", sequenceFlow.getId());
-                            map.put("activityStartTime",
-                                    String.valueOf(historicActivityInstance.getStartTime().getTime()));
+                            map.put("activityStartTime", String.valueOf(historicActivityInstance.getStartTime().getTime()));
                             tempMapList.add(map);
                         }
                     }
                 }
-                flowIdList.add(tempMapList.stream()
-                                          .min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime")))).get().get("flowId"));
+                flowIdList.add(
+                        tempMapList.stream()
+                                   .min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime"))))
+                                   .get()
+                                   .get("flowId")
+                );
             }
 
         }
 
-        ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration()
-                                                                       .getProcessDiagramGenerator();
+        ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator();
         InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList,
                 flowIdList, "宋体", "微软雅黑", "黑体", null, 2.0);
 
