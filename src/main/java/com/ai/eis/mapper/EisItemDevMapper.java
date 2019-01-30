@@ -2,6 +2,9 @@ package com.ai.eis.mapper;
 
 import com.ai.eis.model.EisItemDev;
 
+import java.util.List;
+import java.util.Map;
+
 public interface EisItemDevMapper {
 
     int deleteByPrimaryKey(Integer id);
@@ -15,5 +18,7 @@ public interface EisItemDevMapper {
     int updateByPrimaryKeySelective(EisItemDev record);
 
     int updateByPrimaryKey(EisItemDev record);
+
+    List <EisItemDev> queryByCondition(Map <String, String> map);
 
 }

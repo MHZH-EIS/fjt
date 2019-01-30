@@ -68,4 +68,15 @@
       EXPERIEMNT_ID = #{experiemntId,jdbcType=INTEGER}
     where ID = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+    select
+    <include refid="Base_Column_List"/>
+    from eis_item_dev
+    <where>
+      <if test="exId != null and exId != ''">
+        EXPERIEMNT_ID = #{exId}
+      </if>
+    </where>
+  </select>
 </mapper>
