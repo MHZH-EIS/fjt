@@ -16,10 +16,8 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class WordCommon {
 
@@ -74,18 +72,51 @@ public class WordCommon {
 
     }
 
+    public static void tach() throws FileNotFoundException, Docx4JException {
+        Map <String, String> map = new HashMap <>();
+        map.put("projectNo", "A2018CCC0301-3043365");
+        map.put("projectName", "配电箱");
+        map.put("version", "PZ30");
+        map.put("sampleNum", "50");
+        map.put("signDate", "2019-1-20");
+        map.put("clientCompany", "蚌埠市禹哲电气设备有限公司");
+        map.put("clientAddress", "安徽省蚌埠市禹会区禹和路15号禹会工业园1号车间");
+        map.put("mfName", "蚌埠市禹哲电气设备有限公司");
+        map.put("mfAddress", "安徽省蚌埠市禹会区禹和路15号禹会工业园1号车间");
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat format3 = new SimpleDateFormat("yyyy年MM月dd日");
+        SimpleDateFormat format4 = new SimpleDateFormat("yyyyMM");
+        map.put("sampleNo", format4.format(new Date()));
+        map.put("completeDate", format1.format(new Date()));
+        map.put("sDate", format2.format(new Date()));
+        map.put("sealDate", format3.format(new Date()));
 
-    public static void main(String[] args) throws JAXBException, Docx4JException {
-        List <Map <String, Object>> list = new ArrayList <>();
-        for (int i = 1; i < 10; i++) {
-            Map <String, Object> map = new HashMap <>();
-            map.put("index", i);
-            map.put("experiment", "光学测试" + i);
-            map.put("clause", "3.10." + i);
-            map.put("result", "合格");
-            list.add(map);
-        }
-        createWordTable(new File("D:\\temp\\2.docx"), new File("D:\\temp\\total.docx"), list);
+        map.put("manager", "朱世阳");
+        map.put("charger", "苗海泉");
+        map.put("signer", "郭总");
+        String standard = "GB/T 7251.3-2017《低压成套开关设备和控制设备 第3部分: 由一般人员操作的配电板（DBO）》" + "\r\n" +
+                "GB/T 7251.3-2018《低压成套开关设备和控制设备 第3部分: 由一般人员操作的配电板（DBO）》";
+
+        map.put("standard", standard);
+
+        replacePlaceholder("D:\\temp\\A2018CCC0301-3043365N.docx", "D:\\temp\\total.docx", map);
+
+    }
+
+
+    public static void main(String[] args) throws JAXBException, Docx4JException, FileNotFoundException {
+        tach();
+//        List <Map <String, Object>> list = new ArrayList <>();
+//        for (int i = 1; i < 10; i++) {
+//            Map <String, Object> map = new HashMap <>();
+//            map.put("index", i);
+//            map.put("experiment", "光学测试" + i);
+//            map.put("clause", "3.10." + i);
+//            map.put("result", "合格");
+//            list.add(map);
+//        }
+//        createWordTable(new File("D:\\temp\\2.docx"), new File("D:\\temp\\total.docx"), list);
     }
 
 

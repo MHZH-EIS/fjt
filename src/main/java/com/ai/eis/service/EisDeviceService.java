@@ -17,4 +17,6 @@ public interface EisDeviceService {
     
     int updateDevice(EisDevice device);
 
+    List <Map <String, Object>> queryDevBrief(Integer pId);
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface EisDeviceMapper {
+
     int deleteByPrimaryKey(Integer devId);
 
     int insert(EisDevice record);
@@ -19,4 +20,7 @@ public interface EisDeviceMapper {
     int updateByPrimaryKey(EisDevice record);
 
     List <EisDevice> queryByCondition(Map <String, String> map);
+
+    List <Map <String, Object>> queryDevBrief(Integer pId);
+
 }

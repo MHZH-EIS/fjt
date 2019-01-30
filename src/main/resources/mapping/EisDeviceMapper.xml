@@ -28,13 +28,13 @@
         from eis_resource_device
         where DEV_ID = #{devId,jdbcType=INTEGER}
     </select>
-  
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from eis_resource_device
     where DEV_ID = #{devId,jdbcType=INTEGER}
   </delete>
-  
-  
+
+
     <insert id="insert" parameterType="com.ai.eis.model.EisDevice">
     insert into eis_resource_device (DEV_ID, RESOURCE_ID, NAME, 
       VERSION, DEVICE_TYPE, ADJUST, 
@@ -227,4 +227,20 @@
             </if>
         </where>
     </select>
+
+    <select id="queryDevBrief" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+   SELECT DISTINCT
+	c.DEVICE_TYPE,
+	c.`NAME`,
+	c.DEV_NO,
+	c.VALIDITY_DATE
+    FROM
+	eis_item_dev a
+    LEFT JOIN eis_experiment b ON a.EXPERIEMNT_ID = b.ID
+    LEFT JOIN eis_resource_device c ON a.DEV_ID = c.DEV_ID
+    WHERE
+	b.PROJECT_ID = #{pId}
+  </select>
+
+
 </mapper>

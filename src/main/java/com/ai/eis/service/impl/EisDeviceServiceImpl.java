@@ -31,14 +31,19 @@ public class EisDeviceServiceImpl implements EisDeviceService {
 
     }
 
-	@Override
-	public EisDevice queryById(Integer id) {
-		return deviceMapper.selectByPrimaryKey(id);
-	}
+    @Override
+    public EisDevice queryById(Integer id) {
+        return deviceMapper.selectByPrimaryKey(id);
+    }
 
-	@Override
-	public int updateDevice(EisDevice device) {
-		 
-		return deviceMapper.updateByPrimaryKeySelective(device);
-	}
+    @Override
+    public int updateDevice(EisDevice device) {
+        return deviceMapper.updateByPrimaryKeySelective(device);
+    }
+
+    @Override
+    public List <Map <String, Object>> queryDevBrief(Integer pId) {
+        return deviceMapper.queryDevBrief(pId);
+    }
+
 }

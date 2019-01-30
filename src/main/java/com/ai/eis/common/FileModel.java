@@ -50,7 +50,7 @@ public class FileModel {
     /**
      * 生成合并测试项报告路径
      *
-     * @param pId      项目ID
+     * @param pId 项目ID
      * @return
      */
     public static File generateMergeExperiment(String pId) {
@@ -122,6 +122,42 @@ public class FileModel {
         sb.append("list");
         sb.append(File.separator);
         sb.append("ex_brief.docx");
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+
+
+    /**
+     * 获取设备清单模板文件
+     *
+     * @return
+     */
+    public static File getDevBriefTemplate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("common");
+        sb.append(File.separator);
+        sb.append("template");
+        sb.append(File.separator);
+        sb.append("dev_brief.docx");
+        return new File(sb.toString());
+    }
+
+    /**
+     * 获取设备清单的存放路径
+     *
+     * @param projectId
+     * @return
+     */
+    public static File generateDevBrief(String projectId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(projectId);
+        sb.append(File.separator);
+        sb.append("device");
+        sb.append(File.separator);
+        sb.append("dev_brief.docx");
         return FileUtil.createSpoolAndFile(sb.toString());
     }
 
