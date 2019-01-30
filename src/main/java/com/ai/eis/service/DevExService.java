@@ -10,5 +10,7 @@ public interface DevExService {
     int insertSelective(EisItemDev record);
 
     List<EisItemDev> queryByCondition(Map<String, String> map);
+    
+    Map<String,String> queryDisplayList(Integer id);
 
 }

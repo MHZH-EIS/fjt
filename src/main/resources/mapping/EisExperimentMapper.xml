@@ -21,8 +21,6 @@
       )
   </insert>
   
-  
-  
     <update id="updateSelective" parameterType="com.ai.eis.model.EisExperiment" >
     update eis_experiment
     <set >
@@ -116,8 +114,7 @@
       </if>
     </where>
   </delete>
-
-  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
+ <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
    ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID
     from eis_experiment
@@ -133,6 +130,8 @@
       </if>
     </where>
   </select>
+  
+
 
   <select id="queryExperimentBrief" resultType="java.util.HashMap" parameterType="java.lang.Integer">
    SELECT

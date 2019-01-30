@@ -82,7 +82,9 @@ public class DeviceController {
         map.put("devNo", Tools.liker(devNo));
         return deviceService.queryByCondition(map);
     }
-
+    
+    
+   
     @ResponseBody
     @RequestMapping(value = "/remove")
     public AjaxResult remove(@RequestParam(value = "id") Integer id) {

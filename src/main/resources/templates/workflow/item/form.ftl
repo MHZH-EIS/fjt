@@ -1,7 +1,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
 <form class="app-form" id="workflow-item-form">
- 
-      <div class="field">
+  <div class="field">
     <input class="easyui-textbox" id="projectId" name="projectId" style="width:100%" data-options="label:'项目ID:',required:true,readonly:true">
    </div>
     <div class="field">
@@ -22,7 +21,7 @@
   $('#test-items-form').combobox({
   	 onLoadSuccess:function(data){
         var array=$(this).combobox("getData");
-        for(var item in array[0])
+       for(var item in array[0])
         {
                   if(item=="itemId")
                   {
@@ -33,23 +32,43 @@
     }
   ); 
 
+/*此处有个bug 选择标准和实际对应的ID老是对应不上*/
   $("#standard-form").combobox({
   	onSelect:function() {
-  	      var item = $("#test-items-form");
+      var item = $("#test-items-form");
+      item.combobox({
+          disable:false,
+          url :'/resource/standard/item/list?stId='+$("#standard-form").combobox("getValue"),
+          valueField:'itemId',
+          textField:'testName',
+          onLoadSuccess:function() {
+            var va = $(this).combobox("getData");
+            for (var item in va[0]) {
+              if (item == "itemId") {
+                $(this).combobox("select",va[0][item]);
+              }
+            }
+          }
+      }).combobox("clear");
+  	      /*var item = $("#test-items-form");
   	      var id =   $("#standard-form").combobox("getValue")
+  	      var vv =   $('#standard-form').combobox('getValue')
+
   		  item.combobox("clear");
+  		  alert(vv);
   		  var url = "/resource/standard/item/list?"+"stId=" +id;
-          item.combobox('reload', url);
-  	},
+          item.combobox('reload', url);*/
+  	}
+    /*,
   	 onLoadSuccess:function(data) {
                //默认选中第一个
           var array=$(this).combobox("getData");
-               for(var item in array[0]){
+          for(var item in array[0]){
                   if(item=="stId"){
                     $(this).combobox('select',array[0][item]);
-                  }
+              }
       }
-     }
+     }*/
   }
   )
 </script>

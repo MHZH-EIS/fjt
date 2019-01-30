@@ -12,6 +12,7 @@ public class EisAssignTaskDisplay {
 		private Date assignTime;
 		private Integer projectId;
 		private String remarks;
+		private String id;
 
 		public String getProjectNo() {
 			return projectNo;
@@ -67,5 +68,13 @@ public class EisAssignTaskDisplay {
 
 		public void setProjectId(Integer projectId) {
 			this.projectId = projectId;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
 		}
 }

@@ -24,4 +24,10 @@ public class DevExServiceImpl implements DevExService {
     public List <EisItemDev> queryByCondition(Map <String, String> map) {
         return itemDevMapper.queryByCondition(map);
     }
+
+	@Override
+	public Map<String, String> queryDisplayList(Integer id) {
+		
+		return itemDevMapper.queryDisplayList(id);
+	}
 }

@@ -75,11 +75,23 @@ public class WorkFlowController {
     public void itemForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
 
     }
+    
+
+    @RequestMapping("/item/testform")
+    public void displayform(Long id) {
+    }
 
     @RequestMapping("item/taskform")
     public void taskForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
     }
 
+    
+    @RequestMapping("/testdeal")
+    public void testDeal(@RequestParam(value = "id", defaultValue = "") String id) {
+
+    }
+    
+    
     /**
      * 流程发布
      *
@@ -183,10 +195,13 @@ public class WorkFlowController {
             one.setProjectId(contract.getProjectId());
             EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
             one.setAssignName(user.getName());
+            one.setId(task.getItemId());
             displayTasks.add(one);
         }
         return displayTasks;
     }
+    
+    
 
     /**
      * 获取当前用户的任务集合

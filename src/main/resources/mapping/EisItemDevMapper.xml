@@ -15,6 +15,19 @@
     from eis_item_dev
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  
+  <select id="queryDisplayList" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+    SELECT a.experiemnt_id AS id, b.dev_id AS deviceId,b.name AS name,b.version AS version,b.DEV_NO AS devNo ,b.device_type AS deviceType
+   FROM eis_item_dev a,eis_resource_device b,eis_experiment c
+    <where>
+      a.DEV_ID = b.DEV_ID AND a.experiemnt_id = c.id
+      <if test="pId != null and pId != ''">
+       and   experiemnt_id = #{pId}
+      </if>
+    </where>
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from eis_item_dev
     where ID = #{id,jdbcType=INTEGER}

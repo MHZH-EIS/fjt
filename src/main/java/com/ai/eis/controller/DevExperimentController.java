@@ -6,6 +6,7 @@ import com.ai.eis.service.DevExService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -29,6 +30,8 @@ public class DevExperimentController {
     public void form(Long id) {
     }
 
+    
+    
     @ResponseBody
     @RequestMapping("/save")
     public AjaxResult add(EisItemDev itemDev) {
@@ -44,5 +47,12 @@ public class DevExperimentController {
         return devExService.queryByCondition(map);
     }
 
-
+    @ResponseBody
+    @RequestMapping(value ="/display/list")
+    public Map<String,String> displayList(@RequestParam(value = "id", defaultValue = "") Integer id) {
+    	Map<String,String> map = new HashMap<>();
+    	devExService.queryDisplayList(id);
+    	return map;
+    }
+    
 }

@@ -20,5 +20,8 @@ public interface EisItemDevMapper {
     int updateByPrimaryKey(EisItemDev record);
 
     List <EisItemDev> queryByCondition(Map <String, String> map);
+    
+    //通过试验项目id 去查询设备信息等
+    Map<String,String> queryDisplayList(Integer id);
 
 }

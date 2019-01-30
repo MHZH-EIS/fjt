@@ -79,7 +79,20 @@ define(function () {
           formatter: function (val) {
             return filterXSS(val);
           }
-        },
+        },{
+            field: 'devNo',
+            title: '设备型号',
+            width: 50,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true
+              }
+            },
+            formatter: function (val) {
+              return filterXSS(val);
+            }
+          },
     	{
         field: 'version',
         title: '规格型号',
@@ -295,7 +308,7 @@ define(function () {
         title: (id ? "编辑" : "创建") + "标准",
         iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
         height: 600,
-        width: 420,
+        width: 800,
         collapsible:true,
         href: '/resource/device/form',
         queryParams: {
