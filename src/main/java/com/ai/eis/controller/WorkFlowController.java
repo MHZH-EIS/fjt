@@ -75,7 +75,7 @@ public class WorkFlowController {
     public void itemForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
 
     }
-    
+
 
     @RequestMapping("/item/testform")
     public void displayform(Long id) {
@@ -85,13 +85,13 @@ public class WorkFlowController {
     public void taskForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
     }
 
-    
+
     @RequestMapping("/testdeal")
     public void testDeal(@RequestParam(value = "id", defaultValue = "") String id) {
 
     }
-    
-    
+
+
     /**
      * 流程发布
      *
@@ -200,8 +200,7 @@ public class WorkFlowController {
         }
         return displayTasks;
     }
-    
-    
+
 
     /**
      * 获取当前用户的任务集合
@@ -220,6 +219,7 @@ public class WorkFlowController {
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
             userTask.setDate(task.getCreateTime());
+            userTask.setTaskId(task.getId());
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
                                                             .processInstanceId(task.getProcessInstanceId())
                                                             .singleResult();
@@ -255,6 +255,7 @@ public class WorkFlowController {
                                                          .list();
         for (HistoricTaskInstance historicTaskInstance : list) {
             EisUserTask userTask = new EisUserTask();
+            userTask.setTaskId(historicTaskInstance.getId());
             userTask.setTaskName(historicTaskInstance.getName());
             userTask.setDate(historicTaskInstance.getCreateTime());
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()

@@ -12,6 +12,8 @@ public class EisUserTask {
 
     private Date date;
 
+    private String taskId;
+
     public String getItemId() {
         return itemId;
     }
@@ -42,5 +44,13 @@ public class EisUserTask {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 }
