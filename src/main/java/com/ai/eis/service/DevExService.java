@@ -8,9 +8,10 @@ import java.util.Map;
 public interface DevExService {
 
     int insertSelective(EisItemDev record);
+    int delete(Integer itemId);
 
     List<EisItemDev> queryByCondition(Map<String, String> map);
     
-    Map<String,String> queryDisplayList(Integer id);
+    List<Map<String,Object>> queryDisplayList( Map<String,Integer> map);
 
 }

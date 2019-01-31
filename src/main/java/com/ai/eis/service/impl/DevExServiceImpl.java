@@ -26,8 +26,13 @@ public class DevExServiceImpl implements DevExService {
     }
 
 	@Override
-	public Map<String, String> queryDisplayList(Integer id) {
+	public List<Map<String,Object>> queryDisplayList(Map<String,Integer> id) {
 		
 		return itemDevMapper.queryDisplayList(id);
+	}
+
+	@Override
+	public int delete(Integer itemId) {
+		return itemDevMapper.deleteByPrimaryKey(itemId);
 	}
 }

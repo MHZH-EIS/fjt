@@ -16,13 +16,13 @@
     where ID = #{id,jdbcType=INTEGER}
   </select>
   
-  <select id="queryDisplayList" resultType="java.util.HashMap" parameterType="java.lang.Integer">
-    SELECT a.experiemnt_id AS id, b.dev_id AS deviceId,b.name AS name,b.version AS version,b.DEV_NO AS devNo ,b.device_type AS deviceType
+  <select id="queryDisplayList" resultType="java.util.HashMap" parameterType="Map">
+    SELECT a.id as itemId, a.experiemnt_id AS id, b.dev_id AS deviceId,b.name AS name,b.version AS version,b.DEV_NO AS devNo ,b.device_type AS deviceType
    FROM eis_item_dev a,eis_resource_device b,eis_experiment c
     <where>
       a.DEV_ID = b.DEV_ID AND a.experiemnt_id = c.id
       <if test="id != null ">
-       and   experiemnt_id = #{id,jdbcType=INTEGER}
+       and   experiemnt_id = #{id}
       </if>
     </where>
   </select>

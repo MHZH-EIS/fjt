@@ -181,7 +181,8 @@ define(function () {
       	   }
         },
         emptyMsg: "还未查到使用设备信息",
-        idField: "id",
+        idField: "itemId",
+        ignore: ['itemId'],
         fit: true,
         rownumbers: true,
         fitColumns: true,
@@ -280,9 +281,15 @@ define(function () {
               	if (row) {
                       $.messager.confirm("删除提醒", "确认删除此试验的设备?", function (r) {
                         if (r) {
-                          $.get("/device/experiment/remove", {id: row.testId}, function () {
+                          $.get("/device/experiment/remove", {id: row.itemId}, function (data) {
+                            if (data.success) {
+                              $.messager.alert({title:'提示',msg:"删除试验使用设备成功",icon:'info'});
                             // 数据操作成功后，对列表数据，进行刷新
-                        	  itemdg.datagrid("reload");
+                            itemdg.datagrid("reload");
+                            }
+                            else {
+                              $.messager.alert({title:'提示',msg:"删除试验使用设备失败："+data.message,icon:'info'});
+                            }
                           });
                         }
                       });
@@ -300,7 +307,7 @@ define(function () {
     	 var dialog = $("<div/>", {class: 'flow'}).dialog({
     	        title: (id ? "编辑测试项设备" : "给测试项分配新") + "设备",
     	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
-    	        height: 480,
+    	        height: 240,
     	        width: 420,
     	        collapsible:true,
     	        href: '/workflow/item/testform',
@@ -311,7 +318,7 @@ define(function () {
     	        onLoad: function () {
     	            //窗口表单加载成功时执行
     	            form = $("#workflow-test-form");
-    	            //$("#projectNo").textbox('setValue',row.projectNo); 
+    	            $("#experiemntId").textbox('setValue',row.id); 
     	          },
     	        onClose: function () {
     	          $(this).dialog("destroy");
@@ -332,7 +339,7 @@ define(function () {
     	          text: '保存',
     	          handler: function () {
     	        	  form.form('submit',{
-    	        		 type:"get",
+    	        		 type:"post",
     	        		 url:"/device/experiment/save",
     	        		 onSubmit: function (param) {        //表单提交前的回调函数 
     	        	          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 

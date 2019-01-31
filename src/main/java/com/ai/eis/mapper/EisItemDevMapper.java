@@ -22,6 +22,6 @@ public interface EisItemDevMapper {
     List <EisItemDev> queryByCondition(Map <String, String> map);
     
     //通过试验项目id 去查询设备信息等
-    Map<String,String> queryDisplayList(Integer id);
+    List<Map<String,Object>> queryDisplayList(Map<String,Integer> map);
 
 }
