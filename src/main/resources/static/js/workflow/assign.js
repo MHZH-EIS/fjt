@@ -395,7 +395,6 @@ define(function () {
  	          $("#testName").textbox('setValue',rowitem.testName); 
 	          $("#clause").textbox('setValue',rowitem.clause); 
 	          $("#testid").textbox('setValue',rowitem.testId);
-	          alert(rowitem.testId);
             },
           onClose: function () {
             $(this).dialog("destroy");

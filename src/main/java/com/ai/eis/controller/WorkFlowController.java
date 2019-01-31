@@ -187,7 +187,7 @@ public class WorkFlowController {
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
-            one.setAssignName(task.getTaskName());
+            one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
             EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
             one.setProjectName(contract.getProjectName());

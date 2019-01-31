@@ -50,9 +50,7 @@ public class DevExperimentController {
     @ResponseBody
     @RequestMapping(value ="/display/list")
     public Map<String,String> displayList(@RequestParam(value = "id", defaultValue = "") Integer id) {
-    	Map<String,String> map = new HashMap<>();
-    	devExService.queryDisplayList(id);
-    	return map;
+    	return devExService.queryDisplayList(id);
     }
     
 }

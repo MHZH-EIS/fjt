@@ -21,8 +21,8 @@
    FROM eis_item_dev a,eis_resource_device b,eis_experiment c
     <where>
       a.DEV_ID = b.DEV_ID AND a.experiemnt_id = c.id
-      <if test="pId != null and pId != ''">
-       and   experiemnt_id = #{pId}
+      <if test="id != null ">
+       and   experiemnt_id = #{id,jdbcType=INTEGER}
       </if>
     </where>
   </select>

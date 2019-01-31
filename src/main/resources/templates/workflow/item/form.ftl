@@ -34,7 +34,7 @@
 
 /*此处有个bug 选择标准和实际对应的ID老是对应不上*/
   $("#standard-form").combobox({
-  	onSelect:function() {
+  	onChange:function(newValue, oldValue) {
       var item = $("#test-items-form");
       item.combobox({
           disable:false,
@@ -50,16 +50,7 @@
             }
           }
       }).combobox("clear");
-  	      /*var item = $("#test-items-form");
-  	      var id =   $("#standard-form").combobox("getValue")
-  	      var vv =   $('#standard-form').combobox('getValue')
-
-  		  item.combobox("clear");
-  		  alert(vv);
-  		  var url = "/resource/standard/item/list?"+"stId=" +id;
-          item.combobox('reload', url);*/
-  	}
-    /*,
+  	},
   	 onLoadSuccess:function(data) {
                //默认选中第一个
           var array=$(this).combobox("getData");
@@ -68,7 +59,7 @@
                     $(this).combobox('select',array[0][item]);
               }
       }
-     }*/
+     }
   }
   )
 </script>
