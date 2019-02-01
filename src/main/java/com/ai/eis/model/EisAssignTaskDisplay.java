@@ -13,7 +13,8 @@ public class EisAssignTaskDisplay {
 		private Integer projectId;
 		private String remarks;
 		private String id;
-
+		private String taskId;
+		
 		public String getProjectNo() {
 			return projectNo;
 		}
@@ -76,5 +77,13 @@ public class EisAssignTaskDisplay {
 
 		public void setId(String id) {
 			this.id = id;
+		}
+
+		public String getTaskId() {
+			return taskId;
+		}
+
+		public void setTaskId(String taskId) {
+			this.taskId = taskId;
 		}
 }

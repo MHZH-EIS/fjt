@@ -1,5 +1,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
 <form class="app-form" id="workflow-item-form">
+  <input type="hidden" id="exName" name="exName" class="easyui-textbox" >
   <div class="field">
     <input class="easyui-textbox" id="projectId" name="projectId" style="width:100%" data-options="label:'项目ID:',required:true,readonly:true">
    </div>
@@ -28,6 +29,10 @@
                     $(this).combobox('select',array[0][item]);
                   }
         }
+    },
+    onChange:function(newValue,oldValue) {
+          var item = $("#test-items-form");
+          $("#exName").textbox('setValue',item.combobox("getText")); 
     }
     }
   ); 

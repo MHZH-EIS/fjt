@@ -322,7 +322,7 @@ define(function () {
           },
           "test-item-assign":{
               iconCls: 'fa fa-user-circle-o',
-              text: "分配试验项目",
+              text: "按照选定进行下卡",
               handler: function () {
                 var itemrows = itemdg.datagrid("getRows"); 
                 var row = dg.edatagrid('getSelected');
@@ -345,19 +345,30 @@ define(function () {
                                           id: itemrows[i].testId,
                                           projectId: itemrows[i].projectId,
                                           itemId: itemrows[i].itemId,
-                                          userId: itemrows[i].assign.split(":")[0] 
+                                          userId: itemrows[i].assign.split(":")[0],
+                                          exName: itemrows[i].testName
                                       };
                     postDatas.push(objectData);
                   }
  
                   $.post("/workflow/discard",{"jsonStr":JSON.stringify(postDatas)},function(data){
-                	  var obj = JSON.parse(data);
+                    if(!data.match("^\{(.+:.+,*){1,}\}$"))
+                      {
+                        $.messager.alert({title:'提示',msg:data,icon:'info'});
+                        return;
+                      }
+                      var obj = JSON.parse(data);
+                    //不起作用 在返回500的时候不知道为什么没提示
+                      if(obj.status == 500) {
+                        $.messager.alert({title:'提示',msg:"因服务器原因下卡失败",icon:'info'});
+                         return;
+                      }
                       if (obj.success) {
                         $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
                       }else {
                         $.messager.alert({title:'提示',msg:"下卡失败:"+obj.message,icon:'error'});
                       }
-                  },'json');
+                  },"json");
                 }
               }
           }
@@ -487,7 +498,7 @@ define(function () {
     	        		 type:"get",
     	        		 url:"/resource/contract/experiment/save",
     	        		 onSubmit: function (param) {        //表单提交前的回调函数 
-    	        	          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
+                          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
     	        	          if (!isValid) { 
     	        	        	  $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
     	        	          } 

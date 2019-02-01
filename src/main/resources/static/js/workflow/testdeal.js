@@ -159,6 +159,13 @@ define(function () {
           handler: function () {
         	     dg.edatagrid('reload');
           }
+        },
+        "assign-writedoc": {
+          iconCls: 'fa fa-pencil"',
+          text: "填写报告",
+          handler: function () {
+        	     
+          }
         }
     })
     });

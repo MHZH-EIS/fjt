@@ -196,6 +196,7 @@ public class WorkFlowController {
             EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
             one.setAssignName(user.getName());
             one.setId(task.getItemId());
+            one.setTaskId(task.getTaskId());
             displayTasks.add(one);
         }
         return displayTasks;
