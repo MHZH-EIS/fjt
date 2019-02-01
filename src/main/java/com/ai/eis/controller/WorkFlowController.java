@@ -297,7 +297,12 @@ public class WorkFlowController {
         List <String> executedActivityIdList = historicActivityInstances.stream()
                                                                         .map(HistoricActivityInstance::getActivityId)
                                                                         .collect(Collectors.toList());
-
+        List <Task> list = taskService.createTaskQuery().processInstanceBusinessKey(id).list();
+        if (list.size() > 0) {
+            Map <String, Object> variables = taskService.getVariables(list.get(0).getId());
+            bpmnModel.getFlowElement("test1").setName(String.valueOf(variables.get("experiment1")));
+            bpmnModel.getFlowElement("test2").setName(String.valueOf(variables.get("experiment2")));
+        }
         List <String> flowIdList = new ArrayList <>();
         List <FlowNode> historicFlowNodeList = new LinkedList <>();
         List <HistoricActivityInstance> finishedActivityInstanceList = new LinkedList <>();
