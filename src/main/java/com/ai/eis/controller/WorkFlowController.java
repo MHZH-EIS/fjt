@@ -159,7 +159,7 @@ public class WorkFlowController {
         for (EisExperiment experiment : list) {
             map.put("item" + index, String.valueOf(experiment.getId()));
             map.put("user" + index, experiment.getUserId());
-            map.put("experiment" + index, String.valueOf(experiment.getItemId()));
+            map.put("experiment" + index, String.valueOf(experiment.getExName()));
             index++;
         }
         formService.submitTaskFormData(task.getId(), map);
