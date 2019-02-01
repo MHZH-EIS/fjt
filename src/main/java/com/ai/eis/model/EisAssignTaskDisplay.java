@@ -14,6 +14,7 @@ public class EisAssignTaskDisplay {
 		private String remarks;
 		private String id;
 		private String taskId;
+		private String testFilePath;
 		
 		public String getProjectNo() {
 			return projectNo;
@@ -85,5 +86,13 @@ public class EisAssignTaskDisplay {
 
 		public void setTaskId(String taskId) {
 			this.taskId = taskId;
+		}
+
+		public String getTestFilePath() {
+			return testFilePath;
+		}
+
+		public void setTestFilePath(String testFilePath) {
+			this.testFilePath = testFilePath;
 		}
 }

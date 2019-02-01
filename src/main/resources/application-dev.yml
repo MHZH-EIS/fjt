@@ -36,8 +36,10 @@ spring:
   async-executor-activate: false
   
  eis:
-   system:
-    super-user-id:1
+   super-user-id: 1
+   posyspath: d:/lic/
+   popassword: 111111
+   
  
  
  

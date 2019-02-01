@@ -14,4 +14,6 @@ public interface EisExperimentService {
     List <EisExperiment> queryByCondition(Map <String, String> map);
     List <Map <String, Object>> queryExperimentBrief(Integer projectId);
     int update(EisExperiment experiment);
+    
+    EisExperiment queryById(Integer id);
 }

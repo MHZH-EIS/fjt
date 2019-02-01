@@ -161,10 +161,14 @@ define(function () {
           }
         },
         "assign-writedoc": {
-          iconCls: 'fa fa-pencil"',
+          iconCls: 'fa fa-file-word-o',
           text: "填写报告",
           handler: function () {
-        	     
+            var row = dg.edatagrid('getSelected');
+            if (!row) {
+              $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
+            }
+        	  dg.edatagrid('reload');
           }
         }
     })
@@ -273,7 +277,7 @@ define(function () {
             handler: function () {
            	    var row = dg.edatagrid('getSelected');
            	    if (!row) {
-     				        $.messager.alert({title:'提示',msg:"请先选一个测试任务",icon:'info'});
+     			   $.messager.alert({title:'提示',msg:"请先选一个测试任务",icon:'info'});
            	    }else {
                 	createTestItemForm();
            	    }

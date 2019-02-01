@@ -21,6 +21,14 @@
       )
   </insert>
   
+  
+      <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+      ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID
+      from eis_experiment
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+  
     <update id="updateSelective" parameterType="com.ai.eis.model.EisExperiment" >
     update eis_experiment
     <set >

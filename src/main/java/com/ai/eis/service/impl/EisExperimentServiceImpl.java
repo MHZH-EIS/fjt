@@ -40,4 +40,10 @@ public class EisExperimentServiceImpl implements EisExperimentService {
     public List <Map <String, Object>> queryExperimentBrief(Integer projectId) {
         return experimentMapper.queryExperimentBrief(projectId);
     }
+
+    @Override
+	 public EisExperiment queryById(Integer id) {
+ 
+			return experimentMapper.selectByPrimaryKey(id);
+		}
 }

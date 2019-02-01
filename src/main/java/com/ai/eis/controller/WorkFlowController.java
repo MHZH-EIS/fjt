@@ -4,6 +4,7 @@ import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
 import com.ai.eis.model.*;
 import com.ai.eis.service.EisContractService;
+import com.ai.eis.service.EisExperimentService;
 import com.alibaba.fastjson.JSON;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
@@ -65,6 +66,9 @@ public class WorkFlowController {
 
     @Autowired
     private EisContractService contractService;
+    
+    @Autowired
+    private EisExperimentService experimentService;
 
     @RequestMapping("/assign")
     public void assign(@RequestParam(value = "id", defaultValue = "") String id) {
@@ -187,6 +191,13 @@ public class WorkFlowController {
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
+            /*根据实验项目ID查询到具体的试验*/
+            if (task.getItemId() != null) {
+            	logger.info("=========task itemId:{}",task.getItemId());
+            	EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
+                one.setTestFilePath(experiment.getFile());	
+            }
+            
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
             EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
