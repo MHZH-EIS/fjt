@@ -1,6 +1,7 @@
 package com.ai.eis.common;
 
 import com.ai.eis.model.EisContract;
+import com.ai.eis.model.EisSampleSign;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisDeviceService;
 import com.ai.eis.service.EisExperimentService;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -67,21 +67,26 @@ public class ServiceTask implements JavaDelegate {
 
             FileUtil.mergeWord(allFiles, FileModel.generateReport(projectId));
 
+
             logger.info("最终报告生成成功");
 
-        } catch (IOException | Docx4JException | JAXBException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
-    private File createCover(EisContract contract, String projectId, Map <String, Object> variables) throws FileNotFoundException, Docx4JException {
-        // sampleService.listSignRecord()
+    private File createCover(EisContract contract, String projectId, Map <String, Object> variables) throws Exception {
+        Map <String, String> paraMap = new HashMap <>();
+        paraMap.put("pId", projectId);
+        List <EisSampleSign> eisSampleSigns = sampleService.listSignRecord(paraMap);
+        eisSampleSigns.sort(Comparator.comparing(EisSampleSign::getSignDate).reversed());
+
         Map <String, String> map = new HashMap <>();
         map.put("projectNo", contract.getProjectNo());
         map.put("projectName", contract.getProjectName());
         map.put("version", contract.getProjectVersion());
         map.put("sampleNum", String.valueOf(contract.getSampleNum()));
-        map.put("signDate", "2019-1-20");
+        map.put("signDate", format1.format(eisSampleSigns.get(0).getSignDate()));
         map.put("clientCompany", contract.getClientCompany());
         map.put("clientAddress", contract.getClientAddress());
         map.put("mfName", contract.getMfName());
@@ -94,6 +99,8 @@ public class ServiceTask implements JavaDelegate {
 
         map.put("manager", String.valueOf(variables.get("manager")));
         map.put("charger", "苗海泉");
+        map.put("refNo", "SDDWEFWEF12312");
+        map.put("footDate", format1.format(date));
         File target = FileModel.generateCoverFile(projectId);
         WordCommon.replacePlaceholder(FileModel.getCoverTemplate(), target, map);
         if (target.exists()) {
