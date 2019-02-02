@@ -185,7 +185,7 @@ define(function () {
             if (row) {
               $.messager.confirm('系统提示', '确定将【' + row.name + "】的密码重置为：0000", function (r) {
                 if (r) {
-                  $.get("/system/member/password/reset", {id: row.id}, function (rsp) {
+                  $.get("/system/member/password/reset", {id: row.userid}, function (rsp) {
                     $.messager.alert("系统提示", "密码重置成功！");
                   })
                 }

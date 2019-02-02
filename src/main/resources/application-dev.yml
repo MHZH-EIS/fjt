@@ -35,10 +35,10 @@ spring:
   history-level: full
   async-executor-activate: false
   
- eis:
-   super-user-id: 1
-   posyspath: d:/lic/
-   popassword: 111111
+eis:
+  super-user-id: 1
+  posyspath: d:/lic/
+  popassword: 111111
    
  
  

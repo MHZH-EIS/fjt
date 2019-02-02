@@ -215,6 +215,7 @@ public class MemberController {
 	public AjaxResult resetPassword(Integer id) {
 		EisLogin login = loginService.selectByPrimaryKey(id);
 		login.setPassword(DigestUtils.sha256Hex("0000"));
+		loginService.updateLogin(login);
 		AjaxResult rs = new AjaxResult();
 		rs.setSuccess(true);
 		return rs;
