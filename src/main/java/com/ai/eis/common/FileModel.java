@@ -161,4 +161,68 @@ public class FileModel {
         return FileUtil.createSpoolAndFile(sb.toString());
     }
 
+    /**
+     * 获取封面模板文件
+     *
+     * @return
+     */
+    public static File getCoverTemplate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("common");
+        sb.append(File.separator);
+        sb.append("cover");
+        sb.append(File.separator);
+        sb.append("cover.docx");
+        return new File(sb.toString());
+    }
+
+    /**
+     * 生成封面文件临时文件
+     *
+     * @param projectId
+     * @return
+     */
+    public static File generateCoverFile(String projectId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(projectId);
+        sb.append(File.separator);
+        sb.append("cover.docx");
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+
+    /**
+     * 获取尾页
+     *
+     * @return
+     */
+    public static File getEndPage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("common");
+        sb.append(File.separator);
+        sb.append("endpage");
+        sb.append(File.separator);
+        sb.append("endpage.docx");
+        return new File(sb.toString());
+    }
+
+
+    public static File generateReport(String projectId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(projectId);
+        sb.append(File.separator);
+        sb.append("report");
+        sb.append(File.separator);
+        sb.append("report.docx");
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+
+
 }

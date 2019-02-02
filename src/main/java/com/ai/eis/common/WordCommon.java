@@ -21,8 +21,8 @@ import java.util.*;
 
 public class WordCommon {
 
-    public static void replacePlaceholder(String srcPath, String destPath, Map <String, String> map) throws FileNotFoundException, Docx4JException {
-        WordprocessingMLPackage template = WordprocessingMLPackage.load(new FileInputStream(new File(srcPath)));
+    public static void replacePlaceholder(File src, File dest, Map <String, String> map) throws FileNotFoundException, Docx4JException {
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(new FileInputStream(src));
         List <Object> texts = getAllElementFromObject(template.getMainDocumentPart(), Text.class);
         for (Object text : texts) {
             Text textElement = (Text) text;
@@ -30,7 +30,7 @@ public class WordCommon {
                 textElement.setValue(map.get(textElement.getValue()));
             }
         }
-        template.save(new File(destPath));
+        template.save(dest);
     }
 
     private static List <Object> getAllElementFromObject(Object obj, Class <?> toSearch) {
@@ -47,6 +47,12 @@ public class WordCommon {
             }
         }
         return result;
+    }
+
+    public static void replaceText(File src, File dest, Map <String, String> map) throws Docx4JException, JAXBException {
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(src);
+        wordMLPackage.getMainDocumentPart().variableReplace(map);
+        wordMLPackage.save(dest);
     }
 
     /**
@@ -100,23 +106,17 @@ public class WordCommon {
 
         map.put("standard", standard);
 
-        replacePlaceholder("D:\\temp\\A2018CCC0301-3043365N.docx", "D:\\temp\\total.docx", map);
+        // replacePlaceholder("D:\\temp\\A2018CCC0301-3043365N.docx", "D:\\temp\\total.docx", map);
 
     }
 
 
     public static void main(String[] args) throws JAXBException, Docx4JException, FileNotFoundException {
-        tach();
-//        List <Map <String, Object>> list = new ArrayList <>();
-//        for (int i = 1; i < 10; i++) {
-//            Map <String, Object> map = new HashMap <>();
-//            map.put("index", i);
-//            map.put("experiment", "光学测试" + i);
-//            map.put("clause", "3.10." + i);
-//            map.put("result", "合格");
-//            list.add(map);
-//        }
-//        createWordTable(new File("D:\\temp\\2.docx"), new File("D:\\temp\\total.docx"), list);
+        Map <String, String> map = new HashMap <>();
+        map.put("projectNo", "ASEDD");
+        replaceText(new File("D:\\temp\\report.docx"),
+                new File("D:\\temp\\total.docx"),
+                map);
     }
 
 

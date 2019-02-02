@@ -13,9 +13,8 @@ import org.docx4j.wml.*;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileUtil {
     /**
@@ -49,8 +48,7 @@ public class FileUtil {
         return file;
     }
 
-    public static void mergeWord(List <File> srcDocxs, File destDocx) throws IOException, Docx4JException {
-
+    public static void mergeWord(List <File> srcDocxs, File destDocx, boolean breakPage) throws IOException, Docx4JException {
         WordprocessingMLPackage target = null;
         final File generated = File.createTempFile("generated", ".docx");
         int index = 0;
@@ -62,7 +60,9 @@ public class FileUtil {
                 target = WordprocessingMLPackage.load(generated);
             } else {
                 MainDocumentPart mainDocumentPart = target.getMainDocumentPart();
-                addPageBreak(mainDocumentPart);
+                if (breakPage) {
+                    addPageBreak(mainDocumentPart);
+                }
                 AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/part" + index++ + ".docx"));
                 afiPart.setBinaryData(IOUtils.toByteArray(new FileInputStream(srcDocx)));
                 Relationship relationship = mainDocumentPart.addTargetPart(afiPart);
@@ -75,7 +75,10 @@ public class FileUtil {
             target.save(generated);
             FileUtils.copyInputStreamToFile(new FileInputStream(generated), destDocx);
         }
+    }
 
+    public static void mergeWord(List <File> srcDocxs, File destDocx) throws IOException, Docx4JException {
+        mergeWord(srcDocxs, destDocx, true);
     }
 
     private static void addPageBreak(MainDocumentPart documentPart) {
@@ -89,11 +92,8 @@ public class FileUtil {
         documentPart.addObject(p);
     }
 
-
     public static void main(String[] args) throws IOException, Docx4JException {
-        mergeWord(Stream.of("D:\\temp\\w1.docx", "D:\\temp\\w2.docx").map(File::new).collect(Collectors.toList())
-                , new File("D:\\temp\\w3.docx"));
+        mergeWord(Arrays.asList(new File("D:\\temp\\cover.docx"),new File("D:\\temp\\q1.docx")),new File("D:\\temp\\total.docx"));
     }
-
 
 }
