@@ -29,7 +29,7 @@
             dt = new Date(value);
         }
      
-        return dt.format("yyyy-MM-dd"); //扩展的Date的format方法(上述插件实现)
+        return dt.format("yyyy-MM-dd hh:mm:ss"); //扩展的Date的format方法(上述插件实现)
 };
 
 
@@ -134,9 +134,9 @@ define(function () {
   	   {
           field: 'assignName',
           title: '处理人',
-          width: 50,
+          width: 30,
           editor: {
-            type: 'datebox',
+            type: 'validatebox',
             options: {
               required: true
             }
@@ -145,7 +145,7 @@ define(function () {
         },{
           field: 'assignTime',
           title: '下发时间',
-          width: 30,
+          width: 50,
           editor: {
             type: 'validatebox',
             options: {
