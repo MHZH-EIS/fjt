@@ -80,7 +80,26 @@ public class WorkFlowController {
 
     }
 
+    @RequestMapping("/report/modify")
+    public void modifyReportForm() {
 
+    }
+
+    @RequestMapping("/report/verify")
+    public void verfrifyReportForm() {
+
+    }
+    
+    @RequestMapping("/report/mail")
+    public void mailReportForm() {
+
+    }
+
+    @RequestMapping("/query/tasks/his")
+    public void queryHisTasks() {
+
+    }
+    
     @RequestMapping("/item/testform")
     public void displayform(Long id) {
     }
@@ -212,6 +231,41 @@ public class WorkFlowController {
         }
         return displayTasks;
     }
+    
+    
+    @RequestMapping("/query/task/his/display")
+    @ResponseBody
+    public List <EisAssignTaskDisplay> queryHisDisplayTasks() {
+        HttpSession session = request.getSession();
+        List <EisAssignTaskDisplay> displayTasks = new ArrayList <>();
+        List <EisUserTask> tasks = queryCurrentUserHisTask();
+
+        for (EisUserTask task : tasks) {
+            EisAssignTaskDisplay one = new EisAssignTaskDisplay();
+            /*根据实验项目ID查询到具体的试验*/
+            if (task.getItemId() != null) {
+            	logger.info("=========task itemId:{}",task.getItemId());
+            	EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
+                one.setTestFilePath(experiment.getFile());	
+            }
+            
+            one.setTaskName(task.getTaskName());
+            one.setAssignTime(task.getDate());
+            EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
+            if (contract != null && contract.getProjectName() != null) {
+                one.setProjectName(contract.getProjectName());
+                one.setProjectNo(contract.getProjectNo());
+                one.setProjectId(contract.getProjectId());
+            }
+            EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
+            one.setAssignName(user.getName());
+            one.setId(task.getItemId());
+            one.setTaskId(task.getTaskId());
+            displayTasks.add(one);
+        }
+        return displayTasks;
+    }
+    
 
 
     /**
@@ -273,7 +327,11 @@ public class WorkFlowController {
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                                                                             .processInstanceId(historicTaskInstance.getProcessInstanceId())
                                                                             .singleResult();
-            userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
+            if(historicProcessInstance.getBusinessKey() != null&&
+            		!historicProcessInstance.getBusinessKey().equals("null")	) {
+                userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
+            }
+
             tasks.add(userTask);
         }
         return tasks;

@@ -30,7 +30,6 @@ import com.zhuozhengsoft.pageoffice.OpenModeType;
 import com.zhuozhengsoft.pageoffice.PageOfficeCtrl;
 
 @Controller
-
 public class EditWordController {
 	private Logger logger = LoggerFactory.getLogger(EditWordController.class);
 
@@ -38,6 +37,9 @@ public class EditWordController {
 	private ApplicationConfigData applicationData;
 	private String posyspath;
 
+	
+	
+	
 	@RequestMapping(value = "/testtask/editword", method = RequestMethod.GET)
 	public ModelAndView editWord(HttpServletRequest request, Map<String, Object> map,
 			@RequestParam("filePath") String filePath, HttpSession session) {
@@ -52,9 +54,16 @@ public class EditWordController {
 		poCtrl.setServerPage("/poserver.zz");// 设置服务页面
 		poCtrl.addCustomToolButton("保存", "Save", 1);// 添加自定义保存按钮
 		poCtrl.addCustomToolButton("盖章","AddSeal",2);//添加自定义盖章按钮
-		poCtrl.addCustomToolButton("全屏显示", "fullScreen", 4);
+		poCtrl.addCustomToolButton("全屏显示", "fullScreen", 3);
 		poCtrl.addCustomToolButton("关闭全屏", "cancelFullScreen", 4);
+		poCtrl.addCustomToolButton("修改签章密码", "modifyPassword", 5);
+		poCtrl.addCustomToolButton("打印报告", "Print", 6);
 		poCtrl.setSaveFilePage("/testtask/savefile");// 设置处理文件保存的请求方法
+		//这句可以不要，设置了应该不用单独在word里面设置服务器了
+		poCtrl.setZoomSealServer("http://127.0.0.1:8081/poserver.zz");
+
+
+		//logger.info("GetPath:{}",this.getClass().getResource("/application.yml").getPath());
 
 		Member userMember = (Member) session.getAttribute(Constants.SESSION_MEMBER_KEY);
 		logger.info("用户:{} 打开文档:{}", userMember.getRealName(), filePath);
@@ -70,6 +79,39 @@ public class EditWordController {
 		mv.addObject("fileName", filePath);
 		return mv;
 	}
+	
+	@RequestMapping(value = "/testtask/readword", method = RequestMethod.GET)
+	public ModelAndView readWord(HttpServletRequest request, Map<String, Object> map,
+			@RequestParam("filePath") String filePath, HttpSession session) {
+		
+		PageOfficeCtrl poCtrl = new PageOfficeCtrl(request);
+		try {
+			filePath = java.net.URLDecoder.decode(filePath, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			logger.error("文件名转换编码失败:{}", e1.getMessage());
+			logger.error("文件名为:{}", filePath);
+		}
+		poCtrl.setServerPage("/poserver.zz");// 设置服务页面
+		poCtrl.addCustomToolButton("全屏显示", "fullScreen", 1);
+		poCtrl.addCustomToolButton("关闭全屏", "cancelFullScreen", 2);
+		poCtrl.addCustomToolButton("打印报告", "Print", 6);
+		poCtrl.setSaveFilePage("/testtask/savefile");// 设置处理文件保存的请求方法
+ 
+		Member userMember = (Member) session.getAttribute(Constants.SESSION_MEMBER_KEY);
+		logger.info("用户:{} 以只读模式打开文档:{}", userMember.getRealName(), filePath);
+
+		if (filePath != null && !filePath.equals("null")) {
+			poCtrl.webOpen(filePath, OpenModeType.docReadOnly , userMember.getRealName());
+		} else {
+			poCtrl.webOpen("d:\\test.doc", OpenModeType.docReadOnly , userMember.getRealName());
+			filePath = "d:\\test.doc";
+		}
+		map.put("pageoffice", poCtrl.getHtmlCode("PageOfficeCtrl1"));
+		ModelAndView mv = new ModelAndView("/word/editword");
+		return mv;
+	}
+	
+	
 
 	// 文件保存
 	@RequestMapping("/testtask/savefile")

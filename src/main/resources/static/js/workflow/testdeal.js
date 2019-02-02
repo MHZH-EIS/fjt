@@ -39,6 +39,7 @@ define(function () {
     var dg = $("#test_dg");
  
     var form;
+    var commit =0 ;
     
     var itemdg = $("#device_items_dg");
     
@@ -71,7 +72,7 @@ define(function () {
       border: false,
       pagination: true,
       singleSelect: true,
-      ignore: ['id'],
+      ignore: ['taskId'],
       pageSize: 30,
       columns: [[{
           field: 'projectNo',
@@ -115,6 +116,21 @@ define(function () {
             return filterXSS(val);
           }
         },
+        {
+            field: 'taskId',
+            title: '任务ID',
+            width: 50,
+            editor: {
+              type: 'validatebox',
+              options: {
+                required: true,
+                hide: true
+              }
+            },
+            formatter: function (val) {
+              return filterXSS(val);
+            }
+          },
   	   {
           field: 'assignName',
           title: '处理人',
@@ -169,8 +185,46 @@ define(function () {
               $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
             }
             POBrowser.openWindowModeless(document.URL+'testtask/editword?filePath='+ encodeURI(encodeURI(row.testFilePath)) , 'width=1200px;height=800px;');
+            commit = commit+1;
+          }
+      },
+      "assign-commit": {
+          iconCls: 'fa fa-check-square',
+          text: "提交完成",
+          handler: function () {
+              var row = dg.edatagrid('getSelected');
+              if (!row) {
+                $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
+              }
+              var itemrows = dg.datagrid("getRows"); 
+             // alert("commit:"+commit+"length:"+itemrows.length);
+              if (commit < itemrows.length  ) {
+            	  $.messager.alert({title:'提示',msg:"测试的文档未填完，需要填"+itemrows.length+"个报告",icon:'error'});
+              } 
+              $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
+                  if(!data.match("^\{(.+:.+,*){1,}\}$"))
+                    {
+                      $.messager.alert({title:'提示',msg:data,icon:'info'});
+                      return;
+                    }
+                    var obj = JSON.parse(data);
+                  //不起作用 在返回500的时候不知道为什么没提示
+                    if(obj.status == 500) {
+                      $.messager.alert({title:'提示',msg:"因服务器原因下卡失败",icon:'info'});
+                       return;
+                    }
+                    if (obj.success) {
+                      $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
+                    }else {
+                      $.messager.alert({title:'提示',msg:"下卡失败:"+obj.message,icon:'error'});
+                    }
+                },"json");
+              
+              
+              
+        	  dg.edatagrid('reload');
+          }
         }
-      }
     })
     });
 
