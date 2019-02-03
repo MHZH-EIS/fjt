@@ -66,7 +66,7 @@ public class WorkFlowController {
 
     @Autowired
     private EisContractService contractService;
-    
+
     @Autowired
     private EisExperimentService experimentService;
 
@@ -193,11 +193,11 @@ public class WorkFlowController {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
             /*根据实验项目ID查询到具体的试验*/
             if (task.getItemId() != null) {
-            	logger.info("=========task itemId:{}",task.getItemId());
-            	EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
-                one.setTestFilePath(experiment.getFile());	
+                logger.info("=========task itemId:{}", task.getItemId());
+                EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
+                one.setTestFilePath(experiment.getFile());
             }
-            
+
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
             EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
@@ -270,6 +270,7 @@ public class WorkFlowController {
             userTask.setTaskId(historicTaskInstance.getId());
             userTask.setTaskName(historicTaskInstance.getName());
             userTask.setDate(historicTaskInstance.getCreateTime());
+            userTask.setCompleteDate(historicTaskInstance.getEndTime());
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                                                                             .processInstanceId(historicTaskInstance.getProcessInstanceId())
                                                                             .singleResult();
