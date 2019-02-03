@@ -2,6 +2,8 @@ package com.ai.eis.model;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class EisSampleSign {
 
     private Integer id;
@@ -26,7 +28,13 @@ public class EisSampleSign {
 
     private String status;
 
-    public Integer getId() {
+    private MultipartFile enclosureFile;
+    
+ 
+    
+ 
+
+	public Integer getId() {
         return id;
     }
 
@@ -113,4 +121,12 @@ public class EisSampleSign {
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
     }
+
+	public MultipartFile getEnclosureFile() {
+		return enclosureFile;
+	}
+
+	public void setEnclosureFile(MultipartFile enclosureFile) {
+		this.enclosureFile = enclosureFile;
+	}
 }

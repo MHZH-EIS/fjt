@@ -58,7 +58,7 @@ define(function () {
       onDblClickRow:function(index,data) {
                var selectdata = data;
                if(selectdata.status  == 1) {
-                   $.messager.alert({title:'提示',msg:"项目未启动，未有流程图片!",icon:'info'});	
+                   $.messager.alert({title:'提示',msg:"项目未启动，未有流程展示!",icon:'info'});	
             	 // $("#img1").attr("alt","项目未启动，未有流程图片!");
                }else {
             	   $("#img1").attr("src", "workflow/image?projectId="+ selectdata.projectId);
@@ -274,7 +274,7 @@ define(function () {
           	var row = dg.edatagrid('getSelected');
         	if (row) {
                 var rowIndex = dg.datagrid('getRowIndex', row);
-                if ( (row.signTotal != row.sendTotal) &&
+                if ( (row.signTotal != row.sendTotal) ||
                 	 (row.signTotal != row.sampleNum)
                   ) {
                    $.messager.alert({title:'提示',msg:"项目中的样品数量不达标无法发起流程!",icon:'info'});	
@@ -283,27 +283,9 @@ define(function () {
                 if (row.status != '1') {
                     $.messager.alert({title:'提示',msg:"项目已经启动不能再次启动!",icon:'info'});	
                     userId = $.session.get("userId");
-                    alert(userId);
                     return;
                 }
-   
-                
                 createAssignForm(row.projectId);
-                //var userId = null;
-                /*$.ajax({
-                    url: "/getUserId",
-                    async: false,// 同步方式发送请求，true为异步发送
-                    type: "GET",
-                    data: {},
-                    success: function (result) {
-                    	userId = result;
-                 }
-                 });
-             
-                $.post("/workflow/start", {projectId:row.projectId,userId: userId}, function (res) {
-                    dg.datagrid('reload');
-                  },"json");*/
-                 
         	 }else  {
         		 $.messager.alert({title:'提示',msg:"请先选中要发起流程的项目",icon:'info'});
         	 }
@@ -375,7 +357,8 @@ define(function () {
                       $.post("/workflow/start", {projectId:id,userId: form2.val()}, function (res) {
                     	  if (res.success) {
                   			 $.messager.alert({title:'提示',msg:"成功启动项目",icon:'info'});
-            				   dialog.dialog('close');
+            				  dialog.dialog('close');
+            				  dg.datagrid('reload');
                     	  }else {
                   			 $.messager.alert({title:'提示',msg:res.message,icon:'error'});
                     		   dialog.dialog('close');

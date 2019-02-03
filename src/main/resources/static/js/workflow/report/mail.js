@@ -71,6 +71,7 @@ define(function () {
       fitColumns: true,
       border: false,
       pagination: true,
+      queryParams:{taskName:"邮寄"},
       singleSelect: true,
       ignore: ['taskId'],
       pageSize: 30,
@@ -202,31 +203,22 @@ define(function () {
             	  $.messager.alert({title:'提示',msg:"待邮寄的文档未打印，需要邮寄"+itemrows.length+"个报告",icon:'error'});
               } 
               if (itemrows.length == 0 ) {
-            	  $.messager.alert({title:'提示',msg:"未有要审核的报告",icon:'error'});
+            	  $.messager.alert({title:'提示',msg:"未有要邮寄的报告",icon:'error'});
               }
               $.messager.confirm("提交提醒", "确认提交?", function (r) {
                 if (r) {
                    $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
-                    if(!data.match("^\{(.+:.+,*){1,}\}$"))
-                      {
-                        $.messager.alert({title:'提示',msg:data,icon:'info'});
-                        return;
-                      }
-                      var obj = JSON.parse(data);
-                    //不起作用 在返回500的时候不知道为什么没提示
-                      if(obj.status == 500) {
-                        $.messager.alert({title:'提示',msg:"因服务器原因审核提交失败",icon:'info'});
-                         return;
-                      }
-                      if (obj.success) {
-                        $.messager.alert({title:'提示',msg:"审核提交成功",icon:'info'});
+                      if (data.success) {
+                        $.messager.alert({title:'提示',msg:"邮寄信息提交成功",icon:'info'});
+                  	    dg.datagrid('reload');
                       }else {
-                        $.messager.alert({title:'提示',msg:"审核提交失败:"+obj.message,icon:'error'});
+                        $.messager.alert({title:'提示',msg:"邮寄信息提交失败:"+data.message,icon:'error'});
+                  	  dg.datagrid('reload');
                       }
                   },"json");
                 }
               });
-        	  dg.edatagrid('reload');
+
           }
         }
     })

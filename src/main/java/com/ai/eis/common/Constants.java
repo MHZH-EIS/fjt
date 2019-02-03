@@ -31,4 +31,11 @@ public interface Constants {
     
     /*测试工程师角色*/
     int TEST_ENGINEER_ROLE_ID = 4;
+    
+    /*下卡任务、 测试任务、调整任务、审核任务、分配任务*/
+    String DISCARD_TASK = "下卡";
+    String TEST_TASK = "测试";
+    String MODIFY_TASK="修改";
+    String VERIFY_TASK = "审核";
+    String MAIL_TASK = "邮寄";
 }

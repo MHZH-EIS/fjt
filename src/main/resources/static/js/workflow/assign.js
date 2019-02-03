@@ -61,13 +61,14 @@ define(function () {
         	  itemdg.datagrid('reload', {projectId: selectdata.projectId});
            }
       },
-      emptyMsg: "还未查到任务",
+      emptyMsg: "还未下卡任务",
       idField: "projectId",
       fit: true,
       rownumbers: true,
       fitColumns: true,
       border: false,
       pagination: true,
+      queryParams:{taskName:"下卡"},
       singleSelect: true,
       ignore: ['projectId'],
       pageSize: 30,
@@ -168,13 +169,22 @@ define(function () {
         destroyUrl: '/resource/contract/experiment/remove',
         updateUrl: '/resource/contract/experiment/update',
         saveUrl: '/resource/contract/experiment/update',
+        onLoadSuccess:function(data){
+            var rows = dg.datagrid("getRows"); 
+            if(rows.length == 0) {
+            	var itemrows = itemdg.datagrid('getRows');
+                for(var i=itemrows.length-1;i>=0;i--){
+                	itemdg.datagrid('deleteRow',i);
+                }
+            }
+        },
         onBeforeSave: function(index) {
       	  return true;
         },
         onSave: function (index, row) {                    
       	   if (itemdg.data('isSave')) {
       	          //如果需要刷新，保存完后刷新
-      	         itemdg.edatagrid('reload');
+      	         itemdg.datagrid('reload');
       	         itemdg.removeData('isSave');
       	   }
         },
@@ -352,22 +362,14 @@ define(function () {
                   }
  
                   $.post("/workflow/discard",{"jsonStr":JSON.stringify(postDatas)},function(data){
-                    if(!data.match("^\{(.+:.+,*){1,}\}$"))
-                      {
-                        $.messager.alert({title:'提示',msg:data,icon:'info'});
-                        return;
-                      }
-                      var obj = JSON.parse(data);
-                    //不起作用 在返回500的时候不知道为什么没提示
-                      if(obj.status == 500) {
-                        $.messager.alert({title:'提示',msg:"因服务器原因下卡失败",icon:'info'});
-                         return;
-                      }
-                      if (obj.success) {
-                        $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
+ 
+                      if (data.success) {
+                          $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
+                         dialog.dialog('close');
+                         dg.datagrid('reload');
                       }else {
-                        $.messager.alert({title:'提示',msg:"下卡失败:"+obj.message,icon:'error'});
-                      }
+                        $.messager.alert({title:'提示',msg:"下卡失败:"+data.data,icon:'error'});
+                      } 
                   },"json");
                 }
               }

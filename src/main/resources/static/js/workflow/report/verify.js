@@ -73,6 +73,7 @@ define(function () {
       pagination: true,
       singleSelect: true,
       ignore: ['taskId'],
+      queryParams:{taskName:"审核"},
       pageSize: 30,
       columns: [[{
           field: 'projectNo',
@@ -207,26 +208,18 @@ define(function () {
               $.messager.confirm("提交提醒", "确认提交?", function (r) {
                 if (r) {
                    $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
-                    if(!data.match("^\{(.+:.+,*){1,}\}$"))
-                      {
-                        $.messager.alert({title:'提示',msg:data,icon:'info'});
-                        return;
-                      }
-                      var obj = JSON.parse(data);
-                    //不起作用 在返回500的时候不知道为什么没提示
-                      if(obj.status == 500) {
-                        $.messager.alert({title:'提示',msg:"因服务器原因审核提交失败",icon:'info'});
-                         return;
-                      }
-                      if (obj.success) {
+ 
+                      if (data.success) {
                         $.messager.alert({title:'提示',msg:"审核提交成功",icon:'info'});
+                  	    dg.datagrid('reload');
                       }else {
-                        $.messager.alert({title:'提示',msg:"审核提交失败:"+obj.message,icon:'error'});
+                        $.messager.alert({title:'提示',msg:"审核提交失败:"+data.message,icon:'error'});
+                  	    dg.datagrid('reload');
                       }
                   },"json");
                 }
               });
-        	  dg.edatagrid('reload');
+        
           }
         }
     })

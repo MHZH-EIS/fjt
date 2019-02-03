@@ -28,6 +28,28 @@ public class FileModel {
     }
 
     /**
+     * 生成样品描述文件路径
+     *
+     * @param pId     项目id
+     * @param fileName 文件名
+     * @return
+     */
+    public static File generateSample(Integer pId,String fileName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(pId);
+        sb.append(File.separator);
+        sb.append("samples");
+        sb.append(File.separator);
+        sb.append(fileName);
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+    
+    
+    
+    /**
      * 生成标准测试项模板文件路径
      *
      * @param stNo     标准号
@@ -210,8 +232,7 @@ public class FileModel {
         return new File(sb.toString());
     }
 
-
-    public static File generateReport(String projectId) {
+    public static String getReportName(String projectId) {
         StringBuilder sb = new StringBuilder();
         sb.append(BASE_PATH);
         sb.append("project");
@@ -221,7 +242,12 @@ public class FileModel {
         sb.append("report");
         sb.append(File.separator);
         sb.append("report.docx");
-        return FileUtil.createSpoolAndFile(sb.toString());
+        return sb.toString();
+    }
+
+    public static File generateReport(String projectId) {
+ 
+        return FileUtil.createSpoolAndFile(getReportName(projectId).toString());
     }
 
 

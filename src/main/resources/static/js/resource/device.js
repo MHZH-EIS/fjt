@@ -308,7 +308,7 @@ define(function () {
         title: (id ? "编辑" : "创建") + "标准",
         iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
         height: 600,
-        width: 800,
+        width: 600,
         collapsible:true,
         href: '/resource/device/form',
         queryParams: {

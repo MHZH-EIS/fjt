@@ -1,9 +1,13 @@
 package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.Constants;
+import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
+import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisSampleSend;
 import com.ai.eis.model.EisSampleSign;
+import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisSampleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +18,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +36,9 @@ public class SampleController {
 
     @Autowired
     private EisSampleService sampleService;
+    
+    @Autowired
+    private EisContractService contractService;
 
     @RequestMapping("/send")
     public void sendIndex() {
@@ -69,6 +80,9 @@ public class SampleController {
             return new AjaxResult(false).setData(br.getAllErrors());
         }
 
+  
+        
+        
         sampleService.send(record);
         logger.info("send {} smaple success,the project is{}", record.getSendNum(), record.getProjectId());
         return new AjaxResult(true);
@@ -88,9 +102,21 @@ public class SampleController {
             logger.error("对象校验失败：" + br.getAllErrors());
             return new AjaxResult(false).setData(br.getAllErrors());
         }
-
-        sampleService.sign(record);
-        logger.info("项目{}此次成功签收{}个样品", record.getProjectId(), record.getSingNum());
+        MultipartFile multipartFile = record.getEnclosureFile();
+        
+        try {
+            if (!multipartFile.isEmpty()) {
+                File file = FileModel.generateSample(record.getProjectId(), multipartFile.getOriginalFilename());
+                logger.info("save file path:{}", file.getAbsolutePath());
+                multipartFile.transferTo(file);
+                logger.info("样品附件上传成功，地址为{}", file.getAbsolutePath());
+            }
+            sampleService.sign(record);
+            logger.info("项目{}此次成功签收{}个样品", record.getProjectId(), record.getSingNum());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return new AjaxResult(false).setData(e);
+        }
         return new AjaxResult(true);
     }
 

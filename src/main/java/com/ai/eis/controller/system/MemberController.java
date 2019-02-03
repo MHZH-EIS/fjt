@@ -163,7 +163,7 @@ public class MemberController {
 					if(loginInfo == null) {
 						loginInfo =  new EisLogin();
 					}
-					loginInfo.setUserid(member.getRoleId());
+					loginInfo.setUserid(member.getUserid());
 					loginInfo.setAccount(member.getAccount());
 					
 					loginService.updateLogin(loginInfo);

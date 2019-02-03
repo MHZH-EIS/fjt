@@ -64,7 +64,7 @@ define(function () {
         	  itemdg.datagrid('reload', {id: selectdata.id});
            }
       },
-      emptyMsg: "还未查到任务",
+      emptyMsg: "还未查到测试任务",
       idField: "id",
       fit: true,
       rownumbers: true,
@@ -72,6 +72,7 @@ define(function () {
       border: false,
       pagination: true,
       singleSelect: true,
+      queryParams:{taskName:"测试"},
       ignore: ['taskId'],
       pageSize: 30,
       columns: [[{
@@ -196,33 +197,23 @@ define(function () {
               if (!row) {
                 $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
               }
-              var itemrows = dg.datagrid("getRows"); 
-             // alert("commit:"+commit+"length:"+itemrows.length);
+              /*var itemrows = dg.datagrid("getRows"); 
               if (commit < itemrows.length  ) {
             	  $.messager.alert({title:'提示',msg:"测试的文档未填完，需要填"+itemrows.length+"个报告",icon:'error'});
-              } 
-              $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
-                  if(!data.match("^\{(.+:.+,*){1,}\}$"))
-                    {
-                      $.messager.alert({title:'提示',msg:data,icon:'info'});
-                      return;
-                    }
-                    var obj = JSON.parse(data);
-                  //不起作用 在返回500的时候不知道为什么没提示
-                    if(obj.status == 500) {
-                      $.messager.alert({title:'提示',msg:"因服务器原因下卡失败",icon:'info'});
-                       return;
-                    }
-                    if (obj.success) {
-                      $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
-                    }else {
-                      $.messager.alert({title:'提示',msg:"下卡失败:"+obj.message,icon:'error'});
-                    }
-                },"json");
+              } */
               
-              
-              
-        	  dg.edatagrid('reload');
+              $.messager.confirm("提交确认", "确认填写完毕测试报告，确认提交?", function (r) {
+                  if (r) {
+                      $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
+                            if (data.success) {
+                              $.messager.alert({title:'提示',msg:"测试任提交务成功",icon:'info'});
+                            }else {
+                              $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
+                            }
+                        },"json");
+                   	  dg.edatagrid('reload');
+                  }
+                });
           }
         }
     })
@@ -244,6 +235,15 @@ define(function () {
       	         itemdg.edatagrid('reload');
       	         itemdg.removeData('isSave');
       	   }
+        },
+        onLoadSuccess:function(data){
+            var rows = dg.datagrid("getRows"); 
+            if(rows.length == 0) {
+            	var itemrows = itemdg.datagrid('getRows');
+                for(var i=itemrows.length-1;i>=0;i--){
+                	itemdg.datagrid('deleteRow',i);
+                }
+            }
         },
         emptyMsg: "还未查到使用设备信息",
         idField: "itemId",

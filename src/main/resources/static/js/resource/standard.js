@@ -66,7 +66,7 @@ define(function () {
         pageSize: 10,
         columns: [[{
             field: 'stId',
-            title: '标准号',
+            title: '标准ID',
             width: 30,
             editor: {
               type: 'validatebox',
@@ -154,7 +154,7 @@ define(function () {
               	if (row) {
               		
               		itemdg.edatagrid('destroyRow');
-              		alert(row.itemId);
+           
               		//itemdg.edatagrid('reload');
               	 }else {
               		$.messager.alert({title:'提示',msg:"请先选一个测试项",icon:'info'});

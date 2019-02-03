@@ -2,6 +2,7 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.FileModel;
 import com.ai.eis.model.*;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
@@ -203,10 +204,10 @@ public class WorkFlowController {
 
     @RequestMapping("/task/display")
     @ResponseBody
-    public List <EisAssignTaskDisplay> queryDisplayTasks() {
+    public List <EisAssignTaskDisplay> queryDisplayTasks(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
         HttpSession session = request.getSession();
         List <EisAssignTaskDisplay> displayTasks = new ArrayList <>();
-        List <EisUserTask> tasks = queryCurrentUserTask();
+        List <EisUserTask> tasks = queryCurrentUserTask(taskName);
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
@@ -216,7 +217,11 @@ public class WorkFlowController {
                 EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
                 one.setTestFilePath(experiment.getFile());
             }
-
+            
+            /*下卡任务*/
+            if( !taskName.equals(Constants.DISCARD_TASK)) {
+            	one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
+            }
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
             EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
@@ -248,6 +253,7 @@ public class WorkFlowController {
             	EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
                 one.setTestFilePath(experiment.getFile());	
             }
+
             
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
@@ -275,13 +281,16 @@ public class WorkFlowController {
      */
     @RequestMapping("/queryCurrentUserTask")
     @ResponseBody
-    public List <EisUserTask> queryCurrentUserTask() {
+    public List <EisUserTask> queryCurrentUserTask(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
         List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
         logger.info("=======userId:{}====", user.getUserid());
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
+        	if(!task.getName().contains(taskName)) {
+        		continue;
+        	}
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
             userTask.setDate(task.getCreateTime());

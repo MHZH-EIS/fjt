@@ -221,7 +221,7 @@ define(function () {
 	 */
     function createForm(id) {
       var dialog = $("<div/>", {class: 'flow'}).dialog({
-        title: (id ? "编辑" : "创建") + "标准",
+        title: (id ? "编辑" : "创建") + "发送样品记录",
         iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
         height: 600,
         width: 420,

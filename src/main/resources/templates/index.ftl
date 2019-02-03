@@ -56,7 +56,7 @@
          <ul class="crm-menu">
 			  <#list menus as child>
 				  <#if child.parent?? &&  child.parentId == menu.id>
-                    <li data-url="${child.menuUrl}">${child.resName}</li>
+                    <li  data-url="${child.menuUrl}" >${child.resName}</li>
 				  </#if>
 			  </#list>
           </ul>

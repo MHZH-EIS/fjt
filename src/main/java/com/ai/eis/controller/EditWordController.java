@@ -107,7 +107,8 @@ public class EditWordController {
 			filePath = "d:\\test.doc";
 		}
 		map.put("pageoffice", poCtrl.getHtmlCode("PageOfficeCtrl1"));
-		ModelAndView mv = new ModelAndView("/word/editword");
+		ModelAndView mv = new ModelAndView("/word/readword");
+		mv.addObject("fileName", filePath);
 		return mv;
 	}
 	
