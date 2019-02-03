@@ -467,12 +467,8 @@ public class WorkFlowController {
                         }
                     }
                 }
-                flowIdList.add(
-                        tempMapList.stream()
-                                   .min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime"))))
-                                   .get()
-                                   .get("flowId")
-                );
+                Optional <Map <String, String>> activityStartTime = tempMapList.stream().min(Comparator.comparing(x -> Long.valueOf(x.get("activityStartTime"))));
+                activityStartTime.ifPresent(map -> flowIdList.add(map.get("flowId")));
             }
 
         }
