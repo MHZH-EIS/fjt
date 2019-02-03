@@ -16,6 +16,7 @@ import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.image.ProcessDiagramGenerator;
@@ -90,7 +91,7 @@ public class WorkFlowController {
     public void verfrifyReportForm() {
 
     }
-    
+
     @RequestMapping("/report/mail")
     public void mailReportForm() {
 
@@ -100,7 +101,7 @@ public class WorkFlowController {
     public void queryHisTasks() {
 
     }
-    
+
     @RequestMapping("/item/testform")
     public void displayform(Long id) {
     }
@@ -183,7 +184,7 @@ public class WorkFlowController {
         for (EisExperiment experiment : list) {
             map.put("item" + index, String.valueOf(experiment.getId()));
             map.put("user" + index, experiment.getUserId());
-            map.put("experiment" + index, String.valueOf(experiment.getExName()));
+            map.put("experiment" + index, experiment.getExName());
             index++;
         }
         formService.submitTaskFormData(task.getId(), map);
@@ -202,6 +203,26 @@ public class WorkFlowController {
         return new AjaxResult(true);
     }
 
+    @ResponseBody
+    @RequestMapping("/endProcess")
+    public AjaxResult endProcessInstance(@RequestParam(value = "taskId", defaultValue = "") String taskId) {
+        try {
+            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                                                            .processInstanceId(task.getProcessInstanceId())
+                                                            .singleResult();
+            String projectId = processInstance.getBusinessKey();
+            EisContract contract = new EisContract();
+            contract.setStatus(Constants.PROJECT_FINISH);
+            contract.setProjectId(Integer.valueOf(projectId));
+            contractService.update(contract);
+            taskService.complete(taskId);
+        } catch (Exception e) {
+            return new AjaxResult(false).setMessage(e.getMessage());
+        }
+        return new AjaxResult(true);
+    }
+
     @RequestMapping("/task/display")
     @ResponseBody
     public List <EisAssignTaskDisplay> queryDisplayTasks(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
@@ -217,10 +238,10 @@ public class WorkFlowController {
                 EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
                 one.setTestFilePath(experiment.getFile());
             }
-            
+
             /*下卡任务*/
-            if( !taskName.equals(Constants.DISCARD_TASK)) {
-            	one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
+            if (!taskName.equals(Constants.DISCARD_TASK)) {
+                one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
             }
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
@@ -236,8 +257,8 @@ public class WorkFlowController {
         }
         return displayTasks;
     }
-    
-    
+
+
     @RequestMapping("/query/task/his/display")
     @ResponseBody
     public List <EisAssignTaskDisplay> queryHisDisplayTasks() {
@@ -249,12 +270,12 @@ public class WorkFlowController {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
             /*根据实验项目ID查询到具体的试验*/
             if (task.getItemId() != null) {
-            	logger.info("=========task itemId:{}",task.getItemId());
-            	EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
-                one.setTestFilePath(experiment.getFile());	
+                logger.info("=========task itemId:{}", task.getItemId());
+                EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
+                one.setTestFilePath(experiment.getFile());
             }
 
-            
+
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
             EisContract contract = contractService.selectByPrimaryKey(task.getProjectId());
@@ -271,7 +292,6 @@ public class WorkFlowController {
         }
         return displayTasks;
     }
-    
 
 
     /**
@@ -288,9 +308,9 @@ public class WorkFlowController {
         logger.info("=======userId:{}====", user.getUserid());
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
-        	if(!task.getName().contains(taskName)) {
-        		continue;
-        	}
+            if (!task.getName().contains(taskName)) {
+                continue;
+            }
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
             userTask.setDate(task.getCreateTime());
@@ -308,6 +328,25 @@ public class WorkFlowController {
                     }
                 }
             }
+            tasks.add(userTask);
+        }
+        return tasks;
+    }
+
+    @RequestMapping("/queryAllCurrentTaskByName")
+    @ResponseBody
+    public List <EisUserTask> queryAllCurrentTaskByName(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
+        List <EisUserTask> tasks = new ArrayList <>();
+        List <Task> list = taskService.createTaskQuery().taskName(taskName).list();
+        for (Task task : list) {
+            EisUserTask userTask = new EisUserTask();
+            userTask.setTaskName(task.getName());
+            userTask.setDate(task.getCreateTime());
+            userTask.setTaskId(task.getId());
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                                                            .processInstanceId(task.getProcessInstanceId())
+                                                            .singleResult();
+            userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
             tasks.add(userTask);
         }
         return tasks;
@@ -337,8 +376,8 @@ public class WorkFlowController {
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
                                                                             .processInstanceId(historicTaskInstance.getProcessInstanceId())
                                                                             .singleResult();
-            if(historicProcessInstance.getBusinessKey() != null&&
-            		!historicProcessInstance.getBusinessKey().equals("null")	) {
+            if (historicProcessInstance.getBusinessKey() != null &&
+                    !historicProcessInstance.getBusinessKey().equals("null")) {
                 userTask.setProjectId(Integer.valueOf(historicProcessInstance.getBusinessKey()));
             }
 
@@ -377,11 +416,20 @@ public class WorkFlowController {
         List <String> executedActivityIdList = historicActivityInstances.stream()
                                                                         .map(HistoricActivityInstance::getActivityId)
                                                                         .collect(Collectors.toList());
-        List <Task> list = taskService.createTaskQuery().processInstanceBusinessKey(id).list();
+        List <HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                                                         .processInstanceBusinessKey(id)
+                                                         .list();
         if (list.size() > 0) {
-            Map <String, Object> variables = taskService.getVariables(list.get(0).getId());
-            bpmnModel.getFlowElement("test1").setName(String.valueOf(variables.get("experiment1")));
-            bpmnModel.getFlowElement("test2").setName(String.valueOf(variables.get("experiment2")));
+            List <HistoricVariableInstance> hvlist = historyService.createHistoricVariableInstanceQuery()
+                                                                   .processInstanceId(list.get(0).getProcessInstanceId())
+                                                                   .list();
+            for (HistoricVariableInstance historicVariableInstance : hvlist) {
+                if (historicVariableInstance.getVariableName().equals("experiment1")) {
+                    bpmnModel.getFlowElement("test1").setName(String.valueOf(historicVariableInstance.getValue()));
+                } else if (historicVariableInstance.getVariableName().equals("experiment2")) {
+                    bpmnModel.getFlowElement("test2").setName(String.valueOf(historicVariableInstance.getValue()));
+                }
+            }
         }
         List <String> flowIdList = new ArrayList <>();
         List <FlowNode> historicFlowNodeList = new LinkedList <>();

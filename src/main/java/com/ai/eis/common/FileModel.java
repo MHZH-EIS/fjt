@@ -30,11 +30,11 @@ public class FileModel {
     /**
      * 生成样品描述文件路径
      *
-     * @param pId     项目id
+     * @param pId      项目id
      * @param fileName 文件名
      * @return
      */
-    public static File generateSample(Integer pId,String fileName) {
+    public static File generateSample(Integer pId, String fileName) {
         StringBuilder sb = new StringBuilder();
         sb.append(BASE_PATH);
         sb.append("project");
@@ -46,9 +46,25 @@ public class FileModel {
         sb.append(fileName);
         return FileUtil.createSpoolAndFile(sb.toString());
     }
-    
-    
-    
+
+    /**
+     * 获取样品文件
+     *
+     * @param pId 项目id
+     * @return
+     */
+    public static File getSample(String pId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(pId);
+        sb.append(File.separator);
+        sb.append("samples");
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+
+
     /**
      * 生成标准测试项模板文件路径
      *
@@ -246,7 +262,7 @@ public class FileModel {
     }
 
     public static File generateReport(String projectId) {
- 
+
         return FileUtil.createSpoolAndFile(getReportName(projectId).toString());
     }
 

@@ -60,6 +60,7 @@ public class ServiceTask implements JavaDelegate {
             EisContract contract = contractService.selectByPrimaryKey(Integer.valueOf(projectId));
 
             allFiles.add(createCover(contract, projectId, execution.getVariables()));
+            allFiles.addAll(Arrays.asList(FileModel.getSample(projectId).listFiles()));
             allFiles.add(createExperimentBrief(experiments, projectId));
             allFiles.add(createDetailExperiment(experiments, projectId));
             allFiles.add(createDevBrief(devs, projectId));
@@ -99,7 +100,7 @@ public class ServiceTask implements JavaDelegate {
 
         map.put("manager", String.valueOf(variables.get("manager")));
         map.put("charger", "苗海泉");
-        map.put("refNo", "SDDWEFWEF12312");
+        map.put("refNo", contract.getProjectNo());
         map.put("footDate", format1.format(date));
         File target = FileModel.generateCoverFile(projectId);
         WordCommon.replacePlaceholder(FileModel.getCoverTemplate(), target, map);
