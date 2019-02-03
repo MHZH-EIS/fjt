@@ -183,10 +183,35 @@ define(function () {
           handler: function () {
             var row = dg.edatagrid('getSelected');
             if (!row) {
-              $.messager.alert({title:'提示',msg:"请先选择个调整任务",icon:'info'});
+              $.messager.alert({title:'提示',msg:"请先选择个任务",icon:'info'});
+              return;
             }
             POBrowser.openWindowModeless(document.URL+'/testtask/readword?filePath='+ encodeURI(encodeURI(row.testFilePath)) , 'width=1200px;height=800px;');
             commit = commit+1;
+          }
+      },
+      "assign-downloaddoc": {
+          iconCls: 'fa fa-download',
+          text: "下载报告",
+          handler: function () {
+            var row = dg.edatagrid('getSelected');
+            if (!row) {
+              $.messager.alert({title:'提示',msg:"请先选择个任务",icon:'info'});
+              return;
+            }
+            var form=$("<form>");//定义一个form表单
+             form.attr("style","display:none");
+               form.attr("target","");
+                form.attr("method","post");
+                form.attr("action","/mail/downloadfile");
+                
+                var input2=$("<input>");
+                input2.attr("type","hidden");
+                input2.attr("name","filePath");
+                input2.attr("value", row.testFilePath);
+                form.append(input2);
+                $(document.body).append(form);
+                form.submit();//表单提交             
           }
       },
       "assign-commit": {

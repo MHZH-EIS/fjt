@@ -219,7 +219,7 @@ public class WorkFlowController {
             }
             
             /*下卡任务*/
-            if( !taskName.equals(Constants.DISCARD_TASK)) {
+            if( !taskName.equals(Constants.TEST_TASK)) {
             	one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
             }
             one.setTaskName(task.getTaskName());
@@ -288,9 +288,10 @@ public class WorkFlowController {
         logger.info("=======userId:{}====", user.getUserid());
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
-        	if(!task.getName().contains(taskName)) {
+        	logger.info("====taskname:{}=====",task.getName());
+        	/*if(!task.getName().contains(taskName)) {
         		continue;
-        	}
+        	}*/
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
             userTask.setDate(task.getCreateTime());
