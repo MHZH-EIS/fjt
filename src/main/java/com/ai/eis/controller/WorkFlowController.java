@@ -143,10 +143,13 @@ public class WorkFlowController {
         if (StringUtils.isEmpty(projectId) || StringUtils.isEmpty(charge)) {
             return new AjaxResult(false).setData("必须选择一个项目和一个项目经理");
         }
+        HttpSession session = request.getSession();
+        EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
         ProcessInstance pi = runtimeService.createProcessInstanceBuilder()
                                            .businessKey(projectId)
                                            .processDefinitionKey("eisprocess")
                                            .variable("manager", charge)
+                                           .variable("charger", user.getUserid())
                                            .start();
         EisContract contract = new EisContract();
         contract.setStatus(Constants.PROJECT_PROCESSING);
@@ -203,7 +206,7 @@ public class WorkFlowController {
         return new AjaxResult(true);
     }
 
-     @ResponseBody
+    @ResponseBody
     @RequestMapping("/endProcess")
     public AjaxResult endProcessInstance(@RequestParam(value = "taskId", defaultValue = "") String taskId) {
         try {
@@ -222,7 +225,7 @@ public class WorkFlowController {
         }
         return new AjaxResult(true);
     }
-    
+
     @RequestMapping("/task/display")
     @ResponseBody
     public List <EisAssignTaskDisplay> queryDisplayTasks(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
@@ -240,8 +243,8 @@ public class WorkFlowController {
             }
 
             /*下卡任务*/
-            if( ! taskName.equals(Constants.TEST_TASK)) {
-            	one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
+            if (!taskName.equals(Constants.TEST_TASK)) {
+                one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
             }
             one.setTaskName(task.getTaskName());
             one.setAssignTime(task.getDate());
@@ -308,9 +311,9 @@ public class WorkFlowController {
         logger.info("=======userId:{}====", user.getUserid());
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
-        	if(!task.getName().contains(taskName)) {
-        		continue;
-        	}
+            if (!task.getName().contains(taskName)) {
+                continue;
+            }
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
             userTask.setDate(task.getCreateTime());

@@ -99,7 +99,7 @@ public class ServiceTask implements JavaDelegate {
         map.put("sealDate", format3.format(date));
 
         map.put("manager", String.valueOf(variables.get("manager")));
-        map.put("charger", "苗海泉");
+        map.put("charger", String.valueOf(variables.get("charger")));
         map.put("refNo", contract.getProjectNo());
         map.put("footDate", format1.format(date));
         File target = FileModel.generateCoverFile(projectId);

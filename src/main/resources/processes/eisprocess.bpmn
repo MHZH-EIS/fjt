@@ -16,8 +16,8 @@
 	</userTask>
     <serviceTask activiti:delegateExpression="${ServiceTask}" activiti:exclusive="true" id="report" name="系统生成报告"/>
 	<userTask activiti:exclusive="true" activiti:assignee="${manager}" id="modifyReport" name="修改报告"/>
-    <userTask activiti:exclusive="false" id="verifiy" name="报告审核"/>
-    <userTask activiti:exclusive="false" id="send" name="报告邮寄"/>
+    <userTask activiti:exclusive="false" activiti:assignee="${charger}" id="verifiy" name="报告审核"/>
+    <userTask activiti:exclusive="false" activiti:assignee="${charger}" id="send" name="报告邮寄"/>
     <endEvent id="结束" name="End"/>
     <parallelGateway gatewayDirection="Unspecified" id="parallelgateway1" name="Parallel Gateway"/>
     <sequenceFlow id="flow12" sourceRef="verifiy" targetRef="send"/>
