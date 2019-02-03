@@ -240,7 +240,7 @@ public class WorkFlowController {
             }
 
             /*下卡任务*/
-            if( !taskName.equals(Constants.DISCARD_TASK)) {
+            if( ! taskName.equals(Constants.TEST_TASK)) {
             	one.setTestFilePath(FileModel.getReportName(String.valueOf(task.getProjectId())));
             }
             one.setTaskName(task.getTaskName());
