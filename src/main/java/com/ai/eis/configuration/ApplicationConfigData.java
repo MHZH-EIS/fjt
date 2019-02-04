@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix="eis")
 public class ApplicationConfigData {
 	
-    
-
-    
 	/*超级用户ID不能删除*/
 	@Value("${eis.super-user-id}")
 	private Integer superUserId;
@@ -21,6 +18,18 @@ public class ApplicationConfigData {
 	/*pageoffice 设置自带印章管理程序的登录密码*/
 	@Value("${eis.popassword}")
 	private String popassword;
+
+	@Value("${eis.basepath}")
+	private String basePath;
+	
+	
+	public String getBasePath() {
+		return basePath;
+	}
+
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
+	}
 
 	public Integer getSuperUserId() {
 		return superUserId;
