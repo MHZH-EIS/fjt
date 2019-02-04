@@ -1,13 +1,25 @@
 package com.ai.eis.common;
 
-import org.springframework.util.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class FileModel {
 
-    public static final String BASE_PATH = new File(ClassUtils.getDefaultClassLoader().getResource("").getPath()).getAbsolutePath()
-            + File.separator + "upload" + File.separator;
+    private static Logger logger = LoggerFactory.getLogger(FileModel.class);
+
+    public static String BASE_PATH;
+
+    static {
+        try {
+            BASE_PATH = ResourceUtils.getFile("classpath:upload").getAbsolutePath() + File.separator;
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
     /**
      * 生成标准文件路径

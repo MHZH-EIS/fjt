@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -124,8 +126,9 @@ public class WorkFlowController {
      */
     @RequestMapping("/deploy")
     @ResponseBody
-    public AjaxResult deployProcess() {
-        repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
+    public AjaxResult deployProcess() throws FileNotFoundException {
+        String path = ResourceUtils.getFile("classpath:processes").getAbsolutePath();
+        repositoryService.createDeployment().addClasspathResource(path + "/eisprocess.bpmn").deploy();
         return new AjaxResult(true);
     }
 
