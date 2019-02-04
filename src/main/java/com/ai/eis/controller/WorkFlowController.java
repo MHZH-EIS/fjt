@@ -3,6 +3,7 @@ package com.ai.eis.controller;
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
 import com.ai.eis.common.FileModel;
+import com.ai.eis.configuration.ApplicationConfigData;
 import com.ai.eis.model.*;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -73,6 +72,9 @@ public class WorkFlowController {
 
     @Autowired
     private EisExperimentService experimentService;
+
+    @Autowired
+    private ApplicationConfigData applicationData;
 
     @RequestMapping("/assign")
     public void assign(@RequestParam(value = "id", defaultValue = "") String id) {
@@ -126,8 +128,8 @@ public class WorkFlowController {
      */
     @RequestMapping("/deploy")
     @ResponseBody
-    public AjaxResult deployProcess() throws FileNotFoundException {
-        String path = ResourceUtils.getFile("classpath:processes").getAbsolutePath();
+    public AjaxResult deployProcess() {
+        String path = applicationData.getBasePath() + "/processes";
         repositoryService.createDeployment().addClasspathResource(path + "/eisprocess.bpmn").deploy();
         return new AjaxResult(true);
     }

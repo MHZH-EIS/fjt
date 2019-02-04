@@ -1,24 +1,19 @@
 package com.ai.eis.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.ResourceUtils;
-
 import java.io.File;
-import java.io.FileNotFoundException;
+
 
 public class FileModel {
 
-    private static Logger logger = LoggerFactory.getLogger(FileModel.class);
 
     public static String BASE_PATH;
 
-    static {
-        try {
-            BASE_PATH = ResourceUtils.getFile("classpath:upload").getAbsolutePath() + File.separator;
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
-        }
+    public static String getBasePath() {
+        return BASE_PATH;
+    }
+
+    public static void setBasePath(String basePath) {
+        BASE_PATH = basePath + File.separator + "upload" + File.separator;
     }
 
     /**
