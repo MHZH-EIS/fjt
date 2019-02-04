@@ -123,7 +123,7 @@ public class EditWordController {
 	}
 
 	// 文件保存
-	@RequestMapping(value = "/mail/downloadfile", method = RequestMethod.GET)
+	@RequestMapping(value = "/mail/downloadfile")
 	public AjaxResult downloadFile(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "filePath", defaultValue = "") String filePath) {
 
