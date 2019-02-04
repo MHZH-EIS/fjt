@@ -91,11 +91,26 @@ public class WorkFlowControllerTest {
 	@RequestMapping("/clear")
 	@ResponseBody
 	public void clear() {
-		ProcessEngine processEngine =  processEngineConfiguration.
+		
+		ProcessEngineConfiguration processEngineConfiguration = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();
+        //连接数据库配置
+        processEngineConfiguration.setJdbcDriver("com.mysql.jdbc.Driver");
+        processEngineConfiguration.setJdbcUrl("jdbc:mysql://localhost:3306/test?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false");
+        processEngineConfiguration.setJdbcUsername("root");
+        processEngineConfiguration.setJdbcPassword("mhq19831030");
+        
+        processEngineConfiguration.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
+        //工作流的核心对象，ProcessEngine对象
+        ProcessEngine processEngine = processEngineConfiguration.buildProcessEngine();
+ 
+        
+		/*ProcessEngine processEngine =  processEngineConfiguration.
 			      setDatabaseSchema(ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE  )
-			      .buildProcessEngine();
+			      .buildProcessEngine();*/
 	
 	   processEngine.close();
+	   logger.info("Clear tables...");
+	   return;
 				
 	}
 	

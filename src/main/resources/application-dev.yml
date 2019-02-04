@@ -27,6 +27,9 @@ spring:
     file-size-threshold: 0
     max-file-size: 100Mb
     max-request-size: 100Mb
+    maxFileSize: 100Mb
+    maxRequestSize: 100Mb
+    
  
  #如果没有这个配置项，则必须在resources/processes里面有bpmn
  activiti:

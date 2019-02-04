@@ -142,6 +142,7 @@ public class RoleController {
                     	resourceids.add(rid);
                     }
                 }
+                eisRoleMenuResourceService.deleteRoleMenu(roleId);
                 eisRoleMenuResourceService.addRoleMenu(role.getRoleId(),resourceids);
                 return new AjaxResult();
             } catch (Exception e) {

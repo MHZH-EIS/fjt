@@ -63,6 +63,8 @@
       </foreach>
     </where>
   </sql>
+  
+  
   <delete id="deleteByExample" parameterType="com.ai.eis.model.EisRoleMenuResourceExample">
     delete from eis_role_menu_resource
     <if test="_parameter != null">
@@ -71,11 +73,18 @@
   </delete>
   
   
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from eis_role_menu_resource
+    where ROLE_ID = #{roleId,jdbcType=INTEGER}
+  </delete>
+  
   
   <insert id="insert" parameterType="com.ai.eis.model.EisRoleMenuResource">
     insert into eis_role_menu_resource (role_id, menu_id)
     values (#{roleId,jdbcType=BIGINT}, #{menuId,jdbcType=BIGINT})
   </insert>
+  
+ 
   
     <insert id="insertByIdAndResourceids"   parameterType="hashmap" >
    insert into eis_role_menu_resource

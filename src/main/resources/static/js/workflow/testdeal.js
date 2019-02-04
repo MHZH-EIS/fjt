@@ -207,11 +207,13 @@ define(function () {
                       $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
                             if (data.success) {
                               $.messager.alert({title:'提示',msg:"测试任提交务成功",icon:'info'});
+                        	  dg.datagrid('reload');
                             }else {
                               $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
+                        	  dg.edatagrid('reload');
                             }
                         },"json");
-                   	  dg.edatagrid('reload');
+                   
                   }
                 });
           }

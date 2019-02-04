@@ -49,7 +49,7 @@ define(function () {
       onSave: function (index, row) {                    
     	   if (dg.data('isSave')) {
     	          //如果需要刷新，保存完后刷新
-    	         dg.edatagrid('reload');
+    	         dg.datagrid('reload');
     	         dg.removeData('isSave');
     	   }
       },
@@ -164,6 +164,49 @@ define(function () {
           handler: function () {
         	     dg.edatagrid('reload');
           }
+        },
+        "test-item-assign":{
+            iconCls: 'fa fa-user-circle-o',
+            text: "按照选定进行下卡",
+            handler: function () {
+              var itemrows = itemdg.datagrid("getRows"); 
+              var row = dg.edatagrid('getSelected');
+              if (!row) {
+                $.messager.alert({title:'提示',msg:"请先选一个下卡任务",icon:'info'});
+              }else {
+                if (itemrows.length == 0) {
+              	  $.messager.alert({title:'提示',msg:"还未给此任务分配试验项目",icon:'info'});
+              	  return;
+                }
+                for (var i = 0; i < itemrows.length;i++) {
+                  if (itemrows[i].assign == null) {
+                    $.messager.alert({title:'提示',msg:"请先给所有测试项分配好工程师后才可以分配试验项目!",icon:'info'});
+                    return;
+                  }
+                }
+                var postDatas = [];
+                for (var i = 0; i < itemrows.length;i++) {
+                  var objectData = {
+                                        id: itemrows[i].testId,
+                                        projectId: itemrows[i].projectId,
+                                        itemId: itemrows[i].itemId,
+                                        userId: itemrows[i].assign.split(":")[0],
+                                        exName: itemrows[i].testName
+                                    };
+                  postDatas.push(objectData);
+                }
+
+                $.post("/workflow/discard",{"jsonStr":JSON.stringify(postDatas)},function(data){
+
+                    if (data.success) {
+                        $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
+                 	   dg.datagrid('reload');
+                    }else {
+                      $.messager.alert({title:'提示',msg:"下卡失败:"+data.data,icon:'error'});
+                    } 
+                },"json");
+              }
+            }
         }
     })
     });
@@ -344,50 +387,6 @@ define(function () {
               		$.messager.alert({title:'提示',msg:"请先选一个试验项目",icon:'info'});
               	 }
               	 
-              }
-          },
-          "test-item-assign":{
-              iconCls: 'fa fa-user-circle-o',
-              text: "按照选定进行下卡",
-              handler: function () {
-                var itemrows = itemdg.datagrid("getRows"); 
-                var row = dg.edatagrid('getSelected');
-                if (!row) {
-                  $.messager.alert({title:'提示',msg:"请先选一个下卡任务",icon:'info'});
-                }else {
-                  if (itemrows.length == 0) {
-                	  $.messager.alert({title:'提示',msg:"还未给此任务分配试验项目",icon:'info'});
-                	  return;
-                  }
-                  for (var i = 0; i < itemrows.length;i++) {
-                    if (itemrows[i].assign == null) {
-                      $.messager.alert({title:'提示',msg:"请先给所有测试项分配好工程师后才可以分配试验项目!",icon:'info'});
-                      return;
-                    }
-                  }
-                  var postDatas = [];
-                  for (var i = 0; i < itemrows.length;i++) {
-                    var objectData = {
-                                          id: itemrows[i].testId,
-                                          projectId: itemrows[i].projectId,
-                                          itemId: itemrows[i].itemId,
-                                          userId: itemrows[i].assign.split(":")[0],
-                                          exName: itemrows[i].testName
-                                      };
-                    postDatas.push(objectData);
-                  }
- 
-                  $.post("/workflow/discard",{"jsonStr":JSON.stringify(postDatas)},function(data){
- 
-                      if (data.success) {
-                          $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
-                         dialog.dialog('close');
-                         dg.datagrid('reload');
-                      }else {
-                        $.messager.alert({title:'提示',msg:"下卡失败:"+data.data,icon:'error'});
-                      } 
-                  },"json");
-                }
               }
           }
         })

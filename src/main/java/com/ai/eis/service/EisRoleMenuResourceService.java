@@ -13,4 +13,6 @@ public interface EisRoleMenuResourceService {
     List<EisRoleMenuResource>  selectByRoleId(Integer roleId);
 
 	void addRoleMenu(Integer roleid, List<Long> resourceids);
+	
+	int deleteRoleMenu(Integer roleid);
 }

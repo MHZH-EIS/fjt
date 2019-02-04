@@ -44,6 +44,13 @@ public class EisRoleMenuResourceServiceImpl implements EisRoleMenuResourceServic
 		eisRoleMenuResourceMapper.insertByIdAndResourceids(map);
 	}
 
+	@Override
+	public int deleteRoleMenu(Integer roleid) {
+ 
+		return eisRoleMenuResourceMapper.deleteByPrimaryKey(roleid);
+		
+	}
+
 	
 
 }

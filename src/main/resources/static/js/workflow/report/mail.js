@@ -224,11 +224,12 @@ define(function () {
                 return;
               }
               var itemrows = dg.datagrid("getRows"); 
-              if (commit < itemrows.length  ) {
+            /*  if (commit < itemrows.length  ) {
             	  $.messager.alert({title:'提示',msg:"待邮寄的文档未打印，需要邮寄"+itemrows.length+"个报告",icon:'error'});
-              } 
+              }*/ 
               if (itemrows.length == 0 ) {
             	  $.messager.alert({title:'提示',msg:"未有要邮寄的报告",icon:'error'});
+            	  return;
               }
               $.messager.confirm("提交提醒", "确认提交?", function (r) {
                 if (r) {

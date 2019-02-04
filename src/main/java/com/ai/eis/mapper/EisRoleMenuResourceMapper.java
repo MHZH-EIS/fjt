@@ -11,6 +11,8 @@ public interface EisRoleMenuResourceMapper {
     int countByExample(EisRoleMenuResource example);
 
     int deleteByExample(EisRoleMenuResource example);
+    
+    int deleteByPrimaryKey(Integer roleId);
 
     int insert(EisRoleMenuResource record);
 
@@ -33,4 +35,5 @@ public interface EisRoleMenuResourceMapper {
 	void insertByIdAndResourceids(Integer roleid, List<Long> resourceids);
 
 	void insertByIdAndResourceids(Map<String, Object> map);
+	
 }
