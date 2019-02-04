@@ -16,6 +16,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.image.ProcessDiagramGenerator;
@@ -87,6 +88,17 @@ public class WorkFlowControllerTest {
         return "流程发布成功";
     }
 
+	@RequestMapping("/clear")
+	@ResponseBody
+	public void clear() {
+		ProcessEngine processEngine =  processEngineConfiguration.
+			      setDatabaseSchema(ProcessEngineConfigurationImpl.DB_SCHEMA_UPDATE_DROP_CREATE  )
+			      .buildProcessEngine();
+	
+	   processEngine.close();
+				
+	}
+	
     @RequestMapping("/start")
     @ResponseBody
     public AjaxResult start(String projectId, String charge) {

@@ -53,11 +53,17 @@ define(function () {
     	         dg.removeData('isSave');
     	   }
       },
+      onLoadSuccess:function(data){
+    	  if (data.rows.length != 0) {
+    	       // dg.datagrid("selectRow", 0);
+          	    //itemdg.datagrid('loadData',{total:0,rows:[]})
+    	        //itemdg.datagrid('reload', {projectId: data.projectId});
+    	  }
+      },
       onClickRow:function(index,data) {
           var selectdata = data;
           if (selectdata) {
         	  itemdg.datagrid('loadData',{total:0,rows:[]})
-
         	  itemdg.datagrid('reload', {projectId: selectdata.projectId});
            }
       },
@@ -177,6 +183,16 @@ define(function () {
                 	itemdg.datagrid('deleteRow',i);
                 }
             }
+        },
+        //开始不加载数据
+        onBeforeLoad: function (param) {
+        	var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
         },
         onBeforeSave: function(index) {
       	  return true;

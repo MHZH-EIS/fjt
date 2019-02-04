@@ -359,6 +359,7 @@ define(function () {
                   			 $.messager.alert({title:'提示',msg:"成功启动项目",icon:'info'});
             				  dialog.dialog('close');
             				  dg.datagrid('reload');
+            				  $("#img1").attr("src", "workflow/image?projectId="+ id);
                     	  }else {
                   			 $.messager.alert({title:'提示',msg:res.message,icon:'error'});
                     		   dialog.dialog('close');

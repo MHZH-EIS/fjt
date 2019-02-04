@@ -232,7 +232,7 @@ define(function () {
               }
               $.messager.confirm("提交提醒", "确认提交?", function (r) {
                 if (r) {
-                   $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
+                   $.post("/workflow/endProcess",{"taskId":row.taskId},function(data){
                       if (data.success) {
                         $.messager.alert({title:'提示',msg:"邮寄信息提交成功",icon:'info'});
                   	    dg.datagrid('reload');

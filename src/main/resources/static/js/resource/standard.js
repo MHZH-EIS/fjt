@@ -152,10 +152,7 @@ define(function () {
               handler: function () {
               	var row = itemdg.edatagrid('getSelected');
               	if (row) {
-              		
               		itemdg.edatagrid('destroyRow');
-           
-              		//itemdg.edatagrid('reload');
               	 }else {
               		$.messager.alert({title:'提示',msg:"请先选一个测试项",icon:'info'});
               	 }

@@ -179,7 +179,7 @@ define(function () {
         },
         "assign-writedoc": {
           iconCls: 'fa fa-file-word-o',
-          text: "调整报告",
+          text: "审核报告",
           handler: function () {
             var row = dg.edatagrid('getSelected');
             if (!row) {

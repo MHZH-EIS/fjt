@@ -236,6 +236,16 @@ define(function () {
       	         itemdg.removeData('isSave');
       	   }
         },
+        //开始不加载数据
+        onBeforeLoad: function (param) {
+        	var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+        },
         onLoadSuccess:function(data){
             var rows = dg.datagrid("getRows"); 
             if(rows.length == 0) {
