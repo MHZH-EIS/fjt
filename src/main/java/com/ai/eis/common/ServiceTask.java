@@ -2,10 +2,7 @@ package com.ai.eis.common;
 
 import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisSampleSign;
-import com.ai.eis.service.EisContractService;
-import com.ai.eis.service.EisDeviceService;
-import com.ai.eis.service.EisExperimentService;
-import com.ai.eis.service.EisSampleService;
+import com.ai.eis.service.*;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -46,6 +43,9 @@ public class ServiceTask implements JavaDelegate {
     @Autowired
     private EisSampleService sampleService;
 
+    @Autowired
+    private StandardService standardService;
+
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -82,6 +82,9 @@ public class ServiceTask implements JavaDelegate {
         List <EisSampleSign> eisSampleSigns = sampleService.listSignRecord(paraMap);
         eisSampleSigns.sort(Comparator.comparing(EisSampleSign::getSignDate).reversed());
 
+        List <Map <String, Object>> list = standardService.queryByProject(Integer.valueOf(projectId));
+        String standards = list.stream().map(map -> map.get("ST_NO") + "《" + map.get("NAME") + "》").collect(Collectors.joining(" "));
+
         Map <String, String> map = new HashMap <>();
         map.put("projectNo", contract.getProjectNo());
         map.put("projectName", contract.getProjectName());
@@ -97,9 +100,10 @@ public class ServiceTask implements JavaDelegate {
         map.put("completeDate", format1.format(date));
         map.put("sDate", format2.format(date));
         map.put("sealDate", format3.format(date));
+        map.put("standard", standards);
 
         map.put("manager", String.valueOf(variables.get("manager")));
-        map.put("charger", String.valueOf(variables.get("charger")));
+        map.put("signer", String.valueOf(variables.get("charger")));
         map.put("refNo", contract.getProjectNo());
         map.put("footDate", format1.format(date));
         File target = FileModel.generateCoverFile(projectId);

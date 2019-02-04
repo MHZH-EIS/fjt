@@ -232,4 +232,28 @@
       </if>
     </where>
   </select>
+
+  <select id="queryByProject" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+    SELECT
+	a.ST_NO,
+	a.`NAME`
+  FROM
+	eis_standard a
+  WHERE
+	a.ST_ID IN (
+		SELECT DISTINCT
+			b.ST_ID
+		FROM
+			eis_st_item b
+		WHERE
+			b.ITEM_ID IN (
+				SELECT DISTINCT
+					c.ITEM_ID
+				FROM
+					eis_experiment c
+				WHERE
+					c.PROJECT_ID = #{projectId}
+			)
+	)
+  </select>
 </mapper>

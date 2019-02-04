@@ -14,4 +14,6 @@ public interface StandardService {
     void delete(Integer id);
 
     EisStandard queryById(Integer id);
+
+    List <Map <String, Object>> queryByProject(Integer projectId);
 }

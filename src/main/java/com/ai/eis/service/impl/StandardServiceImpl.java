@@ -30,8 +30,13 @@ public class StandardServiceImpl implements StandardService {
         standardMapper.deleteByPrimaryKey(id);
     }
 
-	@Override
-	public EisStandard queryById(Integer id) {
-		return standardMapper.selectByPrimaryKey(id);
-	}
+    @Override
+    public EisStandard queryById(Integer id) {
+        return standardMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List <Map <String, Object>> queryByProject(Integer projectId) {
+        return standardMapper.queryByProject(projectId);
+    }
 }
