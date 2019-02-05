@@ -2,6 +2,7 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.FileModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,6 +26,7 @@ import com.ai.eis.model.Member;
 import com.ai.eis.model.enums.ResourceType;
 
 import com.ai.eis.common.VerifyCodeUtils;
+import com.ai.eis.configuration.ApplicationConfigData;
 import com.ai.eis.controller.system.MemberController;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
@@ -72,6 +74,8 @@ public class AppController {
 	@Autowired
 	EisUserService eisUserService;
 	
+	@Autowired
+	ApplicationConfigData applicationData;
 	
 	@Autowired
 	EisRoleService  eisRoleService;
@@ -111,6 +115,9 @@ public class AppController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String doLogin(String userName, String password, RedirectAttributes rAttributes,
     		HttpServletRequest request, HttpSession session) {
+    	//登錄設置下基礎路徑
+    	FileModel.setBasePath(applicationData.getBasePath());
+    	logger.info("===========Path:{}",FileModel.getBasePath());
         // 参数校验
         if (isEmpty(userName) || isEmpty(password)) {
             rAttributes.addFlashAttribute("error", "参数错误！");
