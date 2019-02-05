@@ -34,6 +34,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -130,7 +134,15 @@ public class WorkFlowController {
     @ResponseBody
     public AjaxResult deployProcess() {
         String path = applicationData.getBasePath() + "/processes";
-        repositoryService.createDeployment().addClasspathResource(path + "/eisprocess.bpmn").deploy();
+       // repositoryService.createDeployment().addClasspathResource(path + "/eisprocess.bpmn").deploy();
+        try {
+			repositoryService.createDeployment().addInputStream("eisprocess.bpmn",
+					new FileInputStream(new File(path + "/eisprocess.bpmn"))).deploy();
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			return new AjaxResult(false).setMessage(e.getMessage());
+		}
         return new AjaxResult(true);
     }
 

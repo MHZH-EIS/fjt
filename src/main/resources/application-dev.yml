@@ -22,14 +22,19 @@ spring:
    cache: false
    charset: UTF-8
   http:
+   encoding:
+    force: true
+    charset: UTF-8
+    enabled: true
+    uri-encoding: UTF-8
    multipart:
     enable: true
     file-size-threshold: 0
     max-file-size: 100Mb
     max-request-size: 100Mb
     maxFileSize: 100Mb
-    maxRequestSize: 100Mb
     
+ 
  
  #如果没有这个配置项，则必须在resources/processes里面有bpmn
  activiti:
@@ -42,7 +47,7 @@ eis:
   super-user-id: 1
   posyspath: d:/lic/
   popassword: 111111
-   
+  basepath: d:/lic
  
  
  

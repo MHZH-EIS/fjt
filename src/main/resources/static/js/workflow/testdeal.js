@@ -185,7 +185,8 @@ define(function () {
             if (!row) {
               $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
             }
-            POBrowser.openWindowModeless(document.URL+'testtask/editword?filePath='+ encodeURI(encodeURI(row.testFilePath)) , 'width=1200px;height=800px;');
+            //document.URL+
+            POBrowser.openWindowModeless('testtask/editword?filePath='+ encodeURI(encodeURI(row.testFilePath)) , 'width=1200px;height=800px;');
             commit = commit+1;
           }
       },

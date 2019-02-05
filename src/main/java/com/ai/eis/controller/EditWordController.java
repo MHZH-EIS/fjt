@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.TransCharsetCoder;
 import com.ai.eis.configuration.ApplicationConfigData;
 import com.ai.eis.model.Member;
 import com.zhuozhengsoft.pageoffice.FileSaver;
@@ -62,12 +64,17 @@ public class EditWordController {
 		poCtrl.setSaveFilePage("/testtask/savefile");// 设置处理文件保存的请求方法
 		// 这句可以不要，设置了应该不用单独在word里面设置服务器了
 		poCtrl.setZoomSealServer("http://127.0.0.1:8081/poserver.zz");
-
-		// logger.info("GetPath:{}",this.getClass().getResource("/application.yml").getPath());
-
+		
 		Member userMember = (Member) session.getAttribute(Constants.SESSION_MEMBER_KEY);
 		logger.info("用户:{} 打开文档:{}", userMember.getRealName(), filePath);
-
+		try {
+			filePath = new String(filePath.getBytes("UTF-8"),"GBK");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		logger.info("2用户:{} 打开文档:{} 编码:{}", userMember.getRealName(), filePath,Charset.defaultCharset());
+		
+		
 		if (filePath != null && !filePath.equals("null")) {
 			poCtrl.webOpen(filePath, OpenModeType.docAdmin, userMember.getRealName());
 		} else {
