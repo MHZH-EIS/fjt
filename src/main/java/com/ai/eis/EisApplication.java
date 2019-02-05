@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @MapperScan("com.ai.eis.mapper")
-@EnableAutoConfiguration
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class EisApplication {
 
