@@ -62,24 +62,12 @@ public class EditWordController {
 		poCtrl.addCustomToolButton("修改签章密码", "modifyPassword", 5);
 		poCtrl.addCustomToolButton("打印报告", "Print", 6);
 		poCtrl.setSaveFilePage("/testtask/savefile");// 设置处理文件保存的请求方法
-		// 这句可以不要，设置了应该不用单独在word里面设置服务器了
-		poCtrl.setZoomSealServer("http://127.0.0.1:8081/poserver.zz");
-		
 		Member userMember = (Member) session.getAttribute(Constants.SESSION_MEMBER_KEY);
 		logger.info("用户:{} 打开文档:{}", userMember.getRealName(), filePath);
-		try {
-			filePath = new String(filePath.getBytes("UTF-8"),"GBK");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		logger.info("2用户:{} 打开文档:{} 编码:{}", userMember.getRealName(), filePath,Charset.defaultCharset());
-		
-		
 		if (filePath != null && !filePath.equals("null")) {
 			poCtrl.webOpen(filePath, OpenModeType.docAdmin, userMember.getRealName());
 		} else {
-			poCtrl.webOpen("d:\\test.doc", OpenModeType.docAdmin, userMember.getRealName());
-			filePath = "d:\\test.doc";
+			logger.error("filePath is null.");
 		}
 		map.put("pageoffice", poCtrl.getHtmlCode("PageOfficeCtrl1"));
 		ModelAndView mv = new ModelAndView("/word/editword");
@@ -108,10 +96,10 @@ public class EditWordController {
 		logger.info("用户:{} 以只读模式打开文档:{}", userMember.getRealName(), filePath);
 
 		if (filePath != null && !filePath.equals("null")) {
+			
 			poCtrl.webOpen(filePath, OpenModeType.docReadOnly, userMember.getRealName());
 		} else {
-			poCtrl.webOpen("d:\\test.doc", OpenModeType.docReadOnly, userMember.getRealName());
-			filePath = "d:\\test.doc";
+			logger.error("filePath is null.");
 		}
 		map.put("pageoffice", poCtrl.getHtmlCode("PageOfficeCtrl1"));
 		ModelAndView mv = new ModelAndView("/word/readword");
@@ -171,7 +159,7 @@ public class EditWordController {
 	public ServletRegistrationBean servletRegistrationBean() {
 		com.zhuozhengsoft.pageoffice.poserver.Server poserver = new com.zhuozhengsoft.pageoffice.poserver.Server();
 		posyspath = applicationData.getPosyspath();
-		logger.info("path:====={}", posyspath);
+		logger.info("posyspath:{}", posyspath);
 		poserver.setSysPath(posyspath);// 设置PageOffice注册成功后,license.lic文件存放的目录
 		ServletRegistrationBean srb = new ServletRegistrationBean(poserver);
 		srb.addUrlMappings("/poserver.zz");
