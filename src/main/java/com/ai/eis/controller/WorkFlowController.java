@@ -118,6 +118,12 @@ public class WorkFlowController {
     public void testDeal(@RequestParam(value = "id", defaultValue = "") String id) {
 
     }
+    
+    @RequestMapping("/item/dealform")
+    public void dealForm(@RequestParam(value = "id", defaultValue = "") String id) {
+
+    }
+ 
 
 
     /**
@@ -251,7 +257,9 @@ public class WorkFlowController {
             if (task.getItemId() != null) {
                 logger.info("=========task itemId:{}", task.getItemId());
                 EisExperiment experiment = experimentService.queryById(Integer.parseInt(task.getItemId()));
-                one.setTestFilePath(experiment.getFile());
+                if (experiment != null) {
+                    one.setTestFilePath(experiment.getFile());
+                }
             }
 
             /*下卡任务*/
@@ -320,9 +328,10 @@ public class WorkFlowController {
         List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-        logger.info("=======userId:{}====", user.getUserid());
+        logger.info("=======userId:{} taskName:{}====", user.getUserid(),taskName);
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
+            logger.info("taskId:{} taskName:{}",task.getId(),task.getName());
             if (!task.getName().contains(taskName)) {
                 continue;
             }

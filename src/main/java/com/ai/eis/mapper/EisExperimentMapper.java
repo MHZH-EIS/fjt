@@ -20,4 +20,6 @@ public interface EisExperimentMapper {
     int updateSelective(EisExperiment record);
 
 	EisExperiment selectByPrimaryKey(Integer id);
+	
+	int updateResult(Map<String,String> map);
 }

@@ -83,6 +83,14 @@ public class WorkFlowControllerTest {
         repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
         return "流程发布成功";
     }
+    
+    @RequestMapping("/getPath")
+    @ResponseBody
+    public String getPath() {
+    	return FileModel.getBasePath();
+    }
+    
+ 
 
 	@RequestMapping("/clear")
 	@ResponseBody

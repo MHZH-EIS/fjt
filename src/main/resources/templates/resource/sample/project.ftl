@@ -1,4 +1,19 @@
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+			.box{
+				max-width: 200px;
+				height: 200px;
+				line-height: 200px;
+				text-align: center;
+				border: 1px solid black;
+			}
+			.img{
+				max-height: 90%;
+				max-width: 90%;
+				vertical-align: middle;
+			}
+</style>
 <div class="easyui-layout" fit="true">
   <div data-options="region:'north',border:false" style="height: 70px;padding: 10px;overflow: hidden;" title="项目管理">
     <form id="project_search_from" class="searcher-form">
@@ -14,13 +29,13 @@
       <a class="easyui-linkbutton reset" data-options="iconCls:'fa fa-repeat'">刷新</a>
     </form>
   </div>
-  <div data-options="region:'center',border:false" style="border-top: 1px solid #D3D3D3">
+  <div data-options="region:'center',border:false" style="border-top: 1px solid #D3D3D3; height:35%">
     <table id="project_dg"></table>
   </div>
   
-   <div  id="display" data-options="region:'south',border:false" style="border-top: 1px solid #D3D3D3;height:60%;" title="流程图展示">
+   <div  id="display" data-options="region:'south',border:false"  align="center"   style="border-top: 1px solid #D3D3D3;height:60%;" title="流程图展示">
       <table id="display_dg" >
-      <td><img id="img1" style="width: 800px; height: 300px" src="./images/bg2.jpg"/> </td>
+      <td><img id="img1" class="img" src="./images/bg2.jpg"/> </td>
       </table>
    </div>
 </div>

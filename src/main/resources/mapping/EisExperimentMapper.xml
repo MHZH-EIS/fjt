@@ -139,6 +139,11 @@
     </where>
   </select>
   
+  <update id = "updateResult" parameterType="Map" >
+  update eis_experiment set 
+  result = #{result}
+  where  id= #{id}
+  </update>
 
 
   <select id="queryExperimentBrief" resultType="java.util.HashMap" parameterType="java.lang.Integer">

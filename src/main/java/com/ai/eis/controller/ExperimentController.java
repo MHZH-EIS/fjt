@@ -90,6 +90,24 @@ public class ExperimentController {
         return experimentService.queryByCondition(map);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/setResult")
+    public AjaxResult setResult( @RequestParam(value = "id", defaultValue = "") String id,
+                                     @RequestParam(value = "result", defaultValue = "") String result) {
+        Map <String, String> map = new HashMap <>();
+        map.put("id", id);
+        map.put("result", result);
+        try {
+            experimentService.updateResult(map);
+        }catch (Exception e) {
+        	logger.error(e.getMessage());
+        	return new AjaxResult(false).setMessage(e.getMessage());
+        }
+    
+        return new AjaxResult(true);
+   }
+    
+    
 
     /**
      * @param pId 项目ID，列出所有此项目关联的子测试项

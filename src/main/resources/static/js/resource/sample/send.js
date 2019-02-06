@@ -223,7 +223,7 @@ define(function () {
       var dialog = $("<div/>", {class: 'flow'}).dialog({
         title: (id ? "编辑" : "创建") + "发送样品记录",
         iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
-        height: 600,
+        height: 500,
         width: 420,
         collapsible:true,
         href: '/resource/sample/send/form',

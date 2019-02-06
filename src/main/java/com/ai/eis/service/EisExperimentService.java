@@ -8,7 +8,9 @@ import java.util.Map;
 public interface EisExperimentService {
 
     void insert(EisExperiment experiment);
-
+    
+    int updateResult(Map<String,String> map);
+    
     int deleteByCondition(Map <String, String> map);
 
     List <EisExperiment> queryByCondition(Map <String, String> map);

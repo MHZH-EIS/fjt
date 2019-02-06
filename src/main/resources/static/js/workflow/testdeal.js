@@ -30,7 +30,21 @@
         }
      
         return dt.format("yyyy-MM-dd"); //扩展的Date的format方法(上述插件实现)
-};
+   }; 
+   
+   function loadFilter(data, status) {//重新组织datagrid数据，把符合条件的内容加到定义的json字符串中。
+    var value = {
+        total: data.total,
+        rows: []
+    };
+    var x = 0;
+    for (var i = 0; i < data.rows.length; i++) {
+        if (data.rows[i].status2 == status) {
+            value.rows[x++] = data.rows[i];
+        }
+    }
+    return value;
+}
 
 
 
@@ -64,15 +78,15 @@ define(function () {
         	  itemdg.datagrid('reload', {id: selectdata.id});
            }
       },
-      emptyMsg: "还未查到测试任务",
+      emptyMsg: "还未查到任务",
       idField: "id",
       fit: true,
       rownumbers: true,
       fitColumns: true,
       border: false,
       pagination: true,
-      singleSelect: true,
       queryParams:{taskName:"测试"},
+      singleSelect: true,
       ignore: ['taskId'],
       pageSize: 30,
       columns: [[{
@@ -185,8 +199,7 @@ define(function () {
             if (!row) {
               $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
             }
-            //document.URL+
-            POBrowser.openWindowModeless('testtask/editword?filePath='+ encodeURI(encodeURI(row.testFilePath)) , 'width=1200px;height=800px;');
+            POBrowser.openWindowModeless(document.URL+'testtask/editword?filePath='+ encodeURI(encodeURI(row.testFilePath)) , 'width=1200px;height=800px;');
             commit = commit+1;
           }
       },
@@ -197,25 +210,12 @@ define(function () {
               var row = dg.edatagrid('getSelected');
               if (!row) {
                 $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
+                return;
               }
-              /*var itemrows = dg.datagrid("getRows"); 
-              if (commit < itemrows.length  ) {
-            	  $.messager.alert({title:'提示',msg:"测试的文档未填完，需要填"+itemrows.length+"个报告",icon:'error'});
-              } */
-              
               $.messager.confirm("提交确认", "确认填写完毕测试报告，确认提交?", function (r) {
-                  if (r) {
-                      $.post("/workflow/completeTask",{"taskId":row.taskId},function(data){
-                            if (data.success) {
-                              $.messager.alert({title:'提示',msg:"测试任提交务成功",icon:'info'});
-                        	  dg.datagrid('reload');
-                            }else {
-                              $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
-                        	  dg.edatagrid('reload');
-                            }
-                        },"json");
-                   
-                  }
+
+                  createTestDealForm();
+                  
                 });
           }
         }
@@ -238,25 +238,6 @@ define(function () {
       	         itemdg.edatagrid('reload');
       	         itemdg.removeData('isSave');
       	   }
-        },
-        //开始不加载数据
-        onBeforeLoad: function (param) {
-        	var firstLoad = $(this).attr("firstLoad");
-            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
-            {
-                $(this).attr("firstLoad","true");
-                return false;
-            }
-            return true;
-        },
-        onLoadSuccess:function(data){
-            var rows = dg.datagrid("getRows"); 
-            if(rows.length == 0) {
-            	var itemrows = itemdg.datagrid('getRows');
-                for(var i=itemrows.length-1;i>=0;i--){
-                	itemdg.datagrid('deleteRow',i);
-                }
-            }
         },
         emptyMsg: "还未查到使用设备信息",
         idField: "itemId",
@@ -379,7 +360,74 @@ define(function () {
         })
     });
     
-    
+    function createTestDealForm(id) {
+      var row = dg.edatagrid('getSelected');
+      var dialog = $("<div/>", {class: 'flow'}).dialog({
+        title: "设置项目测试结果",
+        iconCls: "fa fa-plus-square",
+        height: 280,
+        width: 300,
+        collapsible:true,
+        href: '/workflow/item/dealform',
+        modal: true,
+        onLoad: function () {
+               form = $("#set-test-form");
+        	   $("#id").textbox('setValue',row.id); 
+          },
+        onClose: function () {
+          $(this).dialog("destroy");
+        },
+        sucess:function(result) {
+          
+        },
+        buttons: [
+            {
+                iconCls: 'fa fa-trash-o',
+                text: '取消',
+                handler: function(){
+                    dialog.dialog('close');
+                }
+            },	
+        {
+          iconCls: 'fa fa-save',
+          text: '保存',
+          handler: function () {
+            form.form('submit',{
+             type:"post",
+             url:"/resource/contract/experiment/setResult",
+             onSubmit: function (param) {        //表单提交前的回调函数 
+                    var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
+                    if (!isValid) { 
+                      $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
+                    } 
+                    return isValid; // 如果验证不通过，返回false终止表单提交 
+               }, 
+             success:function(data) {
+               var obj = JSON.parse(data);
+               if (obj.success) {
+                 $.messager.alert({title:'提示',msg:"设置检验结果成功!",icon:'info'});
+      
+               	  var da = {"taskId":row.taskId};
+                  $.post("/workflow/completeTask",da,function(data){
+                           if (data.success) {
+                             $.messager.alert({title:'提示',msg:"测试任务提交务成功",icon:'info'});
+                           }else {
+                             $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
+                           }
+                       },"json");
+            	         dg.edatagrid('reload');
+                 dialog.dialog('close');
+               }else {
+                 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+               }
+             }
+            },'json');
+          }
+        }]
+      });
+    	
+    };
+
     function createTestItemForm(id) {
     	 var row = dg.edatagrid('getSelected');
     	 var dialog = $("<div/>", {class: 'flow'}).dialog({

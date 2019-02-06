@@ -46,4 +46,10 @@ public class EisExperimentServiceImpl implements EisExperimentService {
  
 			return experimentMapper.selectByPrimaryKey(id);
 		}
+
+	@Override
+	public int updateResult(Map<String, String> map) {
+		
+		return experimentMapper.updateResult(map);
+	}
 }
