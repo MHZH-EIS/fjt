@@ -487,7 +487,7 @@ public class WorkFlowController {
 
         ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator();
         InputStream imageStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", executedActivityIdList,
-                flowIdList, null, null, null, null, 2.0);
+                flowIdList, "宋体", "微软雅黑", "黑体", null, 2.0);
 
         byte[] b = new byte[1024];
         int len;
