@@ -65,7 +65,7 @@ public class EditWordController {
 		Member userMember = (Member) session.getAttribute(Constants.SESSION_MEMBER_KEY);
 		logger.info("用户:{} 打开文档:{}", userMember.getRealName(), filePath);
 		if (filePath != null && !filePath.equals("null")) {
-			poCtrl.webOpen(filePath, OpenModeType.docAdmin, userMember.getRealName());
+			poCtrl.webOpen("file:///"+filePath, OpenModeType.docAdmin, userMember.getRealName());
 		} else {
 			logger.error("filePath is null.");
 		}
@@ -97,7 +97,7 @@ public class EditWordController {
 
 		if (filePath != null && !filePath.equals("null")) {
 			
-			poCtrl.webOpen(filePath, OpenModeType.docReadOnly, userMember.getRealName());
+			poCtrl.webOpen("file:///"+filePath, OpenModeType.docReadOnly, userMember.getRealName());
 		} else {
 			logger.error("filePath is null.");
 		}
