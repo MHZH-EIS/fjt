@@ -33,7 +33,7 @@
     <table id="project_dg"></table>
   </div>
   
-   <div  id="display" data-options="region:'south',border:false"  align="center"   style="border-top: 1px solid #D3D3D3;height:60%;" title="流程图展示">
+   <div  id="display" data-options="region:'south',border:false"  align="center"   style="border-top: 1px solid #D3D3D3;height:40%;" title="流程图展示">
       <table id="display_dg" >
       <td><img id="img1" class="img" src="./images/bg2.jpg"/> </td>
       </table>

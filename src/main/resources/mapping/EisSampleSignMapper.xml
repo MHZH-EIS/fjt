@@ -149,7 +149,7 @@
     <where>
          a.PROJECT_ID = b.PROJECT_ID
       <if test="pId != null and pId !=''">
-       and PROJECT_ID = #{pId}
+       and a.PROJECT_ID = #{pId}
       </if>
        <if test="id != null and id !=''">
        and  a.id = #{id} 

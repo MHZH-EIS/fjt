@@ -102,14 +102,14 @@
   
   <select id="listSendRecord" resultMap="BaseResultMap" parameterType="Map">
     select
-    a.ID, a.PROJECT_ID, a.SEND_DATE, a.TRACK,b.PROJECT_NO as projectNo,
+    a.ID, a.PROJECT_ID as projectId, a.SEND_DATE, a.TRACK,b.PROJECT_NO as projectNo,
     a.CONTACT, a.PHONE, a.SEND_NUM,
     a.REMARKS
     from eis_sample_send a,eis_resource_contract b
     <where>
      a.PROJECT_ID = b.PROJECT_ID
       <if test="pId != null and pId !=''">
-       and  PROJECT_ID = #{pId} 
+       and  a.PROJECT_ID = #{pId} 
       </if>
       <if test="id != null and id !=''">
        and  a.id = #{id} 

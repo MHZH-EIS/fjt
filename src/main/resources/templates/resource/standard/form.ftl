@@ -31,7 +31,7 @@
     <input class="easyui-datebox" name="cbDate" style="width:90%" data-options="label:'CB授权日期:',required:true ">
   </div>
   <div class="field">
-    <input class="easyui-textbox" name="remarks" style="width:90%" data-options="label:'备注信息:',required:true ">
+    <input class="easyui-textbox" name="remarks" style="width:90%" data-options="label:'备注信息:'  ">
   </div> 
   <div class="field">
     <input class="easyui-filebox" name="enclosureFile" style="width:90%" data-options="label:'标准上传:',required:true,prompt:'文件上传' ">

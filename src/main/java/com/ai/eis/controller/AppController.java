@@ -159,6 +159,7 @@ public class AppController {
         userMember.setUserName(member.getAccount());
         userMember.setUserid(user.getUserid());
         userMember.setPassword(member.getPassword());
+        user.setAccount(member.getAccount());
  
         
         List<EisMenuResource> menus = new ArrayList<EisMenuResource>();
@@ -309,5 +310,33 @@ public class AppController {
         }
         return "resource";
     }
+    
+
+    /**
+     * 修改用户资料
+     */
+    @RequestMapping("/change/info")
+    public String changeInfo() {
+        return "info";
+    }
+    
+
+    /**
+     * 修改用户资料
+     */
+    @RequestMapping(value = "/change/info", method = RequestMethod.POST)
+    @Transactional
+    @ResponseBody
+    public AjaxResult doChangeInfo(@SessionAttribute("s_eis") EisUser user,
+                                   Member member, HttpSession session) {
+
+        if (isEmpty(member.getRealName()) || isEmpty(member.getUserName() )) {
+            return new AjaxResult(false).setMessage("参数错误！");
+        }
+ 
+        eisUserService.updateUser(user);
+        return new AjaxResult(true);
+    }
+
     
 }

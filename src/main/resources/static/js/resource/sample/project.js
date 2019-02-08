@@ -59,9 +59,7 @@ define(function () {
                var selectdata = data;
                if(selectdata.status  == 1) {
                  $.messager.alert({title:'提示',msg:"项目未启动，未有流程展示!",icon:'info'});
-                 //$("#img1").flush();
                  $("#img1").attr("src","./images/bg2.jpg");
-            	 // $("#img1").attr("alt","项目未启动，未有流程图片!");
                }else {
             	   $("#img1").attr("src", "workflow/image?projectId="+ selectdata.projectId);
                }

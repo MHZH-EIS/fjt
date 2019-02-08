@@ -7,10 +7,10 @@
     <input class="easyui-textbox" id="clause" name="clause" style="width:80%" data-options="label:'测试条款：',required:true">
   </div>
    <div class="field">
-    <input id="standard-form" class="easyui-combobox" style="width:80%" name="userId" data-options="label:'测试工程师：',valueField:'userid',panelMaxHeight:200,panelHeight:'auto',textField:'name',url:'/system/member/testengineers',editable:false">
+    <input id="standard-form" class="easyui-combobox" style="width:80%" name="userId" data-options="label:'测试工程师：',valueField:'userid',panelMaxHeight:200,panelHeight:'auto',textField:'name',url:'/system/member/testengineers',editable:false,required:true">
     </div>
   <div class="field">
-    <input class="easyui-textbox" name="requirement" style="width:80%" data-options="label:'测试要求：',multiline:true,required:true">
+    <input class="easyui-textbox" name="requirement" style="width:80%" data-options="label:'测试要求：',multiline:true">
   </div>
  
 </form>

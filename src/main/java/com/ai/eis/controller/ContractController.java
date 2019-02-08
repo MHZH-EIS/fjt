@@ -113,7 +113,12 @@ public class ContractController {
     @Transactional
     @RequestMapping(value = "/delete")
     public AjaxResult delete(@RequestParam(value = "id") Integer projectId) {
-        contractService.deleteByPrimaryKey(projectId);
+    	try {
+            contractService.deleteByPrimaryKey(projectId);
+    	}catch(Exception e) {
+    		return new AjaxResult(false).setMessage(e.getMessage());
+    	}
+
         return new AjaxResult(true);
     }
 

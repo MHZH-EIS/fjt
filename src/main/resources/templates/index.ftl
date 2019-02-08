@@ -36,18 +36,34 @@
       realName: '${s_member.realName}',
       userName: '${s_member.userName}'
     };
+
+
   </script>
   <script src="/js/require.js" charset="utf-8" data-main="js/app" defer async="true"></script>
 </head>
 <body class="easyui-layout">
 <div data-options="region:'north'" style="height: 70px;overflow: hidden;padding: 0 10px;">
   <div class="user-info">
+    <span class="item" id="showtask"><i class="fa fa-list-alt" ></i></span>
     <span class="item" id="public_change_info"><i class="fa fa-user"></i> ${s_member.realName}</span>
-    <span class="item" id="public_change_password"><i class="fa fa-user"></i> 修改密码</span>
+    <span class="item" id="public_change_password"><i class="fa fa-key"></i> 修改密码</span>
     <a class="item" href="/logout"><i class="fa fa-sign-out"></i> 注销</a>
   </div>
   <h1>EIS实验室管理系统</h1>
 </div>
+<script>
+ $(document).ready(function() { 
+   $.post("/workflow/queryCurrentUserTask",null,function(result) {
+       var test3=$("#showtask").text();
+       if (  result== null || result =="") {
+       		$("#showtask").text("您目前没有任务");
+       }else  {
+           $("#showtask").html("您目前有:"+result.length+"任务");
+       }
+
+     },"json");
+	});
+</script> 
 <div title="菜单" data-options="region:'west',iconCls:'fa fa-list'" style="width: 200px">
   <div class="easyui-accordion" data-options="fit:true,border:false">
    <#list menus as menu>
