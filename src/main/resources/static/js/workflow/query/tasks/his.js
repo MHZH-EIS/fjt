@@ -58,11 +58,6 @@ define(function () {
       },
       onClickRow:function(index,data) {
           var selectdata = data;
-          if (selectdata) {
-        	  itemdg.datagrid('loadData',{total:0,rows:[]})
-
-        	  itemdg.datagrid('reload', {id: selectdata.id});
-           }
       },
       emptyMsg: "还未查到历史任务",
       idField: "id",

@@ -99,14 +99,15 @@
 
   <select id="listSignRecord" resultMap="BaseResultMap" parameterType="Map">
     select
-    ID, PROJECT_ID, SAMPLE_NAME, SING_NUM,
-    COMPANY, ADDRESS, CONTACT,
-    PHONE, SIGN_DATE, TYPE,
-    STATUS
-    from eis_sample_sign
+    a.ID, a.PROJECT_ID, a.SAMPLE_NAME, a.SING_NUM,b.PROJECT_NO as projectNo,
+    a.COMPANY, a.ADDRESS, a.CONTACT,
+    a.PHONE, a.SIGN_DATE, a.TYPE,
+    a.STATUS
+    from eis_sample_sign a,eis_resource_contract b
     <where>
+         a.PROJECT_ID = b.PROJECT_ID
       <if test="pId != null and pId !=''">
-        PROJECT_ID = #{pId}
+       and PROJECT_ID = #{pId}
       </if>
       <if test="name != null and name != ''">
         and SAMPLE_NAME like #{name}

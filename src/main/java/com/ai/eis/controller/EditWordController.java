@@ -23,11 +23,13 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.FileModel;
 import com.ai.eis.common.TransCharsetCoder;
 import com.ai.eis.configuration.ApplicationConfigData;
 import com.ai.eis.model.Member;
@@ -119,16 +121,24 @@ public class EditWordController {
 
 	// 文件保存
 	@RequestMapping(value = "/mail/downloadfile")
+    @ResponseBody
 	public AjaxResult downloadFile(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "filePath", defaultValue = "") String filePath) {
+			@RequestParam(value = "filePath", defaultValue = "") String filePath, @RequestParam("projectId")String projectId) {
 
 		try {
 			if (filePath == null || filePath.equals("") || filePath.equals("null")) {
-				return new AjaxResult(false).setMessage("传入的文件为空!");
+				if (projectId == null || projectId.equals("")|| projectId.equals("null")) {
+					return new AjaxResult(false).setMessage("传入的文件为空!");
+				}else {
+					filePath = FileModel.getReportName(projectId);
+				}
 			}
+			logger.info("开始下载报告:{}",filePath);
 			File downloadFile = new File(filePath);
-			if (!downloadFile.exists() || downloadFile.isDirectory()) {
-				return new AjaxResult(false).setMessage("文件不存在或为目录");
+			if (!downloadFile.exists() ) {
+				return new AjaxResult(false).setMessage("项目报告文件不存在，请检查！");
+			}	else if (downloadFile.isDirectory()) {
+				return new AjaxResult(false).setMessage("项目报告文件路径为目录，请检查！");
 			}
 			response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(filePath, "UTF-8"));
 			FileInputStream in = new FileInputStream(filePath);

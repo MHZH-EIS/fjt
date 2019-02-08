@@ -66,7 +66,7 @@ define(function () {
       ignore: ['id'],
       pageSize: 10,
       columns: [[{
-          field: 'projectId',
+          field: 'projectNo',
           title: '项目编号',
           width: 50,
           editor: {

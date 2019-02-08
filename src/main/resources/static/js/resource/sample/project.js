@@ -55,10 +55,12 @@ define(function () {
     	                              dg.removeData('isSave');
     	                          }
            },
-      onDblClickRow:function(index,data) {
+      onClickRow:function(index,data) {
                var selectdata = data;
                if(selectdata.status  == 1) {
-                   $.messager.alert({title:'提示',msg:"项目未启动，未有流程展示!",icon:'info'});	
+                 $.messager.alert({title:'提示',msg:"项目未启动，未有流程展示!",icon:'info'});
+                 //$("#img1").flush();
+                 $("#img1").attr("src","./images/bg2.jpg");
             	 // $("#img1").attr("alt","项目未启动，未有流程图片!");
                }else {
             	   $("#img1").attr("src", "workflow/image?projectId="+ selectdata.projectId);
@@ -274,10 +276,12 @@ define(function () {
           	var row = dg.edatagrid('getSelected');
         	if (row) {
                 var rowIndex = dg.datagrid('getRowIndex', row);
-                if ( (row.signTotal != row.sendTotal) ||
-                	 (row.signTotal != row.sampleNum)
+                if ( 
+                	row.signTotal == 0|| row.signTotal == null
+                    //(row.signTotal != row.sendTotal) ||
+                	// (row.signTotal != row.sampleNum)
                   ) {
-                   $.messager.alert({title:'提示',msg:"项目中的样品数量不达标无法发起流程!",icon:'info'});	
+                   $.messager.alert({title:'提示',msg:"还未收到样品无法发起流程!",icon:'info'});	
                    return;
                 }
                 if (row.status != '1') {
@@ -291,7 +295,69 @@ define(function () {
         	 }
     
           }
-        } 
+        } ,
+        "assign-downloaddoc": {
+            iconCls: 'fa fa-download',
+            text: "下载报告",
+            handler: function () {
+              var row = dg.edatagrid('getSelected');
+              if (!row) {
+                $.messager.alert({title:'提示',msg:"请先选择个任务",icon:'info'});
+                return;
+              }
+              if (row.status != '3') {
+                  $.messager.alert({title:'提示',msg:"项目未归档报告未生成不能下载!",icon:'info'});	
+                  return;
+              }
+              var form=$("<form id= 'download'>");//定义一个form表单
+              form.attr("style","display:none");
+              form.attr("target","");
+              form.attr("method","post");
+              form.attr("action","/mail/downloadfile");
+                  
+              var input2=$("<input>");
+              input2.attr("type","hidden");
+              input2.attr("name","projectId");
+              input2.attr("value", row.projectId);
+              form.append(input2);
+              $(document.body).append(form);
+  
+              /*var options = {
+            	      type:'post',           //post提交
+            	      url:'/mail/downloadfile',   //url
+            	      data: {"projectId":row.projectId},    //如果需要提交附加参数，视情况添加
+            	      async:false,          //同步返回
+            	      success:function(data){
+            	    	  if (data.success) {
+                              $.messager.alert({title:'提示',msg:"找到报告开始下载",icon:'info'});
+                            }else {
+                              $.messager.alert({title:'提示',msg:"下载报告失败:"+data.message,icon:'error'});
+                            }
+            	      },
+            	      error:function(XmlHttpRequest,textStatus,errorThrown){
+            	          $.messager.alert({title:'提示',msg:"找到报告开始下载",icon:'error'});
+            	      }
+            	    };
+            	    $('#download').ajaxSubmit(options);*/
+             
+             /*$.post("/mail/downloadfile",{"projectId":row.projectId},function(data){
+                 if (data.success) {
+                     $.messager.alert({title:'提示',msg:"找到报告开始下载",icon:'info'});
+                   }else {
+                     $.messager.alert({title:'提示',msg:"下载报告失败:"+data.message,icon:'error'});
+                   }
+               },"json");*/
+            /*   $("#download").ajaxForm(function(data){  
+                  if (data.success) {
+                      $.messager.alert({title:'提示',msg:"找到报告开始下载",icon:'info'});
+                    }else {
+                      $.messager.alert({title:'提示',msg:"下载报告失败:"+data.message,icon:'error'});
+                    }
+                 }
+               );*/
+              form.submit();//表单提交             
+            }
+        }
       })
     });
     

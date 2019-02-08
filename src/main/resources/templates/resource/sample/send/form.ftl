@@ -23,7 +23,7 @@
     <input class="easyui-textbox" name="sendNum" style="width:90%" data-options="label:'发货数量:',required:true ">
   </div>
   <div class="field">
-    <input class="easyui-textbox" name="remarks" style="width:90%" data-options="label:'备注:',required:true  ">
+    <input class="easyui-textbox" name="remarks" style="width:90%" data-options="label:'备注:'  ">
   </div>
 </form>
 <script>

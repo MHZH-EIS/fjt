@@ -19,6 +19,8 @@ public class EisSampleSend {
     private Integer sendNum;
 
     private String remarks;
+    
+    private String projectNo;
 
     public Integer getId() {
         return id;
@@ -83,4 +85,12 @@ public class EisSampleSend {
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
     }
+
+	public String getProjectNo() {
+		return projectNo;
+	}
+
+	public void setProjectNo(String projectNo) {
+		this.projectNo = projectNo;
+	}
 }

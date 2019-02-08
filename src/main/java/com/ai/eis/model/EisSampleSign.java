@@ -30,6 +30,7 @@ public class EisSampleSign {
 
     private MultipartFile enclosureFile;
     
+    private String projectNo;
  
     
  
@@ -128,5 +129,13 @@ public class EisSampleSign {
 
 	public void setEnclosureFile(MultipartFile enclosureFile) {
 		this.enclosureFile = enclosureFile;
+	}
+
+	public String getProjectNo() {
+		return projectNo;
+	}
+
+	public void setProjectNo(String projectNo) {
+		this.projectNo = projectNo;
 	}
 }
