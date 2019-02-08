@@ -1,13 +1,10 @@
 package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
-import com.ai.eis.common.Constants;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
-import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisSampleSend;
 import com.ai.eis.model.EisSampleSign;
-import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisSampleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,9 +32,6 @@ public class SampleController {
 
     @Autowired
     private EisSampleService sampleService;
-    
-    @Autowired
-    private EisContractService contractService;
 
     @RequestMapping("/send")
     public void sendIndex() {
@@ -80,9 +73,7 @@ public class SampleController {
             return new AjaxResult(false).setData(br.getAllErrors());
         }
 
-  
-        
-        
+
         sampleService.send(record);
         logger.info("send {} smaple success,the project is{}", record.getSendNum(), record.getProjectId());
         return new AjaxResult(true);
@@ -103,7 +94,7 @@ public class SampleController {
             return new AjaxResult(false).setData(br.getAllErrors());
         }
         MultipartFile multipartFile = record.getEnclosureFile();
-        
+
         try {
             if (!multipartFile.isEmpty()) {
                 File file = FileModel.generateSample(record.getProjectId(), multipartFile.getOriginalFilename());
@@ -193,7 +184,7 @@ public class SampleController {
         Map <String, String> map = new HashMap <>();
         map.put("name", Tools.liker(name));
         map.put("status", status);
-        map.put("pNo", pNo);
+        map.put("pNo", Tools.liker(pNo));
         return sampleService.listProject(map);
     }
 
