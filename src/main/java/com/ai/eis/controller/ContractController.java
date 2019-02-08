@@ -118,7 +118,6 @@ public class ContractController {
     	}catch(Exception e) {
     		return new AjaxResult(false).setMessage(e.getMessage());
     	}
-
         return new AjaxResult(true);
     }
 
