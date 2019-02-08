@@ -3,14 +3,19 @@ package com.ai.eis.controller;
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
+import com.ai.eis.model.EisDevice;
 import com.ai.eis.model.EisSampleSend;
 import com.ai.eis.model.EisSampleSign;
 import com.ai.eis.service.EisSampleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,13 +49,45 @@ public class SampleController {
     }
 
     @RequestMapping("/send/form")
-    public void sendForm(Long id) {
-
+    public void sendForm(Integer id,Model model) {
+        if (id != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String,String> conditions = new HashMap<>();
+            conditions.put("id", String.valueOf(id));
+            
+            List<EisSampleSend> resources = sampleService.listSendRecord(conditions);
+            if (resources == null|| resources.size() == 0) {
+            	return;
+            }
+             
+            try {
+            	EisSampleSend resource = resources.get(0);
+                model.addAttribute("resource", mapper.writeValueAsString(resource));
+            } catch (JsonProcessingException e) {
+                logger.error("json转换错误", e);
+            }
+        }
     }
 
     @RequestMapping("/sign/form")
-    public void signForm(Long id) {
-
+    public void signForm(Integer id,Model model ) {
+        if (id != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String,String> conditions = new HashMap<>();
+            conditions.put("id", String.valueOf(id));
+            
+            List<EisSampleSign> resources = sampleService.listSignRecord(conditions);
+            if (resources == null|| resources.size() == 0) {
+            	return;
+            }
+             
+            try {
+            	EisSampleSign resource = resources.get(0);
+                model.addAttribute("resource", mapper.writeValueAsString(resource));
+            } catch (JsonProcessingException e) {
+                logger.error("json转换错误", e);
+            }
+        }
     }
 
     @RequestMapping("/project")
@@ -72,9 +109,11 @@ public class SampleController {
             logger.error("对象校验失败：" + br.getAllErrors());
             return new AjaxResult(false).setData(br.getAllErrors());
         }
-
-
-        sampleService.send(record);
+        if(record.getId() != null) {
+        	sampleService.updateSend(record);
+        }else {
+            sampleService.send(record);
+        }
         logger.info("send {} smaple success,the project is{}", record.getSendNum(), record.getProjectId());
         return new AjaxResult(true);
     }
@@ -96,14 +135,23 @@ public class SampleController {
         MultipartFile multipartFile = record.getEnclosureFile();
 
         try {
-            if (!multipartFile.isEmpty()) {
+        	if (!multipartFile.isEmpty()) {
                 File file = FileModel.generateSample(record.getProjectId(), multipartFile.getOriginalFilename());
                 logger.info("save file path:{}", file.getAbsolutePath());
                 multipartFile.transferTo(file);
                 logger.info("样品附件上传成功，地址为{}", file.getAbsolutePath());
             }
-            sampleService.sign(record);
-            logger.info("项目{}此次成功签收{}个样品", record.getProjectId(), record.getSingNum());
+        	
+        	//更新操作
+        	if(record.getId() != null) {
+        		sampleService.updateSign(record);
+        	}
+        	else {
+        		//新建操作
+                sampleService.sign(record);
+                logger.info("项目{}此次成功签收{}个样品", record.getProjectId(), record.getSingNum());
+        	}
+
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return new AjaxResult(false).setData(e);

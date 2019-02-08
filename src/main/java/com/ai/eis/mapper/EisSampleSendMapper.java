@@ -14,4 +14,6 @@ public interface EisSampleSendMapper {
     int deleteById(Integer id);
 
     List <EisSampleSend> listSendRecord(Map <String, String> map);
+
+	int updateSend(EisSampleSend sendSample);
 }

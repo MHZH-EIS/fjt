@@ -1,12 +1,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
 <form class="app-form" id="sample-send-form">
+  <input type="hidden" name="id">
     <div class="field">
-      <select id="send-project-form" value="${projectId!''}"  name="projectId" url="/resource/contract/listwithtext" label="项目:"  style="width:90%"></select>
+      <select id="send-project-form" value="${projectId!''}" id="projectId" name="projectId" url="/resource/contract/listwithtext" label="项目:"  style="width:90%"></select>
     </div>
-   <!--
    <div class="field">
-    <input class="easyui-textbox" name="projectId" style="width:90%" data-options="label:'项目编号:',required:true">
-   </div> -->
+    <input class="easyui-textbox" name="projectNo"  id = "projectNo" style="width:90%" data-options="label:'项目编号:',required:true">
+   </div> 
    <div class="field">
     <input class="easyui-datebox" name="sendDate" style="width:90%" data-options="label:'发送日期:',required:true ">
    </div>
@@ -27,5 +27,10 @@
   </div>
 </form>
 <script>
-  $("#send-project-form").combotree()
+  $("#send-project-form").combotree();
+  
+  $("#sample-send-form").form("load",
+   <#if resource??> 
+    ${resource}
+	</#if>);
 </script>

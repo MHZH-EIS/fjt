@@ -1,5 +1,6 @@
 package com.ai.eis.mapper;
 
+ 
 import com.ai.eis.model.EisSampleSign;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface EisSampleSignMapper {
     List <Map <String, Object>> listProject(Map <String, String> map);
 
     List <EisSampleSign> listSignRecord(Map <String, String> map);
+
+	int updateSign(EisSampleSign signSample);
 }

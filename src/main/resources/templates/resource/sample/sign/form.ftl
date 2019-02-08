@@ -1,5 +1,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
 <form class="app-form" id="sample-sign-form" enctype="multipart/form-data"  method="post">
+  <input type="hidden" name="id">
      <div class="field">
       <select id="sign-project-form" value="${projectId!''}"  name="projectId" url="/resource/contract/listwithtext" label="项目:"  style="width:90%"></select>
     </div>
@@ -70,6 +71,12 @@
 　　　　}
 　　}
 };
+ 
+ 
+  $("#sample-sign-form").form("load",
+   <#if resource??> 
+    ${resource}
+	</#if>);
  
   
 </script>

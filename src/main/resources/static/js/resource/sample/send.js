@@ -167,6 +167,18 @@ define(function () {
             createForm()
           }
         },
+        "sample-send-update":{
+            iconCls: 'fa fa-pencil-square-o',
+            text: "修改发送记录",
+            handler: function () {
+             	var row = dg.edatagrid('getSelected');
+             	if (!row) {
+   				   $.messager.alert({title:'提示',msg:"请先选择一个发送记录",icon:'info'});
+             	}else {
+                    createForm.call(this, row.id);
+             	}
+            }
+        },
         "sample-send-delete":{
             iconCls: 'fa fa-trash',
             text: "删除发送记录",
@@ -259,7 +271,12 @@ define(function () {
         		 success:function(data) {
         			 var obj = JSON.parse(data);
         			 if (obj.success) {
-        				 $.messager.alert({title:'提示',msg:"新建发送记录成功",icon:'info'});
+        				 if(id == null) {
+             				 $.messager.alert({title:'提示',msg:"新建发送记录成功",icon:'info'});
+        				 }else {
+             				 $.messager.alert({title:'提示',msg:"修改发送记录成功",icon:'info'});
+        				 }
+   
         				 dialog.dialog('close');
         				 dg.datagrid('reload');
         			 }else {

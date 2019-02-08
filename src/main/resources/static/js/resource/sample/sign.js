@@ -198,13 +198,18 @@ define(function () {
             createForm()
           }
         },
-       /* "contract-update":{
+        "sample-sign-update":{
             iconCls: 'fa fa-pencil-square-o',
-            text: "保存修改",
+            text: "修改签收记录",
             handler: function () {
-                dg.data('isSave', true).edatagrid('saveRow');
+             	var row = dg.edatagrid('getSelected');
+             	if (!row) {
+   				   $.messager.alert({title:'提示',msg:"请先选择一个发送记录",icon:'info'});
+             	}else {
+                    createForm.call(this, row.id);
+             	}
             }
-        },*/
+        },
         "device-delete":{
             iconCls: 'fa fa-trash',
             text: "删除签收记录",
@@ -297,9 +302,14 @@ define(function () {
         		 success:function(data) {
         			 var obj = JSON.parse(data);
         			 if (obj.success) {
-        				 $.messager.alert({title:'提示',msg:"新建签收记录成功",icon:'info'});
+        				 if (id == null) {
+        					 $.messager.alert({title:'提示',msg:"新建签收记录成功",icon:'info'});
+        				 }else {
+        					 $.messager.alert({title:'提示',msg:"修改签收记录成功",icon:'info'});
+        				 }
+        	
         				 dialog.dialog('close');
-        				 dg.datagrid('reload');
+        				 dg.edatagrid("reload");
         			 }else {
         				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
         			 }

@@ -54,4 +54,15 @@ public class EisSampleServiceImpl implements EisSampleService {
     public List <EisSampleSign> listSignRecord(Map <String, String> map) {
         return signMapper.listSignRecord(map);
     }
+
+	@Override
+	public int updateSend(EisSampleSend sendSample) {
+ 
+		return sendMapper.updateSend(sendSample);
+	}
+
+	@Override
+	public int updateSign(EisSampleSign signSample) {
+		 return signMapper.updateSign(signSample);
+	}
 }

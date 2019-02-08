@@ -52,7 +52,17 @@
   <div class="easyui-accordion" data-options="fit:true,border:false">
    <#list menus as menu>
 	  <#if !menu.parent??>
+	   <#if menu.resName == "系统管理">
         <div title="${menu.resName}" data-options="iconCls:'fa fa-cogs'">
+        <#elseif  menu.resName == "资源管理">
+            <div title="${menu.resName}" data-options="iconCls:'fa fa-briefcase'">
+        <#elseif menu.resName=="流程管理">
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-arrows-alt'">
+        <#elseif menu.resName=="信息查询">
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-search-plus'"> 
+        <#elseif menu.resName=="样品管理">
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-cubes'"> 
+       </#if>
          <ul class="crm-menu">
 			  <#list menus as child>
 				  <#if child.parent?? &&  child.parentId == menu.id>

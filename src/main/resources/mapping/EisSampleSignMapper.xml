@@ -24,6 +24,48 @@
       #{phone,jdbcType=VARCHAR}, #{signDate,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, 
       #{status,jdbcType=VARCHAR})
   </insert>
+  
+  
+  
+  <update id="updateSign" parameterType="com.ai.eis.model.EisSampleSign" >
+    update eis_sample_sign
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="sampleName != null" >
+        SAMPLE_NAME =  #{sampleName,jdbcType=VARCHAR},
+      </if>
+     <if test="singNum != null" >
+        SING_NUM = #{singNum,jdbcType=INTEGER}, 
+      </if>
+       <if test="company != null" >
+        COMPANY = #{company,jdbcType=VARCHAR},
+      </if>
+       <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+       <if test="contact != null" >
+        CONTACT = #{contact,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        SIGN_DATE = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+       <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+       <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
   <insert id="insertSelective" parameterType="com.ai.eis.model.EisSampleSign">
     insert into eis_sample_sign
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -108,6 +150,9 @@
          a.PROJECT_ID = b.PROJECT_ID
       <if test="pId != null and pId !=''">
        and PROJECT_ID = #{pId}
+      </if>
+       <if test="id != null and id !=''">
+       and  a.id = #{id} 
       </if>
       <if test="name != null and name != ''">
         and SAMPLE_NAME like #{name}

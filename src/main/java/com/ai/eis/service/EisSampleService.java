@@ -11,10 +11,15 @@ public interface EisSampleService {
     int send(EisSampleSend sendSample);
 
     int sign(EisSampleSign signSample);
+    
+    int updateSend(EisSampleSend sendSample);
+    
+    int updateSign(EisSampleSign signSample);
 
     int deleteSendById(Integer id);
 
     int deleteSignById(Integer id);
+    
 
     List <Map <String, Object>> listProject(Map <String, String> map);
 

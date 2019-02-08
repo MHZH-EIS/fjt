@@ -74,6 +74,32 @@
     where ID = #{id,jdbcType=INTEGER}
   </delete>
 
+  <update id="updateSend" parameterType="com.ai.eis.model.EisSampleSend" >
+    update eis_sample_send
+    <set >
+      <if test="projectId != null" >
+        PROJECT_ID = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="sendDate != null" >
+        SEND_DATE = #{sendDate,jdbcType=TIMESTAMP},
+      </if>
+     <if test="track != null" >
+        TRACK = #{track,jdbcType=VARCHAR}, 
+      </if>
+       <if test="contact != null" >
+        CONTACT =  #{contact,jdbcType=VARCHAR},
+      </if>
+       <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+       <if test="sendNum != null" >
+        SEND_NUM =#{sendNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
   <select id="listSendRecord" resultMap="BaseResultMap" parameterType="Map">
     select
     a.ID, a.PROJECT_ID, a.SEND_DATE, a.TRACK,b.PROJECT_NO as projectNo,
@@ -84,6 +110,9 @@
      a.PROJECT_ID = b.PROJECT_ID
       <if test="pId != null and pId !=''">
        and  PROJECT_ID = #{pId} 
+      </if>
+      <if test="id != null and id !=''">
+       and  a.id = #{id} 
       </if>
        <if test="contact != null and contact !=''">
         and CONTACT like  #{contact}
