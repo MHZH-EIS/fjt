@@ -4,7 +4,6 @@ import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisContract;
-import com.ai.eis.model.EisSampleSend;
 import com.ai.eis.service.EisContractService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

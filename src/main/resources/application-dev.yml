@@ -3,7 +3,7 @@ server:
   port: 8081
   
   
- 
+
 
 
 spring:
@@ -63,6 +63,7 @@ mybatis:
 logging:
    level:
       com.ai.eis.mapper : debug
+   config: classpath:log4j2.xml
 #pagehelper分页插件
 pagehelper:
     helperDialect: mysql
