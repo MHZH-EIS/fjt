@@ -93,6 +93,8 @@ public class AppController {
     
     private Integer userId;
     
+    private  List<EisMenuResource>  allMenuResources;
+    
     @RequestMapping("/")
     public String index() {
         return "index";
@@ -111,6 +113,17 @@ public class AppController {
     public String getUserId() {
     	return String.valueOf(userId);
     }
+    
+    /*根据ID获取菜单资源*/
+    private EisMenuResource getMenuResourceById(Long id) {
+    	    for (EisMenuResource one: allMenuResources) {
+    	    	if (one.getId() == id) {
+    	    		return one;
+    	    	}
+    	    }
+    	    return null;
+    }
+    
     
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String doLogin(String userName, String password, RedirectAttributes rAttributes,
@@ -165,25 +178,22 @@ public class AppController {
         List<EisMenuResource> menus = new ArrayList<EisMenuResource>();
         Set<String> urls = new HashSet<>();
         Set<String> resourceKey = new HashSet<>();
-
+ 
         if (superUserId == member.getUserid()) {
-            // 超级管理员，直接获取所有权限资源
+        	  // 超级管理员，直接获取所有权限资源
             allResources = eisMenuResourceService.selectAllResources();
+            allMenuResources = allResources;
         } else {
             allResources = new ArrayList<>();
             List<EisMenuResource>   resources =  eisMenuResourceService.selectByRoleId(role.getRoleId());
-           
-            // forEach 1.8jdk才支持
             allResources.addAll(resources);
         }
 
         for (EisMenuResource t : allResources) {
-        	Long parentId = eisMenuResourceService.selectParentResource(t.getId());
+        	Long parentId = t.getParentId();
             if (parentId != null) {
-            	t.setParent(eisMenuResourceService.selectByMenuId(parentId));
+            	t.setParent(getMenuResourceById(parentId));
             }
-            
-        	
             // 可用菜单
             if (t.getResType().equals(ResourceType.MENU.name())) {
                 menus.add(t);
