@@ -58,15 +58,7 @@
        if (  result== null || result =="") {
        		$("#showtask").text("您目前没有任务");
        }else  {
-          <#list menus as menu>
-             <#list menus as child>
-				  <#if child.parent?? &&  child.parentId == menu.id>
-                    if ('${child.resName}'.indexOf(result[0].taskName) != -1) {
-                    	 $("#showtask").html("您目前有:<a herf='${child.menuUrl}'>"+result.length+"</a>任务");
-                    }
-				  </#if>
-			  </#list>
-			    </#list> 
+           	 $("#showtask").text("您目前有:"+result.length+"个任务");
        }
      },"json");
 	});
