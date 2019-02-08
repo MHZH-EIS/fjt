@@ -1,7 +1,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> 
 <form class="app-form" id="contract-form">
 
-  <input type="hidden" name="id">
+  <input type="hidden" name="projectId">
     <div class="field">
     <input class="easyui-textbox" name="projectNo" style="width:90%" data-options="label:'项目编号:',required:true">
    </div>
@@ -77,4 +77,9 @@
       }, 200);
     });
 	</#if>
+	
+   $("#contract-form").form("load",
+   <#if resource??> 
+    ${resource}
+	</#if>);
 </script>

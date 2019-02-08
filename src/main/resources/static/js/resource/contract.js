@@ -65,7 +65,7 @@ define(function () {
       singleSelect: true,
       ignore: ['projectId'],
       pageSize: 30,
-      columns: [[{
+      columns: [[ {
           field: 'projectNo',
           title: '项目编号',
           width: 50,
@@ -276,13 +276,18 @@ define(function () {
             createForm()
           }
         },
-       /* "contract-update":{
+        "contract-update":{
             iconCls: 'fa fa-pencil-square-o',
-            text: "保存修改",
+            text: "修改合同",
             handler: function () {
-                dg.data('isSave', true).edatagrid('saveRow');
+            	 var row = dg.edatagrid('getSelected');
+            	 if (!row) {
+            		   $.messager.alert({title:'提示',msg:"请先选择一个合同",icon:'info'});
+            		 return;
+            	 }
+            	 createForm.call(this, row.projectId);
             }
-        },*/
+        }, 
         "contract-delete":{
             iconCls: 'fa fa-trash',
             text: "删除合同",
@@ -373,8 +378,19 @@ define(function () {
           handler: function () {
         	  if (form.form('validate')) {
               $.post("/resource/contract/save", form.serialize(), function (res) {
-                dg.datagrid('reload');
-                dialog.dialog('close');
+ 
+    			 if (res.success) {
+    				 if (id == null) {
+    					 $.messager.alert({title:'提示',msg:"新建合同成功",icon:'info'});
+    				 }else {
+    					 $.messager.alert({title:'提示',msg:"修改合同成功",icon:'info'});
+    				 }
+    	
+    				 dialog.dialog('close');
+    				 dg.edatagrid("reload");
+    			 }else {
+    				 $.messager.alert({title:'提示',msg:res.message,icon:'error'});
+    			 }
               },"json")
           	}
           }
