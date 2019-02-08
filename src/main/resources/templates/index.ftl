@@ -58,9 +58,16 @@
        if (  result== null || result =="") {
        		$("#showtask").text("您目前没有任务");
        }else  {
-           $("#showtask").html("您目前有:"+result.length+"任务");
+          <#list menus as menu>
+             <#list menus as child>
+				  <#if child.parent?? &&  child.parentId == menu.id>
+                    if ('${child.resName}'.indexOf(result[0].taskName) != -1) {
+                    	 $("#showtask").html("您目前有:<a herf='${child.menuUrl}'>"+result.length+"</a>任务");
+                    }
+				  </#if>
+			  </#list>
+			    </#list> 
        }
-
      },"json");
 	});
 </script> 
@@ -82,7 +89,7 @@
          <ul class="crm-menu">
 			  <#list menus as child>
 				  <#if child.parent?? &&  child.parentId == menu.id>
-                    <li  data-url="${child.menuUrl}" >${child.resName}</li>
+                    <li  data-url="${child.menuUrl}" id="${child.resName}" >${child.resName}</li>
 				  </#if>
 			  </#list>
           </ul>
