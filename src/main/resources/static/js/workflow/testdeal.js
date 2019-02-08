@@ -416,7 +416,7 @@ define(function () {
                            }
                        },"json");
             	         dg.edatagrid('reload');
-                 dialog.dialog('close');
+                        dialog.dialog('close');
                }else {
                  $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
                }

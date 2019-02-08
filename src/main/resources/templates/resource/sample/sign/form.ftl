@@ -32,9 +32,44 @@
     <input class="easyui-textbox" name="status" style="width:90%" data-options="label:'样品状态:',required:true  ">
   </div>
     <div class="field">
-    <input class="easyui-filebox" name="enclosureFile" style="width:90%" data-options="label:'样品描述上传:',required:true,prompt:'文件上传' ">
+    <input class="easyui-filebox" id=upload accept=".docx" name="enclosureFile" style="width:90%" data-options="label:'样品描述上传:',required:true,prompt:'文件上传' ">
   </div>
 </form>
 <script>
-  $("#sign-project-form").combotree()
+  $("#sign-project-form").combotree();
+ 
+   $("#upload").filebox({
+   onChange:function(newValue,oldValue) {
+         checkFile();
+    }
+   }
+   );
+ 
+ function checkFile() //检查文件
+{
+　　var fileTypes = ['.docx'];
+　　var filePath = $('#upload').textbox('getValue');
+　　if (filePath != '')
+　　{
+　　　　var flag = false;
+　　　　var fileType = filePath.substring(filePath.lastIndexOf("."));
+　　　　if(fileTypes && fileTypes.length>0){
+
+　　　　　　for (var i = 0; i < fileTypes.length; i++){
+
+　　　　　　　　if(fileTypes[i]==fileType){
+　　　　　　　　　　flag = true;
+　　　　　　　　　　break;
+　　　　　　　　}
+　　　　　　}
+　　　　}
+　　　　if (!flag) {
+　　　　　    $.messager.alert({title:'提示',msg:"只可以上传docx格式文件!",icon:'info'});
+　　　　　　$('#upload').textbox('setValue', '');
+　　　　　　return;
+　　　　}
+　　}
+};
+ 
+  
 </script>

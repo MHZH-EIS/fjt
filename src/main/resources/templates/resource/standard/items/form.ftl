@@ -7,10 +7,44 @@
     <input class="easyui-textbox" name="clause" style="width:90%" data-options="label:'测试项条款:',required:false ">
   </div>
    <div class="field">
-    <input class="easyui-textbox" name="remarks" style="width:90%" data-options="label:'备注:',required:true ">
+    <input class="easyui-textbox" name="remarks" style="width:90%" data-options="label:'备注:' ">
   </div>
   <div class="field">
-    <input class="easyui-filebox" name="templateFile" style="width:90%" data-options="label:'模板文件上传:',required:true,prompt:'文件上传' ">
+    <input class="easyui-filebox" id="upload" name="templateFile" accept=".docx" style="width:90%" data-options="label:'模板文件上传:',required:true,prompt:'文件上传' ">
   </div>
 </form>
  
+ <script>	
+   $("#upload").filebox({
+   onChange:function(newValue,oldValue) {
+         checkFile();
+    }
+   }
+   );
+ 
+ function checkFile() //检查文件
+{
+　　var fileTypes = ['.docx'];
+　　var filePath = $('#upload').textbox('getValue');
+　　if (filePath != '')
+　　{
+　　　　var flag = false;
+　　　　var fileType = filePath.substring(filePath.lastIndexOf("."));
+　　　　if(fileTypes && fileTypes.length>0){
+
+　　　　　　for (var i = 0; i < fileTypes.length; i++){
+
+　　　　　　　　if(fileTypes[i]==fileType){
+　　　　　　　　　　flag = true;
+　　　　　　　　　　break;
+　　　　　　　　}
+　　　　　　}
+　　　　}
+　　　　if (!flag) {
+　　　　　    $.messager.alert({title:'提示',msg:"只可以上传docx格式文件!",icon:'info'});
+　　　　　　$('#upload').textbox('setValue', '');
+　　　　　　return;
+　　　　}
+　　}
+};
+</script>	
