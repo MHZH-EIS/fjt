@@ -411,11 +411,13 @@ define(function () {
                   $.post("/workflow/completeTask",da,function(data){
                            if (data.success) {
                              $.messager.alert({title:'提示',msg:"测试任务提交务成功",icon:'info'});
+                             dg.edatagrid('reload');
+                         	 itemdg.datagrid('loadData',{total:0,rows:[]})
+
                            }else {
                              $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
                            }
                        },"json");
-            	         dg.edatagrid('reload');
                         dialog.dialog('close');
                }else {
                  $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
