@@ -58,7 +58,7 @@ define(function () {
       onClickRow:function(index,data) {
                var selectdata = data;
                if(selectdata.status  == 1) {
-                 $.messager.alert({title:'提示',msg:"项目未启动，未有流程展示!",icon:'info'});
+                // $.messager.alert({title:'提示',msg:"项目未启动，未有流程展示!",icon:'info'});
                  $("#img1").attr("src","./images/bg2.jpg");
                }else {
             	   $("#img1").attr("src", "workflow/image?projectId="+ selectdata.projectId);
