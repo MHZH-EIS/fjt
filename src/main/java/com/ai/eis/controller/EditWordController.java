@@ -141,7 +141,7 @@ public class EditWordController {
 			}	else if (downloadFile.isDirectory()) {
 				return new AjaxResult(false).setMessage("项目报告文件路径为目录，请检查！");
 			}
-			response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(filePath, "UTF-8"));
+			response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(downloadFile.getName(), "UTF-8"));
 			FileInputStream in = new FileInputStream(filePath);
 			OutputStream out = response.getOutputStream();
 			byte buffer[] = new byte[1024];

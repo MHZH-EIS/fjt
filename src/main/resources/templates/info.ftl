@@ -18,7 +18,13 @@
       <input class="easyui-textbox" name="email" style="width:100%" data-options="label:'邮箱：',required:true,validType:'email'" value="${Session["s_eis"].email!""}">
     </div>
     <div class="field">
-      <input class="easyui-datebox" readonly="readonly" name="hiredate" style="width:100%" data-options="label:'入职日期：',editable:false" value="${Session["s_eis"].entryTime?date}">
+      <input class="easyui-datebox" readonly="readonly" name="hiredate" style="width:100%" data-options="label:'入职日期：',editable:false" value=
+      
+      <#if Session["s_eis"].entryTime?? >
+      "${Session["s_eis"].entryTime?date}">
+      <#else>
+      ""
+      </#if>>
     </div>
   </div>
   <div style="margin-left: 250px;text-align: center;margin-top: 30px;">
