@@ -200,7 +200,8 @@ define(function () {
 
                     if (data.success) {
                         $.messager.alert({title:'提示',msg:"下卡成功",icon:'info'});
-                 	   dg.datagrid('reload');
+                 	    dg.datagrid('reload');
+                 	   itemdg.datagrid('loadData', { total: 0, rows: [] });
                     }else {
                       $.messager.alert({title:'提示',msg:"下卡失败:"+data.data,icon:'error'});
                     } 

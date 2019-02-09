@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +72,16 @@ public class WorkFlowControllerTest {
 	@Autowired
 	FormService formService;
 
+	@Value("$$spring.datasource.driver-class-name")
+	private String driver;
+	@Value("$spring.datasource.url")
+	private String dbUrl;
+	@Value("$spring.datasource.username")
+	private String dbUserName;
+	@Value("$spring.datasource.password")
+	private String dbPasswd;
+	
+	
 	@ResponseBody
 	@RequestMapping("/test")
 	public String test() throws FileNotFoundException {
@@ -98,13 +109,14 @@ public class WorkFlowControllerTest {
 			ProcessEngineConfiguration processEngineConfiguration = ProcessEngineConfiguration
 					.createStandaloneProcessEngineConfiguration();
 			// 连接数据库配置
-			processEngineConfiguration.setJdbcDriver("com.mysql.jdbc.Driver");
-			processEngineConfiguration.setJdbcUrl(
-					"jdbc:mysql://localhost:3306/test?characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false");
-			processEngineConfiguration.setJdbcUsername("root");
-			processEngineConfiguration.setJdbcPassword("mhq19831030");
+			processEngineConfiguration.setJdbcDriver(driver);
+			processEngineConfiguration.setJdbcUrl(dbUrl);
+			processEngineConfiguration.setJdbcUsername(dbUserName);
+			processEngineConfiguration.setJdbcPassword(dbPasswd);
+			processEngineConfiguration.setDatabaseSchemaUpdate("drop-create");
 
-			processEngineConfiguration.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
+
+			//processEngineConfiguration.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
 			// 工作流的核心对象，ProcessEngine对象
 			ProcessEngine processEngine = processEngineConfiguration.buildProcessEngine();
 
