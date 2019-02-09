@@ -47,7 +47,7 @@ public class ServiceTask implements JavaDelegate {
     private StandardService standardService;
 
     @Autowired
-    private UserService userService;
+    private EisUserService userService;
 
 
     @Override
@@ -103,9 +103,9 @@ public class ServiceTask implements JavaDelegate {
         map.put("sDate", format2.format(date));
         map.put("sealDate", format3.format(date));
         map.put("standard", standards);
-        map.put("manager", userService.selectByPrimaryKey(Integer.parseInt(String.valueOf(variables.get("manager")))).getUserName());
-        map.put("charger", userService.selectByPrimaryKey(Integer.parseInt(String.valueOf(variables.get("charger")))).getUserName());
-        map.put("signer", userService.selectByPrimaryKey(Integer.parseInt(String.valueOf(variables.get("charger")))).getUserName());
+        map.put("manager", userService.selectByPrimaryKey(Integer.parseInt(String.valueOf(variables.get("manager")))).getName());
+        map.put("charger", userService.selectByPrimaryKey(Integer.parseInt(String.valueOf(variables.get("charger")))).getName());
+        map.put("signer", userService.selectByPrimaryKey(Integer.parseInt(String.valueOf(variables.get("charger")))).getName());
         map.put("refNo", contract.getProjectNo());
         map.put("footDate", format1.format(date));
         File target = FileModel.generateCoverFile(projectId);
