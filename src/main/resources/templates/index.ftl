@@ -77,6 +77,8 @@
               <div title="${menu.resName}" data-options="iconCls:'fa fa-search-plus'"> 
         <#elseif menu.resName=="样品管理">
               <div title="${menu.resName}" data-options="iconCls:'fa fa-cubes'"> 
+         <#else>
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-cogs'">
        </#if>
          <ul class="crm-menu">
 			  <#list menus as child>

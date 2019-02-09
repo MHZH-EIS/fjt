@@ -123,7 +123,8 @@ public class EditWordController {
 	@RequestMapping(value = "/mail/downloadfile")
     @ResponseBody
 	public AjaxResult downloadFile(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "filePath", defaultValue = "") String filePath, @RequestParam("projectId")String projectId) {
+			@RequestParam(value = "filePath", defaultValue = "") String filePath, 
+			@RequestParam(value = "projectId", defaultValue = "") String projectId) {
 
 		try {
 			if (filePath == null || filePath.equals("") || filePath.equals("null")) {
