@@ -71,12 +71,11 @@ public class ServiceTask implements JavaDelegate {
 
             FileUtil.mergeWord(allFiles, FileModel.generateReport(projectId));
 
-
-            logger.info("最终报告生成成功");
-
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage() + " 生成报告失败");
         }
+        logger.info("最终报告生成成功");
     }
 
     private File createCover(EisContract contract, String projectId, Map <String, Object> variables) throws Exception {

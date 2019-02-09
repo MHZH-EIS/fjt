@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
   <process id="eisprocess" name="eisprocess" isExecutable="true">
     <startEvent id="startEvent1" name="开始"></startEvent>
-    <userTask id="sid-E2BE27AD-C645-4346-BA2F-0F9A847A9AC9" name="下卡" activiti:assignee="${manager}">
+    <userTask id="sid-E2BE27AD-C645-4346-BA2F-0F9A847A9AC9" name="下卡" activiti:assignee="${manager}" >
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
@@ -10,38 +10,38 @@
     <sequenceFlow id="sid-0551711C-F896-47A6-A854-214A3D4D3E53" sourceRef="startEvent1" targetRef="sid-E2BE27AD-C645-4346-BA2F-0F9A847A9AC9"></sequenceFlow>
     <sequenceFlow id="sid-CD81FDAC-0A65-42DF-AE5C-C65B09D91397" sourceRef="sid-E2BE27AD-C645-4346-BA2F-0F9A847A9AC9" targetRef="sid-F3FF15BD-698F-4662-B2D3-AB507603730D"></sequenceFlow>
     <parallelGateway id="sid-F3FF15BD-698F-4662-B2D3-AB507603730D"></parallelGateway>
-    <userTask id="sid-F1C1D3E6-631D-43B0-993B-4D1B6C3315EB" name="${experiment1}" activiti:assignee="${user1}">
+    <userTask id="test1" name="${experiment1}" activiti:assignee="${user1}" >
       <extensionElements>
         <activiti:formProperty id="item1" name="测试项目1"></activiti:formProperty>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
-    <userTask id="sid-53AF633C-3A70-45E7-B69A-8BD4A1EDBFF4" name="${experiment2}" activiti:assignee="${user2}">
+    <userTask id="test2" name="${experiment2}" activiti:assignee="${user2}" >
       <extensionElements>
         <activiti:formProperty id="item2" name="测试项目2"></activiti:formProperty>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="sid-CB718C22-0D9B-489B-A40D-338E786952DB" sourceRef="sid-F3FF15BD-698F-4662-B2D3-AB507603730D" targetRef="sid-F1C1D3E6-631D-43B0-993B-4D1B6C3315EB"></sequenceFlow>
-    <sequenceFlow id="sid-3DCB050C-8ED5-4CA0-81E8-F40F57FBFA80" sourceRef="sid-F3FF15BD-698F-4662-B2D3-AB507603730D" targetRef="sid-53AF633C-3A70-45E7-B69A-8BD4A1EDBFF4"></sequenceFlow>
+    <sequenceFlow id="sid-CB718C22-0D9B-489B-A40D-338E786952DB" sourceRef="sid-F3FF15BD-698F-4662-B2D3-AB507603730D" targetRef="test1"></sequenceFlow>
+    <sequenceFlow id="sid-3DCB050C-8ED5-4CA0-81E8-F40F57FBFA80" sourceRef="sid-F3FF15BD-698F-4662-B2D3-AB507603730D" targetRef="test2"></sequenceFlow>
     <parallelGateway id="sid-09339D71-152E-41B6-B47B-90359A109A59"></parallelGateway>
-    <sequenceFlow id="sid-254C0A8E-E039-4F98-BAB6-0365630E2351" sourceRef="sid-F1C1D3E6-631D-43B0-993B-4D1B6C3315EB" targetRef="sid-09339D71-152E-41B6-B47B-90359A109A59"></sequenceFlow>
-    <sequenceFlow id="sid-9451792D-3F8A-4730-B3FD-5132E5885EE4" sourceRef="sid-53AF633C-3A70-45E7-B69A-8BD4A1EDBFF4" targetRef="sid-09339D71-152E-41B6-B47B-90359A109A59"></sequenceFlow>
+    <sequenceFlow id="sid-254C0A8E-E039-4F98-BAB6-0365630E2351" sourceRef="test1" targetRef="sid-09339D71-152E-41B6-B47B-90359A109A59"></sequenceFlow>
+    <sequenceFlow id="sid-9451792D-3F8A-4730-B3FD-5132E5885EE4" sourceRef="test2" targetRef="sid-09339D71-152E-41B6-B47B-90359A109A59"></sequenceFlow>
     <sequenceFlow id="sid-F7742D1D-3E64-41DD-9016-6C3C071DFFCF" sourceRef="sid-09339D71-152E-41B6-B47B-90359A109A59" targetRef="sid-3628FDB5-3881-4219-AA21-67518EDC49B4"></sequenceFlow>
-    <serviceTask id="sid-3628FDB5-3881-4219-AA21-67518EDC49B4" name="系统生成报告" activiti:delegateExpression="${ServiceTask}"></serviceTask>
-    <userTask id="sid-430ADB3A-4B7E-47D7-A955-B756341F9377" name="修改报告" activiti:assignee="${manager}">
+    <serviceTask id="sid-3628FDB5-3881-4219-AA21-67518EDC49B4" name="系统生成报告" activiti:delegateExpression="${ServiceTask}" ></serviceTask>
+    <userTask id="sid-430ADB3A-4B7E-47D7-A955-B756341F9377" name="修改报告" activiti:assignee="${manager}" >
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
     <sequenceFlow id="sid-BF0BB996-B864-49E4-B6C2-F6669A0267FA" sourceRef="sid-3628FDB5-3881-4219-AA21-67518EDC49B4" targetRef="sid-430ADB3A-4B7E-47D7-A955-B756341F9377"></sequenceFlow>
-    <userTask id="sid-00DD37A5-2D00-465B-BBE3-C0B69AA9DA22" name="报告审核" activiti:assignee="${charger}">
+    <userTask id="sid-00DD37A5-2D00-465B-BBE3-C0B69AA9DA22" name="报告审核" activiti:assignee="${charger}" >
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
     <sequenceFlow id="sid-0453D218-D9A9-4635-9477-5E7D23CDF3BC" sourceRef="sid-430ADB3A-4B7E-47D7-A955-B756341F9377" targetRef="sid-00DD37A5-2D00-465B-BBE3-C0B69AA9DA22"></sequenceFlow>
-    <userTask id="sid-261379F5-53A9-4C2B-A0E8-4B77192A6286" name="报告邮寄" activiti:assignee="${charger}">
+    <userTask id="sid-261379F5-53A9-4C2B-A0E8-4B77192A6286" name="报告邮寄" activiti:assignee="${charger}" >
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
@@ -61,10 +61,10 @@
       <bpmndi:BPMNShape bpmnElement="sid-F3FF15BD-698F-4662-B2D3-AB507603730D" id="BPMNShape_sid-F3FF15BD-698F-4662-B2D3-AB507603730D">
         <omgdc:Bounds height="40.0" width="40.0" x="225.0" y="158.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-F1C1D3E6-631D-43B0-993B-4D1B6C3315EB" id="BPMNShape_sid-F1C1D3E6-631D-43B0-993B-4D1B6C3315EB">
+      <bpmndi:BPMNShape bpmnElement="test1" id="BPMNShape_test1">
         <omgdc:Bounds height="80.0" width="100.0" x="330.0" y="45.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-53AF633C-3A70-45E7-B69A-8BD4A1EDBFF4" id="BPMNShape_sid-53AF633C-3A70-45E7-B69A-8BD4A1EDBFF4">
+      <bpmndi:BPMNShape bpmnElement="test2" id="BPMNShape_test2">
         <omgdc:Bounds height="80.0" width="100.0" x="330.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-09339D71-152E-41B6-B47B-90359A109A59" id="BPMNShape_sid-09339D71-152E-41B6-B47B-90359A109A59">
