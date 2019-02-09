@@ -232,6 +232,16 @@ define(function () {
         onBeforeSave: function(index) {
       	  return true;
         },
+        //开始不加载数据
+        onBeforeLoad: function (param) {
+        	var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+        },
         onSave: function (index, row) {                    
       	   if (itemdg.data('isSave')) {
       	          //如果需要刷新，保存完后刷新
@@ -365,7 +375,7 @@ define(function () {
       var dialog = $("<div/>", {class: 'flow'}).dialog({
         title: "设置项目测试结果",
         iconCls: "fa fa-plus-square",
-        height: 280,
+        height: 180,
         width: 300,
         collapsible:true,
         href: '/workflow/item/dealform',
@@ -405,7 +415,7 @@ define(function () {
              success:function(data) {
                var obj = JSON.parse(data);
                if (obj.success) {
-                 $.messager.alert({title:'提示',msg:"设置检验结果成功!",icon:'info'});
+                //  $.messager.alert({title:'提示',msg:"设置检验结果成功!",icon:'info'});
       
                	  var da = {"taskId":row.taskId};
                   $.post("/workflow/completeTask",da,function(data){

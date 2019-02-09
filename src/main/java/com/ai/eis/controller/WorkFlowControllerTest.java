@@ -72,7 +72,7 @@ public class WorkFlowControllerTest {
 	@Autowired
 	FormService formService;
 
-	@Value("$$spring.datasource.driver-class-name")
+	@Value("$spring.datasource.driver-class-name")
 	private String driver;
 	@Value("$spring.datasource.url")
 	private String dbUrl;
