@@ -227,6 +227,7 @@
    <select id="selectAllResources"   resultMap="BaseResultMap"    >
     select  *  from
      eis_menu_resource
+     order by weight desc
    </select>
    
       
@@ -234,6 +235,7 @@
     select parent_id from
      eis_menu_resource
       where id = #{id,jdbcType=BIGINT}
+       order by weight desc
    </select>
    
    

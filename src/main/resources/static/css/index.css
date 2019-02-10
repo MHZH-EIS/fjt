@@ -1,0 +1,85 @@
+   .bannercss {
+   height: 70px;overflow: hidden;
+   padding: 0 10px; 
+   background: url(../images/banner.png);border:0;
+   }
+   
+   .centercss {
+    padding: 2 2px; 
+   	/*background: url(../images/index_bg3.jpg);border:0;*/
+   	background:#EFE9E7;
+   }
+   
+   .rightcss {
+   	width: 200px;
+   	background:#EFE9E7;
+   	overflow: hidden;
+   	overflow-x:hidden;
+   }
+   
+
+      .a {
+			color: #525C66;
+			text-decoration: none;
+		}
+        <!-- div 大小设定 -->
+		.top-10 {
+			float: left;
+			width: 560px;
+ 			margin-top: 106px;
+			margin-left: 118px;
+			background: #fff;
+			border: 1px solid #FFF;
+			box-shadow: #d0d0d0 1px 1px 10px 0px;
+		}
+ 
+         .top-10 ol {
+			counter-reset: section;
+		}
+
+ 
+
+		.top-10 li {
+			float: left;
+			width: 60%;
+			border-bottom: 1px solid #b8c2cc;
+			line-height: 46px;
+			height: 46px;
+			overflow: hidden;
+			color: #525C66;
+			font-size: 14px;
+
+		}
+
+		.top-10 li:before {
+		    counter-increment: section;
+			content: counter(section);
+			display: inline-block;
+			padding: 0 12px;
+			margin-right: 10px;
+			height: 18px;
+			line-height: 18px;
+			background: #b8c2cc;
+			color: #fff;
+			border-radius: 3px;
+			font-size: 9px
+		}
+ 
+ 
+ 
+
+		#rank-more {
+			float: left;
+			width: 100%;
+			margin-top: 8px;
+			text-align: center;
+		}
+
+		.span-h7 {
+			font-size: 14px;
+			color: #B8C2CC;
+			font-weight: 300;
+		}
+ 
+ 
+   

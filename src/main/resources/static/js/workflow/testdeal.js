@@ -417,8 +417,39 @@ define(function () {
                if (obj.success) {
                 //  $.messager.alert({title:'提示',msg:"设置检验结果成功!",icon:'info'});
       
-               	  var da = {"taskId":row.taskId};
-                  $.post("/workflow/completeTask",da,function(data){
+                   var da = {"taskId":row.taskId};
+                   $.ajax({
+                     type: "POST",
+                     url:"/workflow/completeTask",
+                     data:da,
+                     dataType: "json",
+                     beforeSend: function() {
+                    	 MaskUtil.mask();
+                     },
+                     complete:function() {
+                    	 MaskUtil.unmask(); 
+                     },
+                     success: function(data) {
+                       if (data.success) {
+                          $.messager.alert({title:'提示',msg:"测试任务提交务成功",icon:'info'});
+                          dg.edatagrid('reload');
+                          itemdg.datagrid('loadData',{total:0,rows:[]})
+
+                        }else {
+                          $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
+                        }
+                        dialog.dialog('close');
+                     },
+                     error: function() {
+                        $.messager.alert({title:'提示',msg:"测试任务提交失败",icon:'error'});
+                     },
+                     async:false
+
+                    }
+                   );
+
+
+                  /*$.post("/workflow/completeTask",da,function(data){
                            if (data.success) {
                              $.messager.alert({title:'提示',msg:"测试任务提交务成功",icon:'info'});
                              dg.edatagrid('reload');
@@ -428,7 +459,7 @@ define(function () {
                              $.messager.alert({title:'提示',msg:"测试任务提交失败:"+data.message,icon:'error'});
                            }
                        },"json");
-                        dialog.dialog('close');
+                        dialog.dialog('close');*/
                }else {
                  $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
                }

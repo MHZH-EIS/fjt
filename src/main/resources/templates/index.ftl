@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>EIS实验室管理系统</title>
+ 
   <!-- 导入主题样式文件 -->
   <link rel="stylesheet" href="/easyui/themes/gray/easyui.css">
   <!-- 图标 -->
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
   <!-- 项目公共样式 -->
   <link rel="stylesheet" href="/css/app.css">
+   <link rel="stylesheet" href="/css/index.css">
   <!-- 第一脚本：jquery，必须是在第一位 -->
   <script src="/easyui/jquery.min.js" charset="utf-8"></script>
   <!-- easyui的核心 -->
@@ -29,7 +31,7 @@
   <script src="/js/lib/sockjs.min.js" charset="utf-8"></script>
 
   <script src="/js/lib/vue.js" charset="utf-8"></script>
-
+ 
   <script>
     var MEMBER = {
       id:${s_member.userid},
@@ -42,7 +44,7 @@
   <script src="/js/require.js" charset="utf-8" data-main="js/app" defer async="true"></script>
 </head>
 <body class="easyui-layout">
-<div data-options="region:'north'" style="height: 70px;overflow: hidden;padding: 0 10px;">
+<div data-options="region:'north'" class="bannercss">
   <div class="user-info">
     <span class="item" id="showtask"><i class="fa fa-list-alt" ></i></span>
     <span class="item" id="public_change_info"><i class="fa fa-user"></i> ${s_member.realName}</span>
@@ -63,27 +65,27 @@
      },"json");
 	});
 </script> 
-<div title="菜单" data-options="region:'west',iconCls:'fa fa-list'" style="width: 200px">
+<div title="菜单" data-options="region:'west',iconCls:'fa fa-list'" class="rightcss">
   <div class="easyui-accordion" data-options="fit:true,border:false">
    <#list menus as menu>
 	  <#if !menu.parent??>
 	   <#if menu.resName == "系统管理">
-        <div title="${menu.resName}" data-options="iconCls:'fa fa-cogs'">
+        <div title="${menu.resName}" data-options="iconCls:'fa fa-cogs' "  >
         <#elseif  menu.resName == "资源管理">
-            <div title="${menu.resName}" data-options="iconCls:'fa fa-briefcase'">
+            <div title="${menu.resName}" data-options="iconCls:'fa fa-briefcase'" >
         <#elseif menu.resName=="流程管理">
-              <div title="${menu.resName}" data-options="iconCls:'fa fa-arrows-alt'">
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-arrows-alt'"  >
         <#elseif menu.resName=="信息查询">
-              <div title="${menu.resName}" data-options="iconCls:'fa fa-search-plus'"> 
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-search-plus'"  > 
         <#elseif menu.resName=="样品管理">
-              <div title="${menu.resName}" data-options="iconCls:'fa fa-cubes'"> 
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-cubes'"  > 
          <#else>
-              <div title="${menu.resName}" data-options="iconCls:'fa fa-cogs'">
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-cogs'"  >
        </#if>
          <ul class="crm-menu">
 			  <#list menus as child>
 				  <#if child.parent?? &&  child.parentId == menu.id>
-                    <li  data-url="${child.menuUrl}" id="${child.resName}" >${child.resName}</li>
+                    <li  data-url="${child.menuUrl}" id="${child.resName}"   >${child.resName}</li>
 				  </#if>
 			  </#list>
           </ul>
@@ -92,27 +94,22 @@
   </#list> 
   </div>
 </div>
-<div data-options="region:'center' ">
-<div style="padding: 10px">
-  <h1>欢迎使用EIS电力设备测试实验室系统</h1>
-  <h3>使用到的组件和技术：</h3>
-  <ul>
-    <li>Spring Boot基础构建</li>
-    <li>EasyUI构建</li>
-    <li>font-awesome字体库</li>
-    <li>jQuery</li>
-    <li>sockjs</li>
-    <li>vue</li>
-    <li>spring-boot-starter-data-jpa</li>
-    <li>spring-boot-starter-freemarker</li>
-    <li>spring-boot-starter-web</li>
-    <li>spring-boot-starter-websocket</li>
-    <li>mysql-connector-java</li>
-    <li>fastjson</li>
-    <li>commons-codec</li>
-    <li>commons-lang</li>
-    <li>springloaded</li>
-  </ul>
+<div data-options="region:'center'" class="centercss">
+<div >
+<h1 align="center" style="color:black " >欢迎使用EIS电力设备测试实验室Demo系统</h1>
+<div  class="top-10">
+  <ol>
+    <li>首先在【资源管理】中创建设备、标准以及相关测试项内容</li>
+    <li>以实验室经理登录，在【资源管理】中创建合同，本系统一个合同对应一个项目</li>
+    <li>在【样品管理】中创建签收记录</li>
+    <li>在【流程管理】的项目管理中发起流程，可以看到流程图 ；发起流程需要制定项目的项目经理</li>
+    <li>以项目经理的用户登录，在【流程管理】中的下卡环节进行下卡分配项目测试工程师</li>
+    <li>以项目测试工程师角色登录，在【流程管理】中进行填写测试报告和提交报告</li>
+    <li>以项目经理的用户登录，在【流程管理】中的报告调整环节进行报告调整</li>
+    <li>以实验室经理登录，在【流程管理】进行报告审核，签字盖章</li>
+    <li>以实验室经理登录，在【流程管理】进行报告下载打印邮寄工作至此整个项目流程处理完毕</li>
+  </ol>
+  </div> 
 </div>
 </div>
 <div id="footer" data-options="region:'south'" style="height:20px;text-align: center;line-height: 20px;overflow: hidden;">
