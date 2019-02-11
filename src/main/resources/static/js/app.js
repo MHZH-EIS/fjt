@@ -30,12 +30,12 @@ $(function () {
   // 绑定菜单事件
   $(".crm-menu").on('click', 'li', function () {
     if (!$(this).hasClass('selected')) {
-      // 获取center对应的panel对象
-
       // 刷新center区域
       center.panel("refresh", this.dataset.url);
-      // 选中状态
-      $(this).siblings('.selected').toggleClass().end().addClass('selected');
+      $(".crm-menu").children().removeClass('selected');
+      $(this).addClass('selected');
+    }else {
+    	 center.panel("refresh", this.dataset.url);
     }
   });
 

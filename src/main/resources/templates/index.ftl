@@ -65,7 +65,7 @@
      },"json");
 	});
 </script> 
-<div title="菜单" data-options="region:'west',iconCls:'fa fa-list'" class="rightcss">
+<div title="菜单" data-options="region:'west',iconCls:'fa fa-list'" class="rightcss" >
   <div class="easyui-accordion" data-options="fit:true,border:false">
    <#list menus as menu>
 	  <#if !menu.parent??>

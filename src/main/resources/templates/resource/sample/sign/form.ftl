@@ -33,7 +33,7 @@
     <input class="easyui-textbox" name="status" style="width:90%" data-options="label:'样品状态:',required:true  ">
   </div>
     <div class="field">
-    <input class="easyui-filebox" id=upload accept=".docx" name="enclosureFile" style="width:90%" data-options="label:'样品描述上传:',required:true,prompt:'文件上传' ">
+    <input class="easyui-filebox" id=upload accept=".docx" name="enclosureFile" style="width:90%" data-options="label:'样品描述上传:',buttonText:'选择',required:true,prompt:'文件上传' ">
   </div>
 </form>
 <script>

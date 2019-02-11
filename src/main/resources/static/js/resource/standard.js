@@ -145,6 +145,18 @@ define(function () {
 
             }
           },
+          "standard-item-update":{
+              iconCls: 'fa fa-pencil-square-o',
+              text: "修改测试项",
+              handler: function () {
+              	var row = itemdg.edatagrid('getSelected');
+               	if (!row) {
+     				   $.messager.alert({title:'提示',msg:"请先选择一个测试项",icon:'info'});
+               	}else {
+               		createItemForm.call(this, row.itemId);
+               	}
+              }
+          },
  
           "standard-item-delete":{
               iconCls: 'fa fa-trash',
@@ -331,13 +343,18 @@ define(function () {
             createForm()
           }
         },
-       /* "contract-update":{
+       "standard-update":{
             iconCls: 'fa fa-pencil-square-o',
-            text: "保存修改",
+            text: "修改标准",
             handler: function () {
-                dg.data('isSave', true).edatagrid('saveRow');
+            	var row = dg.edatagrid('getSelected');
+             	if (!row) {
+   				   $.messager.alert({title:'提示',msg:"请先选择一个标准",icon:'info'});
+             	}else {
+                    createForm.call(this, row.stId);
+             	}
             }
-        },*/
+        },
         "standard-delete":{
             iconCls: 'fa fa-trash',
             text: "删除标准",
@@ -389,12 +406,12 @@ define(function () {
     	  var dialog = $("<div/>", {class: 'flow'}).dialog({
     	        title: (id ? "编辑" : "创建") + "测试项",
     	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
-    	        height: 480,
+    	        height: 360,
     	        width: 420,
     	        collapsible:true,
     	        href: '/resource/standard/items/form',
     	        queryParams: {
-    	          id: row.stId
+    	          id: id
     	        },
     	        modal: true,
     	        onLoad: function () {
@@ -434,12 +451,24 @@ define(function () {
     	        		 success:function(data) {
     	        			 var obj = JSON.parse(data);
     	        			 if (obj.success) {
-    	        				 $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+    	        				 if (id != null) {
+        	        				 $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+    	        				 }else {
+    	        					 $.messager.alert({title:'提示',msg:"修改测试项成功",icon:'info'});
+    	        				 }
+
     	        				 dialog.dialog('close');
     	        				 itemdg.datagrid('reload', {stId: row.stId});
     	        			 }else {
     	        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+    	        				 dialog.dialog('close');
+    	        				 itemdg.datagrid('reload', {stId: row.stId});
     	        			 }
+    	        		 },
+    	        		 error :function(data) {
+    	        			 $.messager.alert({title:'提示',msg:'提交失败',icon:'error'});
+	        				 dialog.dialog('close');
+	        				 itemdg.datagrid('reload', {stId: row.stId});
     	        		 }
     	        	  });
     	          }
@@ -492,14 +521,26 @@ define(function () {
         		 type:"post",
         		 url:"/resource/standard/save",
         		 success:function(data) {
-        			 var obj = JSON.parse(data);
+           			 var obj = JSON.parse(data);
         			 if (obj.success) {
-        				 $.messager.alert({title:'提示',msg:"新建标准成功",icon:'info'});
+        				 if (id != null) {
+        					 $.messager.alert({title:'提示',msg:"修改标准成功",icon:'info'});
+        				 }else {
+        					 $.messager.alert({title:'提示',msg:"新建标准成功",icon:'info'});
+        				 }
+        	
         				 dialog.dialog('close');
         				 dg.datagrid('reload');
         			 }else {
         				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+          				 dialog.dialog('close');
+        				 dg.datagrid('reload');
         			 }
+        		 },
+        		 error :function(data) {
+        			 $.messager.alert({title:'提示',msg:'提交失败',icon:'error'});
+      				 dialog.dialog('close');
+    				 dg.datagrid('reload');
         		 }
         	  });
           }

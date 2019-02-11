@@ -39,4 +39,9 @@ public class StandardServiceImpl implements StandardService {
     public List <Map <String, Object>> queryByProject(Integer projectId) {
         return standardMapper.queryByProject(projectId);
     }
+
+	@Override
+	public int update(EisStandard standard) {
+		return standardMapper.updateByPrimaryKeySelective(standard);
+	}
 }

@@ -4,16 +4,21 @@ import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
+import com.ai.eis.model.EisDevice;
 import com.ai.eis.model.EisStItem;
 import com.ai.eis.model.EisStandard;
 import com.ai.eis.service.SItemService;
 import com.ai.eis.service.StandardService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,11 +49,30 @@ public class StandardController {
     }
 
     @RequestMapping("/form")
-    public void form(Long id) {
+    public void form(Integer id, Model model) {
+    	  if (id != null) {
+              ObjectMapper mapper = new ObjectMapper();
+              EisStandard resource = standardService.queryById(id);
+              try {
+                  model.addAttribute("resource", mapper.writeValueAsString(resource));
+              } catch (JsonProcessingException e) {
+                  logger.error("json转换错误", e);
+              }
+          }
     }
 
     @RequestMapping("/items/form")
-    public void itemsform(Long id) {
+    public void itemsform(Integer id, Model model ) {
+  	  if (id != null) {
+          ObjectMapper mapper = new ObjectMapper();
+          EisStItem resource = sItemService.queryById(id);
+          try {
+              model.addAttribute("resource", mapper.writeValueAsString(resource));
+          } catch (JsonProcessingException e) {
+              logger.error("json转换错误", e);
+          }
+      }
+    
     }
 
     @ResponseBody
@@ -80,12 +104,18 @@ public class StandardController {
                 logger.info("标准附件上传成功，地址为{}", file.getAbsolutePath());
                 standard.setEnclosure(file.getAbsolutePath());
             }
-            standard.setResourceId(Constants.STANDARD_RESOURCE_ID);
-            standardService.add(standard);
-            logger.info("标准{}添加成功", standard.getName());
-        } catch (IOException e) {
+            if (standard.getStId() != null) {
+            	standardService.update(standard);
+                logger.info("标准{}更改成功", standard.getName());
+            }else {
+                standard.setResourceId(Constants.STANDARD_RESOURCE_ID);
+                standardService.add(standard);
+                logger.info("标准{}添加成功", standard.getName());
+            }
+
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return new AjaxResult(false).setData(e);
+            return new AjaxResult(false).setMessage(e.getMessage());
         }
         return new AjaxResult(true);
     }
@@ -137,11 +167,21 @@ public class StandardController {
             if (standard != null) {
                 logger.info("当前测试项对应的标准为{}", standard.getName());
                 File file = FileModel.generateItem(standard.getStNo(), multipartFile.getOriginalFilename());
+                /*更新情况*/
+                if (file.exists()) {
+                	file.delete();
+                }
                 multipartFile.transferTo(file);
                 logger.info("附件上传成功,地址为{}", file.getAbsolutePath());
                 item.setTemplate(file.getAbsolutePath());
-                sItemService.add(item);
-                logger.info("测试项目{}添加成功", item.getTestName());
+                if(item.getItemId() != null) {
+                    sItemService.update(item);
+                    logger.info("测试项目{}修改成功", item.getTestName());
+                }else {
+                    sItemService.add(item);
+                    logger.info("测试项目{}添加成功", item.getTestName());
+                }
+
             } else {
                 return new AjaxResult(false).setMessage("标准资源不存在").setData("找不到对应的标准资源");
             }
@@ -155,14 +195,26 @@ public class StandardController {
     @ResponseBody
     @RequestMapping("/item/delete")
     public AjaxResult deleteItem(@RequestParam(value = "id", defaultValue = "") Integer itemId) {
-        EisStItem item = sItemService.queryById(itemId);
-        File file = new File(item.getTemplate());
-        if (file.exists()) {
-            file.delete();
-            logger.info("附件删除成功");
+      
+        try {
+        	 EisStItem item = sItemService.queryById(itemId);
+        	 if (item == null) {
+        		 return new AjaxResult(false).setMessage("测试项不存在");
+        	 }
+        	 //先删除数据库记录防止因为数据库记录造成的删除失败文件会被删除掉
+            sItemService.deleteByItemId(item.getItemId());
+            
+            File file = new File(item.getTemplate());
+            if (file.exists()) {
+                file.delete();
+                logger.info("附件删除成功");
+            }
+    
+            logger.info("标准测试项{}删除成功", item.getTestName());
+        }catch(Exception e) {
+        	return   new AjaxResult(false).setMessage(e.getMessage());
         }
-        sItemService.deleteByItemId(item.getItemId());
-        logger.info("标准测试项{}删除成功", item.getTestName());
+
         return new AjaxResult(true);
     }
 

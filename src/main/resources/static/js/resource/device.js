@@ -305,10 +305,10 @@ define(function () {
 	 */
     function createForm(id) {
       var dialog = $("<div/>", {class: 'flow'}).dialog({
-        title: (id ? "编辑" : "创建") + "标准",
+        title: (id ? "编辑" : "创建") + "设备",
         iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
         height: 600,
-        width: 600,
+        width: 420,
         collapsible:true,
         href: '/resource/device/form',
         queryParams: {

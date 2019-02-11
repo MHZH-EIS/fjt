@@ -16,4 +16,6 @@ public interface StandardService {
     EisStandard queryById(Integer id);
 
     List <Map <String, Object>> queryByProject(Integer projectId);
+    
+    int update(EisStandard standard);
 }

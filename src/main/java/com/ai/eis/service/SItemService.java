@@ -16,4 +16,6 @@ public interface SItemService {
     void deleteByItemId(Integer id);
     
     EisStItem queryById(Integer id);
+    
+    int update(EisStItem item);
 }

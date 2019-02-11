@@ -40,4 +40,10 @@ public class SItemServiceImpl implements SItemService {
         // TODO Auto-generated method stub
 		return itemMapper.selectByPrimaryKey(id);
 	}
+
+	@Override
+	public int update(EisStItem item) {
+	 
+		return itemMapper.updateByPrimaryKey(item);
+	}
 }

@@ -194,7 +194,7 @@
         CB_DATE = #{cbDate,jdbcType=TIMESTAMP},
       </if>
       <if test="stNo != null">
-        #{stNo,jdbcType=VARCHAR}
+       ST_NO =  #{stNo,jdbcType=VARCHAR}
       </if>
     </set>
     where ST_ID = #{stId,jdbcType=INTEGER}
@@ -214,7 +214,7 @@
       CNAS = #{cnas,jdbcType=VARCHAR},
       CNAS_DATE = #{cnasDate,jdbcType=TIMESTAMP},
       CB = #{cb,jdbcType=VARCHAR},
-      CB_DATE = #{cbDate,jdbcType=TIMESTAMP}
+      CB_DATE = #{cbDate,jdbcType=TIMESTAMP},
       ST_NO = #{stNo,jdbcType=VARCHAR}
     where ST_ID = #{stId,jdbcType=INTEGER}
   </update>
