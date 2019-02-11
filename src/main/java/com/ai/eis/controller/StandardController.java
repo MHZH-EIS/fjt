@@ -2,6 +2,7 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisDevice;
@@ -11,6 +12,7 @@ import com.ai.eis.service.SItemService;
 import com.ai.eis.service.StandardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -77,14 +79,31 @@ public class StandardController {
 
     @ResponseBody
     @RequestMapping("/list")
-    public List <EisStandard> queryByCondition(@RequestParam(value = "stNo", defaultValue = "") String sNo,
+    public DataGrid<EisStandard> queryByCondition(Integer page,Integer rows, @RequestParam(value = "stNo", defaultValue = "") String sNo,
                                                @RequestParam(value = "name", defaultValue = "") String name) {
-        Map <String, String> map = new HashMap <>();
-        map.put("name", Tools.liker(name));
-        map.put("sNo", Tools.liker(sNo));
-        return standardService.list(map);
+       
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+        List<EisStandard> lst = queryAllByCondition(sNo,name);
+        DataGrid<EisStandard> dg = new DataGrid<EisStandard>(lst);
+		dg.setTotal(pg.getTotal());
+		return dg;
     }
 
+    @ResponseBody
+    @RequestMapping("/listall")
+    public List<EisStandard> queryAllByCondition(  @RequestParam(value = "stNo", defaultValue = "") String sNo,
+                                               @RequestParam(value = "name", defaultValue = "") String name) {
+       
+    	Map <String, String> map = new HashMap <>();
+        map.put("name", Tools.liker(name));
+        map.put("sNo", Tools.liker(sNo));
+        List<EisStandard> lst = standardService.list(map);
+		return lst;
+    }
+
+    
+    
+    
 
     @RequestMapping("/save")
     @Transactional
@@ -144,14 +163,30 @@ public class StandardController {
 
     @ResponseBody
     @RequestMapping("/item/list")
-    public List <EisStItem> listItem(@RequestParam(value = "stId", defaultValue = "") String stId,
+    public DataGrid <EisStItem> listItem(Integer page,Integer rows,@RequestParam(value = "stId", defaultValue = "") String stId,
                                      @RequestParam(value = "testName", defaultValue = "") String name) {
-        Map <String, String> map = new HashMap <>();
-        map.put("stId", stId);
-        map.put("name", Tools.liker(name));
-        return sItemService.queryByCondition(map);
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	 
+        List<EisStItem> lst = listAllItem(stId,name);
+        DataGrid<EisStItem> dg = new DataGrid<EisStItem>(lst);
+		dg.setTotal(pg.getTotal());
+        return dg;
     }
 
+    @ResponseBody
+    @RequestMapping("/item/listall")
+    public List <EisStItem> listAllItem(@RequestParam(value = "stId", defaultValue = "") String stId,
+                                     @RequestParam(value = "testName", defaultValue = "") String name) {
+ 
+    	Map <String, String> map = new HashMap <>();
+        map.put("stId", stId);
+        map.put("name", Tools.liker(name));
+        List<EisStItem> lst = sItemService.queryByCondition(map);
+ 
+        return lst;
+    }
+    
+    
     @ResponseBody
     @RequestMapping("/item/add")
     @Transactional

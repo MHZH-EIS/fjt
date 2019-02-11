@@ -2,11 +2,14 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisContract;
+import com.ai.eis.model.EisDevice;
 import com.ai.eis.service.EisContractService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,16 +87,21 @@ public class ContractController {
 
     @ResponseBody
     @RequestMapping(value = "/list")
-    public List <EisContract> postquery(@RequestParam(value = "projectId", defaultValue = "") String pId,
+    public DataGrid <EisContract> postquery(Integer page,Integer rows,@RequestParam(value = "projectId", defaultValue = "") String pId,
                                         @RequestParam(value = "projectName", defaultValue = "") String pName,
                                         @RequestParam(value = "status", defaultValue = "") String status,
                                         @RequestParam(value = "projectNo", defaultValue = "") String pNo) {
-        Map <String, String> map = new HashMap <>();
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("pName", Tools.liker(pName));
         map.put("status", status);
         map.put("pNo", Tools.liker(pNo));
-        return contractService.queryByCondition(map);
+ 
+        List<EisContract> lst  = contractService.queryByCondition(map);
+        DataGrid<EisContract> dg = new DataGrid<EisContract>(lst);
+		dg.setTotal(pg.getTotal());
+		return dg;
     }
 
     @ResponseBody

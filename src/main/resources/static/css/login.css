@@ -6,7 +6,8 @@
 body {
   font-family: "微软雅黑";
   font-size: 14px;
-  background: url(../images/login-bg.png) fixed center center;
+  /*background: url(../images/login-bg.png) fixed center center;*/
+  background:#5B5B5B;
 }
 
 .logo_box {
@@ -87,7 +88,7 @@ label {
 .act-but {
   font-size: 20px;
   border-radius: 10px;
-  background: #0096e6;
+  background: #323038;
   border: none;
   width: 100%;
   padding: 10px;

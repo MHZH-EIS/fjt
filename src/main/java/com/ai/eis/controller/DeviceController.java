@@ -2,11 +2,15 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisDevice;
+import com.ai.eis.model.EisUser;
 import com.ai.eis.service.EisDeviceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,14 +77,33 @@ public class DeviceController {
 
     @ResponseBody
     @RequestMapping(value = "/list")
-    public List <EisDevice> list(@RequestParam(value = "deviceType", defaultValue = "") String deviceType,
+    public DataGrid<EisDevice> list(Integer page,Integer rows,@RequestParam(value = "deviceType", defaultValue = "") String deviceType,
                                  @RequestParam(value = "name", defaultValue = "") String name,
                                  @RequestParam(value = "devNo", defaultValue = "") String devNo) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+ 
+        List<EisDevice> lst = listAll(deviceType,name,devNo);
+        DataGrid<EisDevice> dg = new DataGrid<EisDevice>(lst);
+		dg.setTotal(pg.getTotal());
+		
+        return dg;
+    }
+    
+    
+    @ResponseBody
+    @RequestMapping(value = "/listAll")
+    public List<EisDevice> listAll( @RequestParam(value = "deviceType", defaultValue = "") String deviceType,
+                                 @RequestParam(value = "name", defaultValue = "") String name,
+                                 @RequestParam(value = "devNo", defaultValue = "") String devNo) {
+ 
         Map <String, String> map = new HashMap <>();
         map.put("name", Tools.liker(name));
         map.put("deviceType", Tools.liker(deviceType));
         map.put("devNo", Tools.liker(devNo));
-        return deviceService.queryByCondition(map);
+        List<EisDevice> lst = deviceService.queryByCondition(map);
+ 
+		
+        return lst;
     }
     
     

@@ -1,16 +1,20 @@
 package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.FileUtil;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisExperimentDisplay;
+import com.ai.eis.model.EisSampleSign;
 import com.ai.eis.model.EisStItem;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.service.EisExperimentService;
 import com.ai.eis.service.EisUserService;
 import com.ai.eis.service.SItemService;
+import com.github.pagehelper.PageHelper;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,15 +84,32 @@ public class ExperimentController {
      */
     @ResponseBody
     @RequestMapping(value = "/list")
-    public List <EisExperiment> list(@RequestParam(value = "projectId", defaultValue = "") String pId,
+    public DataGrid <EisExperiment> list(Integer page,Integer rows, @RequestParam(value = "projectId", defaultValue = "") String pId,
                                      @RequestParam(value = "id", defaultValue = "") String id,
                                      @RequestParam(value = "exName", defaultValue = "") String exName) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("id", id);
         map.put("exName", Tools.liker(exName));
-        return experimentService.queryByCondition(map);
+        List <EisExperiment>  lst =  experimentService.queryByCondition(map);
+        DataGrid<EisExperiment> dg = new DataGrid<EisExperiment>(lst);
+    	dg.setTotal(pg.getTotal());
+    	return dg;
     }
+    
+    private List <EisExperiment> allList(  @RequestParam(value = "projectId", defaultValue = "") String pId,
+            @RequestParam(value = "id", defaultValue = "") String id,
+            @RequestParam(value = "exName", defaultValue = "") String exName) {
+     
+    	Map <String, String> map = new HashMap <>();
+    	map.put("pId", pId);
+    	map.put("id", id);
+    	map.put("exName", Tools.liker(exName));
+    	List <EisExperiment>  lst =  experimentService.queryByCondition(map);
+    	return lst;
+    }    
+    
 
     @ResponseBody
     @RequestMapping(value = "/setResult")
@@ -116,8 +137,9 @@ public class ExperimentController {
      */
     @ResponseBody
     @RequestMapping(value = "/display/list")
-    public List <EisExperimentDisplay> displyList(@RequestParam(value = "projectId", defaultValue = "") String pId,
+    public DataGrid <EisExperimentDisplay> displyList(Integer page,Integer rows,@RequestParam(value = "projectId", defaultValue = "") String pId,
                                                   @RequestParam(value = "id", defaultValue = "") String id) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
         Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("id", id);
@@ -143,7 +165,9 @@ public class ExperimentController {
             displays.add(display);
         }
 
-        return displays;
+        DataGrid<EisExperimentDisplay> dg = new DataGrid<EisExperimentDisplay>(displays);
+    	dg.setTotal(pg.getTotal());
+        return dg;
     }
 
 
@@ -164,7 +188,7 @@ public class ExperimentController {
         map.put("pId", pId);
         map.put("id", id);
         try {
-            List <EisExperiment> list = list(pId, id, "");
+            List <EisExperiment> list = allList(pId, id, "");
             for (EisExperiment experiment : list) {
                 File file = new File(experiment.getFile());
                 if (file.exists()) {

@@ -1,6 +1,7 @@
 package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisDevice;
@@ -9,6 +10,7 @@ import com.ai.eis.model.EisSampleSign;
 import com.ai.eis.service.EisSampleService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,12 +170,17 @@ public class SampleController {
      */
     @ResponseBody
     @RequestMapping("/send/list")
-    public List <EisSampleSend> listSendRecord(@RequestParam(value = "projectId", defaultValue = "") String pId,
+    public DataGrid<EisSampleSend> listSendRecord(Integer page,Integer rows, @RequestParam(value = "projectId", defaultValue = "") String pId,
                                                @RequestParam(value = "contact", defaultValue = "") String contact) {
-        Map <String, String> map = new HashMap <>();
+       	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("contact", Tools.liker(contact));
-        return sampleService.listSendRecord(map);
+        List <EisSampleSend> lst =  sampleService.listSendRecord(map);
+        
+        DataGrid<EisSampleSend> dg = new DataGrid<EisSampleSend>(lst);
+		dg.setTotal(pg.getTotal());
+		return dg;
     }
 
     /**
@@ -185,12 +192,16 @@ public class SampleController {
      */
     @ResponseBody
     @RequestMapping("/sign/list")
-    public List <EisSampleSign> listSignRecord(@RequestParam(value = "projectId", defaultValue = "") String pId,
+    public DataGrid<EisSampleSign> listSignRecord(Integer page,Integer rows,@RequestParam(value = "projectId", defaultValue = "") String pId,
                                                @RequestParam(value = "sampleName", defaultValue = "") String name) {
-        Map <String, String> map = new HashMap <>();
+     	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	Map <String, String> map = new HashMap <>();
         map.put("pId", pId);
         map.put("name", Tools.liker(name));
-        return sampleService.listSignRecord(map);
+        List<EisSampleSign> lst = sampleService.listSignRecord(map);
+        DataGrid<EisSampleSign> dg = new DataGrid<EisSampleSign>(lst);
+    	dg.setTotal(pg.getTotal());
+		return dg;
 
     }
 
@@ -226,14 +237,18 @@ public class SampleController {
      */
     @RequestMapping("/project/list")
     @ResponseBody
-    public List <Map <String, Object>> listProject(@RequestParam(value = "projectName", defaultValue = "") String name,
+    public DataGrid <Map <String, Object>> listProject(Integer page,Integer rows,@RequestParam(value = "projectName", defaultValue = "") String name,
                                                    @RequestParam(value = "status", defaultValue = "") String status,
                                                    @RequestParam(value = "projectNo", defaultValue = "") String pNo) {
-        Map <String, String> map = new HashMap <>();
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	Map <String, String> map = new HashMap <>();
         map.put("name", Tools.liker(name));
         map.put("status", status);
         map.put("pNo", Tools.liker(pNo));
-        return sampleService.listProject(map);
+        List <Map <String, Object>> lst =  sampleService.listProject(map);
+        DataGrid<Map <String, Object>> dg = new DataGrid<Map <String, Object>>(lst);
+    	dg.setTotal(pg.getTotal());
+    	return dg;
     }
 
 

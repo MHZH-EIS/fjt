@@ -5,12 +5,14 @@ package com.ai.eis.controller.system;
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.DataGrid;
 import com.ai.eis.model.EisMenuResource;
+import com.ai.eis.model.EisRank;
 import com.ai.eis.model.EisRole;
 import com.ai.eis.model.EisRoleMenuResource;
 import com.ai.eis.model.EisRoleWithMenuReource;
 import com.ai.eis.service.EisMenuResourceService;
 import com.ai.eis.service.EisRoleMenuResourceService;
 import com.ai.eis.service.EisRoleService;
+import com.github.pagehelper.PageHelper;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,8 @@ public class RoleController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public DataGrid<EisRoleWithMenuReource> list() {
+    public DataGrid<EisRoleWithMenuReource> list(Integer page,Integer rows) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
     	List<EisRoleWithMenuReource> rsResources = new ArrayList<>();
      	List<EisRole> lst = eisRoleService.findAll();
     	for (EisRole role:lst) {
@@ -71,8 +74,9 @@ public class RoleController {
     		rsResources.add(one);
     	}
     	
-  
-        return  new DataGrid<>(rsResources);
+        DataGrid<EisRoleWithMenuReource> dg = new DataGrid<EisRoleWithMenuReource>(rsResources);
+		dg.setTotal(pg.getTotal());
+        return  dg;
     }
 
     @RequestMapping({"/save" })

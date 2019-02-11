@@ -46,7 +46,7 @@
 <body class="easyui-layout">
 <div data-options="region:'north'" class="bannercss">
   <div class="user-info">
-    <span class="item" id="showtask"><i class="fa fa-list-alt" ></i></span>
+    <span class="item" id="showtask"><i class="fa fa-list-alt"  ></i></span>
     <span class="item" id="public_change_info"><i class="fa fa-user"></i> ${s_member.realName}</span>
     <span class="item" id="public_change_password"><i class="fa fa-key"></i> 修改密码</span>
     <a class="item" href="/logout"><i class="fa fa-sign-out"></i> 注销</a>
@@ -55,18 +55,33 @@
 </div>
 <script>
  $(document).ready(function() { 
-   $.post("/workflow/queryCurrentUserTask",null,function(result) {
+   $.post("/workflow/queryCurrentUserTaskAll",null,function(result) {
        var test3=$("#showtask").text();
        if (  result== null || result =="") {
        		$("#showtask").text("您目前没有任务");
        }else  {
-           	 $("#showtask").text("您目前有:"+result.length+"个任务");
+ 
+       	    $("#showtask").text("您目前有:"+result.length+"任务");
+ 
        }
      },"json");
 	});
+   $("#showtask").click( function () { 
+      var pp = $('#allmenu').accordion('panels');// 获取选择的面板
+       if (pp != null && pp.length !=0 ) {
+      	for (var i =0; i < pp.length; i++ ){
+      		if( i== 2) {
+      		   $('#allmenu').accordion('select',1);
+      		}else {
+            	pp[i].panel('collapse');
+      		}
+      	}
+      }
+    });
 </script> 
+ 
 <div title="菜单" data-options="region:'west',iconCls:'fa fa-list'" class="rightcss" >
-  <div class="easyui-accordion" data-options="fit:true,border:false">
+  <div  id="allmenu" class="easyui-accordion" data-options="fit:true,border:false">
    <#list menus as menu>
 	  <#if !menu.parent??>
 	   <#if menu.resName == "系统管理">
@@ -74,7 +89,7 @@
         <#elseif  menu.resName == "资源管理">
             <div title="${menu.resName}" data-options="iconCls:'fa fa-briefcase'" >
         <#elseif menu.resName=="流程管理">
-              <div title="${menu.resName}" data-options="iconCls:'fa fa-arrows-alt'"  >
+              <div title="${menu.resName}" data-options="iconCls:'fa fa-arrows-alt'" id="tasklist"  >
         <#elseif menu.resName=="信息查询">
               <div title="${menu.resName}" data-options="iconCls:'fa fa-search-plus'"  > 
         <#elseif menu.resName=="样品管理">

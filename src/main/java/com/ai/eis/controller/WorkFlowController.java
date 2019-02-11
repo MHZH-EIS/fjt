@@ -2,12 +2,15 @@ package com.ai.eis.controller;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.configuration.ApplicationConfigData;
 import com.ai.eis.model.*;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageHelper;
+
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -246,10 +249,11 @@ public class WorkFlowController {
 
     @RequestMapping("/task/display")
     @ResponseBody
-    public List <EisAssignTaskDisplay> queryDisplayTasks(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
-        HttpSession session = request.getSession();
+    public DataGrid <EisAssignTaskDisplay> queryDisplayTasks(Integer page,Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	HttpSession session = request.getSession();
         List <EisAssignTaskDisplay> displayTasks = new ArrayList <>();
-        List <EisUserTask> tasks = queryCurrentUserTask(taskName);
+        Iterable<EisUserTask> tasks = queryCurrentUserTask(page,rows,taskName).getRows();
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
@@ -278,16 +282,20 @@ public class WorkFlowController {
             one.setTaskId(task.getTaskId());
             displayTasks.add(one);
         }
-        return displayTasks;
+        
+        DataGrid<EisAssignTaskDisplay> dg = new DataGrid<EisAssignTaskDisplay>(displayTasks);
+    	dg.setTotal(pg.getTotal());
+        return dg;
     }
 
 
     @RequestMapping("/query/task/his/display")
     @ResponseBody
-    public List <EisAssignTaskDisplay> queryHisDisplayTasks() {
+    public DataGrid <EisAssignTaskDisplay> queryHisDisplayTasks(Integer page,Integer rows) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
         HttpSession session = request.getSession();
         List <EisAssignTaskDisplay> displayTasks = new ArrayList <>();
-        List <EisUserTask> tasks = queryCurrentUserHisTask();
+        Iterable <EisUserTask> tasks = queryCurrentUserHisTask(page,rows).getRows();
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
@@ -313,7 +321,9 @@ public class WorkFlowController {
             one.setTaskId(task.getTaskId());
             displayTasks.add(one);
         }
-        return displayTasks;
+        DataGrid<EisAssignTaskDisplay> dg = new DataGrid<EisAssignTaskDisplay>(displayTasks);
+    	dg.setTotal(pg.getTotal());
+        return dg;
     }
 
 
@@ -324,8 +334,20 @@ public class WorkFlowController {
      */
     @RequestMapping("/queryCurrentUserTask")
     @ResponseBody
-    public List <EisUserTask> queryCurrentUserTask(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
-        List <EisUserTask> tasks = new ArrayList <>();
+    public DataGrid <EisUserTask> queryCurrentUserTask(Integer page,Integer rows,@RequestParam(value = "taskName", defaultValue = "") String taskName) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+        List <EisUserTask>  tasks = queryCurrentUserTaskAll(taskName);
+        DataGrid<EisUserTask> dg = new DataGrid<EisUserTask>(tasks);
+    	dg.setTotal(pg.getTotal());
+        return dg;
+    }
+    
+    
+    @RequestMapping("/queryCurrentUserTaskAll")
+    @ResponseBody
+    public List <EisUserTask> queryCurrentUserTaskAll( @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+ 
+    	List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
         logger.info("=======userId:{} taskName:{}====", user.getUserid(),taskName);
@@ -356,11 +378,15 @@ public class WorkFlowController {
         }
         return tasks;
     }
+    
+    
+    
 
     @RequestMapping("/queryAllCurrentTaskByName")
     @ResponseBody
-    public List <EisUserTask> queryAllCurrentTaskByName(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
-        List <EisUserTask> tasks = new ArrayList <>();
+    public DataGrid <EisUserTask> queryAllCurrentTaskByName(Integer page,Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	List <EisUserTask> tasks = new ArrayList <>();
         List <Task> list = taskService.createTaskQuery().taskName(taskName).list();
         for (Task task : list) {
             EisUserTask userTask = new EisUserTask();
@@ -373,7 +399,9 @@ public class WorkFlowController {
             userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
             tasks.add(userTask);
         }
-        return tasks;
+        DataGrid<EisUserTask> dg = new DataGrid<EisUserTask>(tasks);
+    	dg.setTotal(pg.getTotal());
+        return dg;
     }
 
 
@@ -384,7 +412,8 @@ public class WorkFlowController {
      */
     @RequestMapping("/queryCurrentUserHisTask")
     @ResponseBody
-    public List <EisUserTask> queryCurrentUserHisTask() {
+    public DataGrid <EisUserTask> queryCurrentUserHisTask(Integer page,Integer rows) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
         List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
@@ -407,7 +436,9 @@ public class WorkFlowController {
 
             tasks.add(userTask);
         }
-        return tasks;
+        DataGrid<EisUserTask> dg = new DataGrid<EisUserTask>(tasks);
+    	dg.setTotal(pg.getTotal());
+        return dg;
     }
 
     /**

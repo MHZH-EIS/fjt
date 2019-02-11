@@ -19,7 +19,7 @@
       <input required="required" placeholder="请输入密码" name="password" class="text" type="password">
     </div>
     <div class="mb2">
-      <button class="act-but submit" style="color: #FFFFFF">登录</button>
+      <button class="act-but submit" style="color: #EDD149">登&nbsp;录</button>
      <!-- <div class="actions"><a href="/reg">注册</a></div> -->
     </div>
   <#if error??>

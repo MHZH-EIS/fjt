@@ -192,7 +192,12 @@ public class AppController {
         for (EisMenuResource t : allResources) {
         	Long parentId = t.getParentId();
             if (parentId != null) {
-            	t.setParent(getMenuResourceById(parentId));
+            	if (allMenuResources != null) {
+                	t.setParent(getMenuResourceById(parentId));
+            	}else {
+            		t.setParent(eisMenuResourceService.selectByMenuId(parentId));
+            	}
+    
             }
             // 可用菜单
             if (t.getResType().equals(ResourceType.MENU.name())) {

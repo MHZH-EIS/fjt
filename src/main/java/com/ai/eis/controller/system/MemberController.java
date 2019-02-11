@@ -27,6 +27,8 @@ import com.ai.eis.model.EisRole;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,17 +85,23 @@ public class MemberController {
 
 	@RequestMapping("/list")
 	@ResponseBody
-	public List<EisUser> list(  @RequestParam(value = "userName", defaultValue = "") String userName,
+	public DataGrid<EisUser> list( Integer page,Integer rows,
+			@RequestParam(value = "userName", defaultValue = "") String userName,
 			@RequestParam(value = "account", defaultValue = "") String account,
 			@RequestParam(value = "telephone", defaultValue = "") String telephone) {
- 
+		
+		com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+
 		// 使用了自定义的复杂查询，这就比原生的Specification的语法使用流畅多了
 		Map<String, String> conditions = new HashMap<>();
 		conditions.put("userName", Tools.liker(userName));
 		conditions.put("account", Tools.liker(account));
 		conditions.put("telephone", telephone);
-
-		return userService.queryByCondition(conditions);
+		
+		List<EisUser> users = userService.queryByCondition(conditions);
+		DataGrid<EisUser> dg = new DataGrid<EisUser>(users);
+		dg.setTotal(pg.getTotal());
+		return  dg;
 	}
 
 	@RequestMapping("/form")

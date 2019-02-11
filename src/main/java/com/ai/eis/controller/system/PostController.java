@@ -18,15 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ai.eis.common.AjaxResult;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisContract;
 import com.ai.eis.model.EisDevice;
+import com.ai.eis.model.EisExperimentDisplay;
 import com.ai.eis.model.EisPost;
 import com.ai.eis.model.EisRank;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisPostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
 
 
 
@@ -81,13 +84,18 @@ public class PostController {
     
     @ResponseBody
     @RequestMapping(value = "/list")
-    public List <EisPost> postquery(@RequestParam(value = "postId", defaultValue = "") String pId,
+    public DataGrid <EisPost> postquery(Integer page,Integer rows,@RequestParam(value = "postId", defaultValue = "") String pId,
                                         @RequestParam(value = "name", defaultValue = "") String pName
                                       ) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
         Map <String, String> map = new HashMap <>();
         map.put("postId", pId);
         map.put("name", Tools.liker(pName));
-        return eispostService.queryByCondition(map);
+        List <EisPost> lst =  eispostService.queryByCondition(map);
+        
+        DataGrid<EisPost> dg = new DataGrid<EisPost>(lst);
+    	dg.setTotal(pg.getTotal());
+        return dg;
     }
     
     @ResponseBody

@@ -19,13 +19,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.Constants;
+import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisContract;
+import com.ai.eis.model.EisDevice;
 import com.ai.eis.model.EisPost;
 import com.ai.eis.model.EisRank;
 import com.ai.eis.service.EisRankService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
 
 
 @Controller
@@ -71,13 +74,17 @@ public class RankController {
     
     @ResponseBody
     @RequestMapping(value = "/list")
-    public List <EisRank> postquery(@RequestParam(value = "rankId", defaultValue = "") String pId,
+    public DataGrid <EisRank> postquery(Integer page,Integer rows,@RequestParam(value = "rankId", defaultValue = "") String pId,
                                         @RequestParam(value = "name", defaultValue = "") String pName
                                       ) {
+    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
         Map <String, String> map = new HashMap <>();
         map.put("rankId", pId);
         map.put("name", Tools.liker(pName));
-        return rankService.queryByCondition(map);
+        List <EisRank>  lst =  rankService.queryByCondition(map);
+        DataGrid<EisRank> dg = new DataGrid<EisRank>(lst);
+		dg.setTotal(pg.getTotal());
+		return dg;
     }
     
     @ResponseBody
