@@ -56,7 +56,11 @@ public class RoleController {
     @RequestMapping("/list")
     @ResponseBody
     public DataGrid<EisRoleWithMenuReource> list(Integer page,Integer rows) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	com.github.pagehelper.Page<Object> pg = null;
+    	if(page != null && rows != null) {
+    		  pg = PageHelper.startPage(page, rows);
+    	}
+     
     	List<EisRoleWithMenuReource> rsResources = new ArrayList<>();
      	List<EisRole> lst = eisRoleService.findAll();
     	for (EisRole role:lst) {
@@ -75,7 +79,17 @@ public class RoleController {
     	}
     	
         DataGrid<EisRoleWithMenuReource> dg = new DataGrid<EisRoleWithMenuReource>(rsResources);
-		dg.setTotal(pg.getTotal());
+        if ( pg != null) {
+    		dg.setTotal(pg.getTotal());
+        }else {
+        	if (rsResources.size()!=0) {
+               	dg.setTotal(1L);
+        	}else {
+        		dg.setTotal(0L);
+        	}
+ 
+        }
+
         return  dg;
     }
 
