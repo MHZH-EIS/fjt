@@ -50,7 +50,7 @@
  
  function checkFile() //检查文件
 {
-　　var fileTypes = ['.docx'];
+　　var fileTypes = ['.docx','.pdf'];
 　　var filePath = $('#upload').textbox('getValue');
 　　if (filePath != '')
 　　{
@@ -67,7 +67,7 @@
 　　　　　　}
 　　　　}
 　　　　if (!flag) {
-　　　　　    $.messager.alert({title:'提示',msg:"只可以上传docx格式文件!",icon:'info'});
+　　　　　    $.messager.alert({title:'提示',msg:"只可以上传docx和pdf格式文件!",icon:'info'});
 　　　　　　$('#upload').textbox('setValue', '');
 　　　　　　return;
 　　　　}

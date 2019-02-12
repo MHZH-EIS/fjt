@@ -43,7 +43,7 @@
       var item = $("#test-items-form");
       item.combobox({
           disable:false,
-          url :'/resource/standard/item/list?stId='+$("#standard-form").combobox("getValue"),
+          url :'/resource/standard/item/listall?stId='+$("#standard-form").combobox("getValue"),
           valueField:'itemId',
           textField:'testName',
           onLoadSuccess:function() {

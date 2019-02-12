@@ -342,6 +342,16 @@ public class WorkFlowController {
         return dg;
     }
     
+   private boolean isTestTask(String taskName) {
+	   if (!taskName.contains(Constants.DISCARD_TASK) &&
+		   !taskName.contains(Constants.MAIL_TASK) &&
+		   !taskName.contains(Constants.MODIFY_TASK) &&
+		   !taskName.contains(Constants.VERIFY_TASK)  
+	     )  {
+		   return true;
+	   }
+	   return false;
+   }
     
     @RequestMapping("/queryCurrentUserTaskAll")
     @ResponseBody
@@ -354,8 +364,15 @@ public class WorkFlowController {
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
             logger.info("taskId:{} taskName:{}",task.getId(),task.getName());
-            if (!task.getName().contains(taskName)) {
-                continue;
+            if(taskName.equals(Constants.TEST_TASK)) {
+            	if (!isTestTask(task.getName())) {
+            		continue;
+            	}
+            }else {
+                if (!task.getName().contains(taskName)) {
+                    continue;
+                }
+            	
             }
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());

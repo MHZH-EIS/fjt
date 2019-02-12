@@ -165,11 +165,20 @@ public class StandardController {
     @RequestMapping("/item/list")
     public DataGrid <EisStItem> listItem(Integer page,Integer rows,@RequestParam(value = "stId", defaultValue = "") String stId,
                                      @RequestParam(value = "testName", defaultValue = "") String name) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	com.github.pagehelper.Page<Object> pg = null;
+    	if (page != null && rows!= null) {
+        	  pg = PageHelper.startPage(page, rows);
+    	}
+
     	 
         List<EisStItem> lst = listAllItem(stId,name);
         DataGrid<EisStItem> dg = new DataGrid<EisStItem>(lst);
-		dg.setTotal(pg.getTotal());
+        if (pg == null) {
+        	dg.setTotal(1L);
+        }else  {
+      		dg.setTotal(pg.getTotal());
+        }
+
         return dg;
     }
 
