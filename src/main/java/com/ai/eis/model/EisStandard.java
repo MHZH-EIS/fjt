@@ -2,7 +2,11 @@ package com.ai.eis.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Transient;
 
 public class EisStandard {
     private Integer stId;
@@ -38,8 +42,26 @@ public class EisStandard {
     private MultipartFile enclosureFile;
 
     private String stNo;
+    
+    @Transient
+    private String text;
+    
+    
+    @Transient
+    private List<EisStItem> children = new ArrayList<EisStItem>();
+    
+    
+    
 
-    public Integer getStId() {
+    public List<EisStItem> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<EisStItem> children) {
+		this.children = children;
+	}
+
+	public Integer getStId() {
         return stId;
     }
 
@@ -61,6 +83,7 @@ public class EisStandard {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+        setText(this.name);
     }
 
     public Date getReleaseDate() {
@@ -174,4 +197,12 @@ public class EisStandard {
     public void setStNo(String stNo) {
         this.stNo = stNo;
     }
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 }

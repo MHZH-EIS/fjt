@@ -16,6 +16,13 @@
      <div class="field">
     <input id="test-items-form" class="easyui-combobox" style="width:100%" name="itemId" data-options="label:'测试项选择：',valueField:'itemId',panelMaxHeight:200,panelHeight:'auto',textField:'testName',url:'/resource/standard/item/listall',editable:false">
     </div>
+    
+    <!--
+    <div class="field">
+    <input class="easyui-textbox" id="requirement" name="requirement" style="width:100%" data-options="label:'测试要求:'">
+    </div>
+    -->
+    
 </form>
 <script>	
  
@@ -37,7 +44,7 @@
     }
   ); 
 
-/*此处有个bug 选择标准和实际对应的ID老是对应不上*/
+/*此处有个bug 选择标准和实际对应的ID老是对应不上 改成onchange后解决*/
   $("#standard-form").combobox({
   	onChange:function(newValue, oldValue) {
       var item = $("#test-items-form");

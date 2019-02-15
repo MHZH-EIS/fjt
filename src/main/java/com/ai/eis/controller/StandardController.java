@@ -102,6 +102,23 @@ public class StandardController {
     }
 
     
+    @ResponseBody
+    @RequestMapping("/listtree")
+    public List<EisStandard> querytree() {
+       
+    	Map <String, String> map = new HashMap <>();
+        List<EisStandard> lst = standardService.list(map);
+        logger.info("lst size:{}",lst.size());
+        if (!lst.isEmpty()) {
+        	for (EisStandard stand :lst) {
+        		 List <EisStItem>  items = listAllItem(String.valueOf(stand.getStId()),"");
+        		 stand.setChildren(items);
+        	}
+        }
+		return lst;
+    }
+
+    
     
     
 
@@ -181,6 +198,9 @@ public class StandardController {
 
         return dg;
     }
+    
+    
+    
 
     @ResponseBody
     @RequestMapping("/item/listall")

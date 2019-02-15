@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-@RequestMapping("/test/workflow")
+@RequestMapping("/test")
 public class WorkFlowControllerTest {
 
 	private Logger logger = LoggerFactory.getLogger(WorkFlowControllerTest.class);
@@ -83,25 +83,35 @@ public class WorkFlowControllerTest {
 	
 	
 	@ResponseBody
-	@RequestMapping("/test")
+	@RequestMapping("/workflow/test")
 	public String test() throws FileNotFoundException {
 		return ResourceUtils.getFile("classpath:templates").getAbsolutePath();
 	}
+	
+	
+	
+ 
+	@RequestMapping("/testtree")
+	public void testForm()   {
+		 
+	}
+	
+	
 
-	@RequestMapping("/deploy")
+	@RequestMapping("/workflow/deploy")
 	@ResponseBody
 	public String deployProcess() {
 		repositoryService.createDeployment().addClasspathResource("./processes/eisprocess.bpmn").deploy();
 		return "流程发布成功";
 	}
 
-	@RequestMapping("/getPath")
+	@RequestMapping("/workflow/getPath")
 	@ResponseBody
 	public String getPath() {
 		return FileModel.getBasePath();
 	}
 
-	@RequestMapping("/clear")
+	@RequestMapping("/workflow/clear")
 	@ResponseBody
 	public AjaxResult clear() {
 
@@ -134,7 +144,7 @@ public class WorkFlowControllerTest {
 		}
 	}
 
-	@RequestMapping("/start")
+	@RequestMapping("/workflow/start")
 	@ResponseBody
 	public AjaxResult start(String projectId, String charge) {
 		if (StringUtils.isEmpty(projectId) || StringUtils.isEmpty(charge)) {
@@ -146,7 +156,7 @@ public class WorkFlowControllerTest {
 		return new AjaxResult(true);
 	}
 
-	@RequestMapping("/discard")
+	@RequestMapping("/workflow/discard")
 	@ResponseBody
 	public AjaxResult card(String projectId) {
 		Task task = taskService.createTaskQuery().processInstanceBusinessKey(projectId).singleResult();
@@ -163,7 +173,7 @@ public class WorkFlowControllerTest {
 		return new AjaxResult(true);
 	}
 
-	@RequestMapping("/queryAllCurrentTaskByName")
+	@RequestMapping("/workflow/queryAllCurrentTaskByName")
 	@ResponseBody
 	public List<EisUserTask> queryAllCurrentTaskByName(
 			@RequestParam(value = "taskName", defaultValue = "") String taskName) {
@@ -182,7 +192,7 @@ public class WorkFlowControllerTest {
 		return tasks;
 	}
 
-	@RequestMapping("/getTaskByProject")
+	@RequestMapping("/workflow/getTaskByProject")
 	@ResponseBody
 	public List<EisUserTask> getByProject(String projectId) {
 		List<EisUserTask> tasks = new ArrayList<>();
@@ -226,14 +236,14 @@ public class WorkFlowControllerTest {
 		return "success";
 	}
 
-	@RequestMapping("/completeByProject")
+	@RequestMapping("/workflow/completeByProject")
 	@ResponseBody
 	public void completeByProject(String projectId) {
 		Task task = taskService.createTaskQuery().processInstanceBusinessKey(projectId).singleResult();
 		taskService.complete(task.getId());
 	}
 
-	@RequestMapping("/queryCurrentUserTask")
+	@RequestMapping("/workflow/queryCurrentUserTask")
 	@ResponseBody
 	public List<EisUserTask> queryCurrentUserTask() {
 		List<EisUserTask> tasks = new ArrayList<>();

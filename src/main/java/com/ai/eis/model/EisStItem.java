@@ -1,5 +1,7 @@
 package com.ai.eis.model;
 
+import javax.persistence.Transient;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class EisStItem {
@@ -14,8 +16,19 @@ public class EisStItem {
     private String template;
 
     private MultipartFile templateFile;
+    
+    @Transient
+    private String text;
 
-    public Integer getItemId() {
+    public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public Integer getItemId() {
         return itemId;
     }
 
@@ -37,6 +50,7 @@ public class EisStItem {
 
     public void setTestName(String testName) {
         this.testName = testName == null ? null : testName.trim();
+        setText(this.testName);
     }
 
     public String getClause() {

@@ -39,7 +39,9 @@ define(function () {
     var form;
     
     var itemdg = $("#test_items_dg");
+ 
     
+
     // 使用edatagrid，需要而外导入edatagrid扩展
     dg.datagrid({
       url: '/workflow/task/display',
@@ -369,6 +371,18 @@ define(function () {
            	    }
             }
           },
+          "test-tree-item-create": {
+              iconCls: 'fa fa-plus-square',
+              text: "新建树状测试项",
+              handler: function () {
+             	    var row = dg.edatagrid('getSelected');
+             	    if (!row) {
+       				        $.messager.alert({title:'提示',msg:"请先选一个下卡任务",icon:'info'});
+             	    }else {
+             	    	createTreeItemFrom();
+             	    }
+              }
+            },
  
           "test-item-delete":{
               iconCls: 'fa fa-trash',
@@ -473,7 +487,90 @@ define(function () {
     };
 
 
+   function createTreeItemFrom(id) {
+    var row = dg.edatagrid('getSelected');
+    var dialog = $("<div/>", {class: 'flow'}).dialog({
+           title: (id ? "编辑" : "创建") + "测试项",
+           iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
+           height: 680,
+           width: 620,
+           collapsible:true,
+           href: '/workflow/item/treeform',
+           queryParams: {
+             projectId: row.projectId
+           },
+           modal: true,
+           onLoad: function () {        	  
+           },
+           onClose: function () {
+             $(this).dialog("destroy");
+           },
+           sucess:function(result) {
+             
+           },
+           buttons: [
+               {
+                   iconCls: 'fa fa-trash-o',
+                   text: '取消',
+                   handler: function(){
+                       dialog.dialog('close');
+                   }
+               },	
+           {
+             iconCls: 'fa fa-save',
+             text: '保存',
+             handler: function () {
+               form.form('submit',{
+                type:"get",
+                url:"",
+                onSubmit: function (param) {        //表单提交前的回调函数 
+                       var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
+                       if (!isValid) { 
+                         $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
+                       } 
+                       return isValid; // 如果验证不通过，返回false终止表单提交 
+                  }, 
+                success:function(data) {
+                  var obj = JSON.parse(data);
+                  if (obj.success) {
+                    $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+                    dialog.dialog('close');
+                    itemdg.datagrid('reload', {projectId: row.projectId});
+                  }else {
+                    $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+                  }
+                }
+               },'json');
+             }
+           }]
+         });
+   };
+    
 
+
+   $("#standard-resource-save").on("click", function () {
+     if (currentRoelId) {
+       // 获取需要关联的资源节点
+       var nodes = resourceTree.tree('getChecked', ['checked', 'indeterminate']);
+       // 获取节点的ID列表
+       var resourceId = [];
+       $.each(nodes, function () {
+         resourceId.push(this.id);
+       });
+       var prams = "roleId=" + currentRoelId + "&resourceId=" + resourceId.join("&resourceId=")
+       // 发送请求保存关系
+       $.post("/system/role/resource/save", prams, function (rsp) {
+         if (rsp.success) {
+           dg.datagrid("reload");
+           $.messager.alert("系统提醒", "保存成功！");
+         }
+       });
+     } else {
+       $.messager.alert("系统提醒", "请先选择角色");
+     }
+   });
+    
+    
     function createTestItemForm(id) {
     	 var row = dg.edatagrid('getSelected');
     	 var dialog = $("<div/>", {class: 'flow'}).dialog({
