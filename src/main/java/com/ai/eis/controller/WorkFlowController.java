@@ -123,6 +123,9 @@ public class WorkFlowController {
             File template = new File(eisStItem.getTableFile());
             File dst = FileModel.getExperimentTable(String.valueOf(experiment.getProjectId()), template.getName());
             WordCommon.fillTable(new File(eisStItem.getTableFile()), dst, dataList);
+            EisExperiment eisExperiment = new EisExperiment();
+            eisExperiment.setTableFile(dst.getAbsolutePath());
+            experimentService.update(eisExperiment);
             return new AjaxResult(true);
         } catch (Docx4JException e) {
             logger.error(e.getMessage(), e);
