@@ -85,6 +85,9 @@
       <if test="exName != null" >
         EX_NAME,
       </if>
+       <if test="userId != null" >
+        USER_ID,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="projectId != null" >
@@ -107,6 +110,9 @@
       </if>
       <if test="exName != null" >
         #{exName,jdbcType=VARCHAR}
+      </if>
+       <if test="userId != null" >
+        #{userId,jdbcType=INTEGER}
       </if>
     </trim>
   </insert>

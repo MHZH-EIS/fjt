@@ -13,6 +13,9 @@ import com.ai.eis.model.EisUser;
 import com.ai.eis.service.EisExperimentService;
 import com.ai.eis.service.EisUserService;
 import com.ai.eis.service.SItemService;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +33,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/resource/contract/experiment")
@@ -60,7 +66,7 @@ public class ExperimentController {
         try {
             EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
             if (eisStItem == null) {
-                return new AjaxResult(false).setMessage("找不到此标准测试项");
+                return new AjaxResult(false).setMessage("找不到此标准测试项:"+experiment.getItemId());
             }
             File template = new File(eisStItem.getTemplate());
             if (!template.exists()) {
@@ -76,6 +82,40 @@ public class ExperimentController {
         }
         return new AjaxResult(Boolean.TRUE);
     }
+    
+    
+    @RequestMapping(value = "/saves")
+    @ResponseBody
+    public AjaxResult addall(@RequestBody ArrayList<EisExperiment>  experiments) {
+        try {
+        	/* String json = request.getParameter("");
+        	  ObjectMapper objectMapper = new ObjectMapper();
+        	  logger.info("reqest:{}",json);
+        	  List<EisExperiment> experiments = JSONObject.parseArray(json,EisExperiment.class);*/
+        	for (EisExperiment experiment: experiments) {
+                EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
+                if (eisStItem == null) {
+                    return new AjaxResult(false).setMessage("找不到此标准测试项:"+experiment.getItemId());
+                }
+                File template = new File(eisStItem.getTemplate());
+                if (!template.exists()) {
+                    return new AjaxResult(false).setMessage("找不到此标准测试项的模板文件");
+                }
+                File target = FileModel.generateExperiment(String.valueOf(experiment.getProjectId()), template.getName());
+                FileUtil.nioTransferCopy(template, target);
+                experiment.setFile(target.getAbsolutePath());
+                experimentService.insert(experiment);
+        	}
+
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new AjaxResult(false).setData(e);
+        }
+        return new AjaxResult(Boolean.TRUE);
+    }
+
+    
+    
 
     /**
      * @param pId 项目ID，列出所有此项目关联的子测试项

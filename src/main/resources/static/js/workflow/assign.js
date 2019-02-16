@@ -493,14 +493,17 @@ define(function () {
            title: (id ? "编辑" : "创建") + "测试项",
            iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
            height: 680,
-           width: 620,
+           width: 820,
            collapsible:true,
            href: '/workflow/item/treeform',
            queryParams: {
              projectId: row.projectId
            },
            modal: true,
-           onLoad: function () {        	  
+           onLoad: function () {      
+	            $("#projectNo").textbox('setValue',row.projectNo); 
+	            $("#projectName").textbox('setValue',row.projectName); 
+	            $("#projectId").textbox("setValue",row.projectId);
            },
            onClose: function () {
              $(this).dialog("destroy");
@@ -520,27 +523,47 @@ define(function () {
              iconCls: 'fa fa-save',
              text: '保存',
              handler: function () {
-               form.form('submit',{
-                type:"get",
-                url:"",
-                onSubmit: function (param) {        //表单提交前的回调函数 
-                       var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
-                       if (!isValid) { 
-                         $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
-                       } 
-                       return isValid; // 如果验证不通过，返回false终止表单提交 
-                  }, 
-                success:function(data) {
-                  var obj = JSON.parse(data);
-                  if (obj.success) {
-                    $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
-                    dialog.dialog('close');
-                    itemdg.datagrid('reload', {projectId: row.projectId});
-                  }else {
-                    $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
-                  }
-                }
-               },'json');
+                 // 获取需要关联的资源节点
+                 var nodes = $("#standard-resource-tree").tree('getChecked', ['checked', 'indeterminate']);
+                 var alldata = [];
+                 $.each(nodes,function(index,curvalue) {
+                	 var childList =$("#standard-resource-tree").tree('getChildren',nodes[index].target);
+                	 if (childList == 0) {
+     					 var onenode =   new Object();
+     					 onenode.projectId= row.projectId;
+     					 onenode.projectNo = row.projectNo;
+     					 onenode.projectName = row.projectName;
+     					 onenode.itemId = nodes[index].itemId;
+     					 onenode.exName = nodes[index].testName;
+     					 onenode.stId = nodes[index].stId; 
+     					 onenode.requirement = $("#requirement_"+nodes[index].itemId).textbox('getValue');
+     					 onenode.clause = nodes[index].clause;
+     					 onenode.userId = parseInt($("#standard-form_"+nodes[index].itemId).combobox('getValue'));  
+     					 alldata.push(onenode);
+     				
+                	 }
+ 					 
+ 				});
+             	console.info(JSON.stringify(alldata));
+            	 $.ajax({
+            		 type:"POST",
+            		 url:"/resource/contract/experiment/saves",
+            		 data:JSON.stringify(alldata),
+                 dataType: "json",
+                 contentType: "application/json;charset=UTF-8",
+                 success: function(data) {
+                	     alert(data.success);
+                         if (data.success) {
+                           $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+                           dialog.dialog('close');
+                           itemdg.datagrid('reload', {projectId: row.projectId});
+                         }else {
+                           $.messager.alert({title:'提示',msg:data.message,icon:'error'});
+                         }
+                       }
+
+            	 } 
+            	 );
              }
            }]
          });
