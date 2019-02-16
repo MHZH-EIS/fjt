@@ -109,7 +109,7 @@
         #{devId,jdbcType=VARCHAR},
       </if>
       <if test="exName != null" >
-        #{exName,jdbcType=VARCHAR}
+        #{exName,jdbcType=VARCHAR},
       </if>
        <if test="userId != null" >
         #{userId,jdbcType=INTEGER}
