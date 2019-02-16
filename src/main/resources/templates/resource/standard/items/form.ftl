@@ -10,10 +10,21 @@
   <div class="field">
     <input class="easyui-filebox" id="upload" name="templateFile" accept=".docx" style="width:90%" data-options="label:'模板文件上传:',buttonText:'选择',required:true,prompt:'文件上传' ">
   </div>
+  
+    <div class="field">
+    <input class="easyui-filebox" id="uploadtable" name="tabTemplateFile" accept=".docx" style="width:90%" data-options="label:'表格模板上传:',buttonText:'选择',required:true,prompt:'文件上传' ">
+  </div>
 </form>
  
  <script>	
    $("#upload").filebox({
+   onChange:function(newValue,oldValue) {
+         checkFile();
+    }
+   }
+   );
+   
+   $("#uploadtable").filebox({
    onChange:function(newValue,oldValue) {
          checkFile();
     }

@@ -18,11 +18,21 @@ public class EisStItem {
     private String tableFile;
 
     private MultipartFile templateFile;
+    
+    private MultipartFile tabTemplateFile;
 
     @Transient
     private String text;
 
-    public String getText() {
+    public MultipartFile getTabTemplateFile() {
+		return tabTemplateFile;
+	}
+
+	public void setTabTemplateFile(MultipartFile tabTemplateFile) {
+		this.tabTemplateFile = tabTemplateFile;
+	}
+
+	public String getText() {
         return text;
     }
 

@@ -203,6 +203,18 @@ define(function () {
             commit = commit+1;
           }
       },
+      "assign-writetab": {
+          iconCls: 'fa fa-table',
+          text: "填写测试表格",
+          handler: function () {
+            var row = dg.edatagrid('getSelected');
+            /*if (!row) {
+              $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
+            }*/
+            createTabItemForm();
+ 
+          }
+      },
       "assign-commit": {
           iconCls: 'fa fa-check-square',
           text: "提交完成",
@@ -471,6 +483,71 @@ define(function () {
     	
     };
 
+    function createTabItemForm(id) {
+   	 var row = dg.edatagrid('getSelected');
+   	 var dialog = $("<div/>", {class: 'flow'}).dialog({
+   	        title: (id ? "编辑测试项表格" : "填写测试项表格") ,
+   	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
+   	        height: 240,
+   	        width: 420,
+   	        collapsible:true,
+   	        href: '/workflow/item/tabform',
+   	        queryParams: {
+   	        },
+   	        modal: true,
+   	        onLoad: function () {
+   	            //窗口表单加载成功时执行
+   	            form = $("#workflow-testtab-form");
+   	           
+   	          },
+   	        onClose: function () {
+   	          $(this).dialog("destroy");
+   	        },
+   	        sucess:function(result) {
+   	        	
+   	        },
+   	        buttons: [
+   	            {
+   	                iconCls: 'fa fa-trash-o',
+   	                text: '取消',
+   	                handler: function(){
+   	                	  dialog.dialog('close');
+   	                }
+   	            },	
+   	        {
+   	          iconCls: 'fa fa-save',
+   	          text: '保存',
+   	          handler: function () {
+   	        	  form.form('submit',{
+   	        		 type:"post",
+   	        		 url:"",
+   	        		 onSubmit: function (param) {        //表单提交前的回调函数 
+   	        	          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
+   	        	          if (!isValid) { 
+   	        	        	  $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
+   	        	          } 
+   	        	          return isValid; // 如果验证不通过，返回false终止表单提交 
+   	        	     }, 
+   	        		 success:function(data) {
+   	        			 var obj = JSON.parse(data);
+   	        			 if (obj.success) {
+   	        				 $.messager.alert({title:'提示',msg:"给测试项分配设备成功",icon:'info'});
+   	        				 dialog.dialog('close');
+   	        				 itemdg.datagrid('reload', {id: row.id});
+   	        			 }else {
+   	        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
+   	        			 }
+   	        		 }
+   	        	  },'json');
+   	          }
+   	        }]
+   	      });
+   };
+   
+
+    
+    
+    
     function createTestItemForm(id) {
     	 var row = dg.edatagrid('getSelected');
     	 var dialog = $("<div/>", {class: 'flow'}).dialog({

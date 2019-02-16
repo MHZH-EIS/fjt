@@ -91,6 +91,30 @@ public class FileModel {
         sb.append(fileName);
         return FileUtil.createSpoolAndFile(sb.toString());
     }
+    
+    
+    /**
+     * 生成标准测试项表格模板文件路径
+     *
+     * @param stNo     标准号
+     * @param fileName 文件名
+     * @return
+     */
+    public static File generateTabItem(String stNo, String fileName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("standards");
+        sb.append(File.separator);
+        sb.append(stNo);
+        sb.append(File.separator);
+        sb.append("tables");
+        sb.append(File.separator);
+        sb.append(fileName);
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+    
+    
+    
 
     /**
      * 生成合并测试项报告路径

@@ -226,17 +226,30 @@ public class StandardController {
         }
 
         MultipartFile multipartFile = item.getTemplateFile();
+        MultipartFile tabFile = item.getTabTemplateFile();
+        
         EisStandard standard = standardService.queryById(item.getStId());
         try {
             if (standard != null) {
                 logger.info("当前测试项对应的标准为{}", standard.getName());
+                
                 File file = FileModel.generateItem(standard.getStNo(), multipartFile.getOriginalFilename());
+                
+                String newFileName = item.getTestName()+"_"+item.getClause()+".docx";
+                File tableFile = FileModel.generateTabItem(standard.getStNo(), newFileName);
+                
+                
                 /*更新情况*/
                 if (file.exists()) {
                 	file.delete();
                 }
+                if (tableFile.exists()) {
+                	tableFile.delete();
+                }
                 multipartFile.transferTo(file);
+                tabFile.transferTo(tableFile);
                 logger.info("附件上传成功,地址为{}", file.getAbsolutePath());
+                logger.info("表格模板上传成功,地址为:{}",tableFile.getAbsolutePath());
                 item.setTemplate(file.getAbsolutePath());
                 if(item.getItemId() != null) {
                     sItemService.update(item);
