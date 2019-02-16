@@ -13,23 +13,32 @@
    var columns = new Array();　　 
    var jsonObj =${data};
    var arr = Object.keys(jsonObj[0]);
-   //alert(arr)
-      $datagrid.emptyMsg= "还没有内容";
-   $datagrid.rownum=true;
-         $datagrid.fitColumns=true;
+   
+      $datagrid.rownum=true;
+      $datagrid.fitColumns=true;
+      $datagrid.border = false;
+      $datagrid.pagination = true;
+      $datagrid.fit = true;
+      $datagrid.rownumbers =true;
+      $datagrid.resizeHandle ='right';
 	 /* for (var i = 0; i < jsonObj.length; i++) {
 	     alert(jsonObj[i][arr[1]]);
 	 } */ 
  
 	  $.each(arr, function (i, item) {
 	        if(arr[i] != null && typeof(arr[i])!=undefined) {
-	           columns.push({ "field":arr[i] , "title": arr[i] , "width": 200});
+	           if (i != 0) {
+	            columns.push({ "field":arr[i] , "title": arr[i] , "width": 100,align:'center',editor:'text'});
+	           }else {
+	            columns.push({ "field":arr[i] , "title": arr[i] , "width": 100,align:'center'});
+	           }
+	          
 	        }
 	     
 	  });
    
    $datagrid.columns = new Array(columns);
-   
+
    
     $('#testtab_dg').edatagrid($datagrid);
     

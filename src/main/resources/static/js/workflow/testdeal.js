@@ -520,27 +520,48 @@ define(function () {
    	          iconCls: 'fa fa-save',
    	          text: '保存',
    	          handler: function () {
-   	        	  form.form('submit',{
-   	        		 type:"post",
-   	        		 url:"",
-   	        		 onSubmit: function (param) {        //表单提交前的回调函数 
-   	        	          var isValid = $(this).form('validate');//验证表单中的一些控件的值是否填写正确，比如某些文本框中的内容必须是数字 
-   	        	          if (!isValid) { 
-   	        	        	  $.messager.alert({title:'提示',msg:"校验失败请检查",icon:'error'});
-   	        	          } 
-   	        	          return isValid; // 如果验证不通过，返回false终止表单提交 
-   	        	     }, 
-   	        		 success:function(data) {
-   	        			 var obj = JSON.parse(data);
-   	        			 if (obj.success) {
-   	        				 $.messager.alert({title:'提示',msg:"给测试项分配设备成功",icon:'info'});
-   	        				 dialog.dialog('close');
-   	        				 itemdg.datagrid('reload', {id: row.id});
-   	        			 }else {
-   	        				 $.messager.alert({title:'提示',msg:obj.message,icon:'error'});
-   	        			 }
-   	        		 }
-   	        	  },'json');
+   	        	var tabrows = $("#testtab_dg").datagrid("getRows");
+   	        	var dataList = new Array();　
+   	        	
+   	        	var datagridTitle = new Array();
+   	            var fields = $("#testtab_dg").datagrid('getColumnFields');
+   	             for (var i = 0; i < fields.length; i++) {
+   	                 var option = $("#testtab_dg").datagrid('getColumnOption', fields[i]);
+   	                 datagridTitle.push(option.title);
+   	             }
+   	            // alert(datagridTitle);
+   	             
+   	        	for (var i = 0; i < tabrows.length; i++) {
+   	        		var onedata = {};
+   	        		//alert(datagridTitle[i]);
+   	        		//alert(tabrows[i]);
+   	        		//alert(tabrows[i][datagridTitle[i]]);
+   	        		for (var j = 0 ; j < fields.length; j++) {
+   	   	        		onedata[datagridTitle[j]] = tabrows[i][datagridTitle[j]]; 
+   	        		}
+   	        		dataList.push(onedata);
+   	        	}
+   	        	alert(JSON.stringify(dataList));
+   	        	
+   	        	  
+           	    $.ajax({
+        		 type:"POST",
+        		 url:"/workflow/fillTable",
+        		 data:JSON.stringify({"id":parseInt(id),"dataList":dataList}),
+                 dataType: "json",
+                 contentType: "application/json;charset=UTF-8",
+                 success: function(data) {
+            	     alert(data.success);
+                     if (data.success) {
+                       $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+                       dialog.dialog('close');
+                       itemdg.datagrid('reload', {projectId: row.projectId});
+                     }else {
+                       $.messager.alert({title:'提示',msg:data.message,icon:'error'});
+                     }
+                   }
+        	 } 
+        	 );
    	          }
    	        }]
    	      });

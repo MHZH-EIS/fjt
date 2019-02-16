@@ -7,6 +7,7 @@ import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
 import com.ai.eis.service.SItemService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
@@ -31,7 +32,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -115,8 +118,14 @@ public class WorkFlowController {
     }
 
     @ResponseBody
-    @RequestMapping("/fillTable")
-    public AjaxResult fillTable(Integer id, List <String> dataList) {
+    //@RequestMapping("/fillTable")
+    @RequestMapping(value="/fillTable", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    public AjaxResult fillTable(@RequestBody HashMap<String,Object> params) {
+    	 Integer id = (Integer)params.get("id");
+    	 List<String> dataList = ( List<String>) params.get("dataList");
+    			 
+    			 // JSONObject.parseArray((String)params.get("dataList"), String.class); 
+    	 
         EisExperiment experiment = experimentService.queryById(id);
         EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
         try {
