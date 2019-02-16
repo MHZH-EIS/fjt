@@ -7,9 +7,10 @@
     <result column="TEST_NAME" property="testName" jdbcType="VARCHAR" />
     <result column="CLAUSE" property="clause" jdbcType="VARCHAR" />
     <result column="TEMPLATE" property="template" jdbcType="VARCHAR" />
+    <result column="TABLE_FILE" property="tableFile"  jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ITEM_ID, ST_ID, TEST_NAME, CLAUSE, TEMPLATE
+    ITEM_ID, ST_ID, TEST_NAME, CLAUSE, TEMPLATE,TABLE_FILE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -28,9 +29,9 @@
   </delete>
   <insert id="insert" parameterType="com.ai.eis.model.EisStItem" >
     insert into eis_st_item (ITEM_ID, ST_ID, TEST_NAME, 
-      CLAUSE, TEMPLATE)
+      CLAUSE, TEMPLATE,TABLE_FILE)
     values (#{itemId,jdbcType=INTEGER}, #{stId,jdbcType=INTEGER}, #{testName,jdbcType=VARCHAR}, 
-      #{clause,jdbcType=VARCHAR}, #{template,jdbcType=VARCHAR})
+      #{clause,jdbcType=VARCHAR}, #{template,jdbcType=VARCHAR},#{tableFile,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ai.eis.model.EisStItem" >
     insert into eis_st_item
@@ -50,6 +51,9 @@
       <if test="template != null" >
         TEMPLATE,
       </if>
+      <if test="tableFile != null" >
+        TABLE_FILE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="itemId != null" >
@@ -66,6 +70,9 @@
       </if>
       <if test="template != null" >
         #{template,jdbcType=VARCHAR},
+      </if>
+      <if test="tableFile != null" >
+        #{tableFile,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -84,6 +91,9 @@
       <if test="template != null" >
         TEMPLATE = #{template,jdbcType=VARCHAR},
       </if>
+      <if test="tableFile != null" >
+        TABLE_FILE = #{tableFile,jdbcType=VARCHAR},
+      </if>
     </set>
     where ITEM_ID = #{itemId,jdbcType=INTEGER}
   </update>
@@ -92,7 +102,8 @@
     set ST_ID = #{stId,jdbcType=INTEGER},
       TEST_NAME = #{testName,jdbcType=VARCHAR},
       CLAUSE = #{clause,jdbcType=VARCHAR},
-      TEMPLATE = #{template,jdbcType=VARCHAR}
+      TEMPLATE = #{template,jdbcType=VARCHAR},
+      TABLE_FILE = #{tableFile,jdbcType=VARCHAR}
     where ITEM_ID = #{itemId,jdbcType=INTEGER}
   </update>
 

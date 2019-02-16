@@ -6,6 +6,7 @@ import com.ai.eis.service.*;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
+import org.apache.commons.lang.StringUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,7 @@ public class ServiceTask implements JavaDelegate {
             allFiles.add(createExperimentBrief(experiments, projectId));
             allFiles.add(createDetailExperiment(experiments, projectId));
             allFiles.add(createDevBrief(devs, projectId));
+            allFiles.add(createExperimentTable(experiments, projectId));
             allFiles.add(FileModel.getEndPage());
 
             FileUtil.mergeWord(allFiles, FileModel.generateReport(projectId));
@@ -159,6 +161,20 @@ public class ServiceTask implements JavaDelegate {
         FileUtil.mergeWord(files, target, false);
         if (target.exists()) {
             logger.info("子实验项目报告合并成功");
+        }
+        return target;
+    }
+
+    private File createExperimentTable(List <Map <String, Object>> experiments, String projectId) throws IOException, Docx4JException {
+        List <File> tableFile = experiments.stream()
+                                           .map(m -> String.valueOf(m.get("tableFile")))
+                                           .filter(StringUtils::isNotEmpty)
+                                           .map(File::new)
+                                           .collect(Collectors.toList());
+        File target = FileModel.generateMergeExperimentTable(projectId);
+        FileUtil.mergeWord(tableFile, target, false);
+        if (target.exists()) {
+            logger.info("子实验项目报告表文件合并成功");
         }
         return target;
     }

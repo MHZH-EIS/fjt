@@ -18,6 +18,8 @@ public class EisExperiment {
 
     private String exName;
 
+    private String tableFile;
+
     // 前台传输测试工程师ID所用字段
     private String userId;
 
@@ -91,5 +93,13 @@ public class EisExperiment {
 
     public void setExName(String exName) {
         this.exName = exName;
+    }
+
+    public String getTableFile() {
+        return tableFile;
+    }
+
+    public void setTableFile(String tableFile) {
+        this.tableFile = tableFile;
     }
 }

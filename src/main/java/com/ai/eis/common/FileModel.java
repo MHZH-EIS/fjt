@@ -114,6 +114,27 @@ public class FileModel {
     }
 
     /**
+     * 生成合并测试项报告路径
+     *
+     * @param pId 项目ID
+     * @return
+     */
+    public static File generateMergeExperimentTable(String pId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(pId);
+        sb.append(File.separator);
+        sb.append("experiment");
+        sb.append(File.separator);
+        sb.append("merge");
+        sb.append(File.separator);
+        sb.append("table.docx");
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+
+    /**
      * 生成测试项报告路径
      *
      * @param pId      项目ID
@@ -269,8 +290,22 @@ public class FileModel {
     }
 
     public static File generateReport(String projectId) {
-
         return FileUtil.createSpoolAndFile(getReportName(projectId).toString());
+    }
+
+    public static File getExperimentTable(String projectId, String fileName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("project");
+        sb.append(File.separator);
+        sb.append(projectId);
+        sb.append(File.separator);
+        sb.append("experiment");
+        sb.append(File.separator);
+        sb.append("table");
+        sb.append(File.separator);
+        sb.append(fileName);
+        return FileUtil.createSpoolAndFile(sb.toString());
     }
 
 

@@ -1,6 +1,6 @@
 server:
-  port: 2332
-  
+  port: 80
+
 
 spring:
  datasource:

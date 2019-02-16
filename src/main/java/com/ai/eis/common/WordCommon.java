@@ -1,5 +1,6 @@
 package com.ai.eis.common;
 
+import com.alibaba.fastjson.JSONObject;
 import org.docx4j.Docx4J;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
@@ -9,16 +10,14 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.JaxbXmlPart;
 import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
 import org.docx4j.relationships.Relationship;
-import org.docx4j.wml.ContentAccessor;
-import org.docx4j.wml.Tbl;
-import org.docx4j.wml.Text;
-import org.docx4j.wml.Tr;
+import org.docx4j.wml.*;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +96,77 @@ public class WordCommon {
                 }
             }
         }
+    }
+
+    public static List <String> getTable(File file) throws Docx4JException {
+        List <String> results = new ArrayList <>();
+        List <String> header = new ArrayList <>();
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(file);
+        ClassFinder find = new ClassFinder(Tbl.class);
+        new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), find);
+        Tbl table = (Tbl) find.results.get(0);
+        List <Object> trs = table.getContent();
+        for (int i = 0; i < trs.size(); i++) {
+            if (i == 0) {
+                continue;
+            }
+            Tr tr = (Tr) trs.get(i);
+            List <Object> tcs = tr.getContent();
+            JSONObject json = new JSONObject(new LinkedHashMap <>());
+            for (int j = 0; j < tcs.size(); j++) {
+                JAXBElement element = (JAXBElement) tcs.get(j);
+                Tc value = (Tc) element.getValue();
+                if (i == 1) {
+                    header.add(value.getContent().get(0).toString());
+                } else {
+                    json.put(header.get(j), value.getContent().get(0).toString());
+                }
+            }
+            if (!json.isEmpty()) {
+                results.add(json.toJSONString());
+            }
+
+        }
+        return results;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void fillTable(File file, File dst, List <String> dataLists) throws Docx4JException {
+        List <String> header = new ArrayList <>();
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(file);
+        ClassFinder find = new ClassFinder(Tbl.class);
+        new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), find);
+        Tbl table = (Tbl) find.results.get(0);
+        List <Object> trs = table.getContent();
+        for (int i = 1; i < trs.size(); i++) {
+            JSONObject json = null;
+            if (i > 1) {
+                json = JSONObject.parseObject(dataLists.get(i - 2));
+            }
+            Tr tr = (Tr) trs.get(i);
+            List <Object> tcs = tr.getContent();
+            for (int j = 0; j < tcs.size(); j++) {
+                JAXBElement element = (JAXBElement) tcs.get(j);
+                Tc value = (Tc) element.getValue();
+                if (i == 1) {
+                    header.add(value.getContent().get(0).toString());
+                } else {
+                    P p = (P) value.getContent().get(0);
+                    R r = (R) p.getContent().get(0);
+                    JAXBElement jaxbElement = (JAXBElement) r.getContent().get(0);
+                    jaxbElement.setValue(json.get(header.get(j)));
+                }
+
+            }
+        }
+        wordMLPackage.save(dst);
+    }
+
+    public static void main(String[] args) throws Docx4JException {
+        //  getTable(new File("C:\\Users\\86183\\Desktop\\table.docx")).forEach(System.out::println);
+//        fillTable(new File("C:\\Users\\86183\\Desktop\\temp.docx"),
+//                getTable(new File("C:\\Users\\86183\\Desktop\\table.docx"))
+//        );
     }
 
 

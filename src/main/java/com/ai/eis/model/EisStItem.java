@@ -1,8 +1,8 @@
 package com.ai.eis.model;
 
-import javax.persistence.Transient;
-
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.Transient;
 
 public class EisStItem {
     private Integer itemId;
@@ -15,20 +15,22 @@ public class EisStItem {
 
     private String template;
 
+    private String tableFile;
+
     private MultipartFile templateFile;
-    
+
     @Transient
     private String text;
 
     public String getText() {
-		return text;
-	}
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public Integer getItemId() {
+    public Integer getItemId() {
         return itemId;
     }
 
@@ -75,5 +77,13 @@ public class EisStItem {
 
     public void setTemplateFile(MultipartFile templateFile) {
         this.templateFile = templateFile;
+    }
+
+    public String getTableFile() {
+        return tableFile;
+    }
+
+    public void setTableFile(String tableFile) {
+        this.tableFile = tableFile;
     }
 }

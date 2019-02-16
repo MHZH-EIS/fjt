@@ -11,24 +11,26 @@
     <result column="DEV_ID" property="devId" jdbcType="VARCHAR" />
     <result column="EX_NAME" property="exName" jdbcType="VARCHAR" />
     <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="TABLE_FILE" property="tableFile" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insert" parameterType="com.ai.eis.model.EisExperiment" >
     insert into eis_experiment (PROJECT_ID, ITEM_ID, REQUIREMENT, 
-      RESULT, FILE, DEV_ID, EX_NAME
+      RESULT, FILE, DEV_ID, EX_NAME, TABLE_FILE
       )
     values (#{projectId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{requirement,jdbcType=VARCHAR}, 
-      #{result,jdbcType=VARCHAR}, #{file,jdbcType=VARCHAR}, #{devId,jdbcType=VARCHAR}, #{exName,jdbcType=VARCHAR}
+      #{result,jdbcType=VARCHAR}, #{file,jdbcType=VARCHAR}, #{devId,jdbcType=VARCHAR}, #{exName,jdbcType=VARCHAR},
+      #{tableFile,jdbcType=VARCHAR}
       )
   </insert>
-  
-  
+
+
       <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select
-      ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID
+      ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID,TABLE_FILE
       from eis_experiment
         where id = #{id,jdbcType=INTEGER}
     </select>
-  
+
     <update id="updateSelective" parameterType="com.ai.eis.model.EisExperiment" >
     update eis_experiment
     <set >
@@ -53,13 +55,16 @@
       <if test="exName != null" >
       EX_NAME =   #{exName,jdbcType=VARCHAR}
       </if>
-     <if test="userId != null" >
+      <if test="userId != null" >
       USER_ID =   #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="tableFile != null">
+      TABLE_FILE = #{tableFile,jdbcType=VARCHAR}
       </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
- 
+
 
   <insert id="insertSelective" parameterType="com.ai.eis.model.EisExperiment" >
     insert into eis_experiment
@@ -88,6 +93,9 @@
        <if test="userId != null" >
         USER_ID,
       </if>
+        <if test="tableFile != null">
+            TABLE_FILE,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="projectId != null" >
@@ -114,6 +122,9 @@
        <if test="userId != null" >
         #{userId,jdbcType=INTEGER}
       </if>
+        <if test="tableFile != null" >
+            #{tableFile,jdbcType=INTEGER}
+        </if>
     </trim>
   </insert>
 
@@ -130,7 +141,7 @@
   </delete>
  <select id="queryByCondition" resultMap="BaseResultMap" parameterType="Map">
     select
-   ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID
+   ID, PROJECT_ID, ITEM_ID, REQUIREMENT,RESULT, FILE, DEV_ID,EX_NAME, USER_ID, TABLE_FILE
     from eis_experiment
     <where>
       <if test="pId != null and pId != ''">
@@ -144,7 +155,7 @@
       </if>
     </where>
   </select>
-  
+
   <update id = "updateResult" parameterType="Map" >
   update eis_experiment set 
   result = #{result}
@@ -157,6 +168,7 @@
 	a.RESULT as result,
 	a.FILE as file,
 	a.DEV_ID as devId,
+	a.TABLE_FILE as tableFile,
 	b.TEST_NAME as experiment,
 	b.CLAUSE as clause
     FROM
