@@ -104,7 +104,7 @@ public class WorkFlowController {
                 return;
             }
             File file = new File(eisStItem.getTableFile());
-            List <String> tables = WordCommon.getTable(file);
+            List<LinkedHashMap<String,String>> tables = WordCommon.getTable(file);
             model.addAttribute("result", "success");
             model.addAttribute("data", mapper.writeValueAsString(tables));
         } catch (Docx4JException | JsonProcessingException e) {

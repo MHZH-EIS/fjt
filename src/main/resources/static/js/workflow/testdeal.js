@@ -188,7 +188,7 @@ define(function () {
           iconCls: 'fa fa-refresh',
           text: "刷新任务",
           handler: function () {
-        	     dg.edatagrid('reload');
+        	     dg.edatagrid('reload');  
           }
         },
         "assign-writedoc": {
@@ -211,7 +211,8 @@ define(function () {
             /*if (!row) {
               $.messager.alert({title:'提示',msg:"请先选择个测试任务",icon:'info'});
             }*/
-            createTabItemForm();
+            createTabItemForm.call(this, row.id);
+            
  
           }
       },
@@ -488,11 +489,12 @@ define(function () {
    	 var dialog = $("<div/>", {class: 'flow'}).dialog({
    	        title: (id ? "编辑测试项表格" : "填写测试项表格") ,
    	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
-   	        height: 240,
-   	        width: 420,
+   	        height: 680,
+   	        width: 580,
    	        collapsible:true,
    	        href: '/workflow/item/tabform',
    	        queryParams: {
+   	        	id:id
    	        },
    	        modal: true,
    	        onLoad: function () {

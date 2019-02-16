@@ -98,7 +98,7 @@ public class WordCommon {
         }
     }
 
-    public static List <String> getTable(File file) throws Docx4JException {
+    public static  List<LinkedHashMap<String,String>> getTable(File file) throws Docx4JException {
         List <String> results = new ArrayList <>();
         List <String> header = new ArrayList <>();
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(file);
@@ -106,12 +106,16 @@ public class WordCommon {
         new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), find);
         Tbl table = (Tbl) find.results.get(0);
         List <Object> trs = table.getContent();
+        List<LinkedHashMap<String,String>> lst = new ArrayList<>();
+        
+        
         for (int i = 0; i < trs.size(); i++) {
             if (i == 0) {
                 continue;
             }
             Tr tr = (Tr) trs.get(i);
             List <Object> tcs = tr.getContent();
+            LinkedHashMap<String,String> map = new LinkedHashMap<>();
             JSONObject json = new JSONObject(new LinkedHashMap <>());
             for (int j = 0; j < tcs.size(); j++) {
                 JAXBElement element = (JAXBElement) tcs.get(j);
@@ -120,14 +124,16 @@ public class WordCommon {
                     header.add(value.getContent().get(0).toString());
                 } else {
                     json.put(header.get(j), value.getContent().get(0).toString());
+                    map.put(header.get(j), value.getContent().get(0).toString());
                 }
             }
             if (!json.isEmpty()) {
                 results.add(json.toJSONString());
+                lst.add(map);
             }
 
         }
-        return results;
+        return lst;
     }
 
     @SuppressWarnings("unchecked")
@@ -164,10 +170,10 @@ public class WordCommon {
 
     public static void main(String[] args) throws Docx4JException {
       //    getTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx")).forEach(System.out::println);
-        fillTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx"),
-                new File("C:\\Users\\86183\\Desktop\\test2.docx"),
-                getTable(new File("C:\\Users\\86183\\Desktop\\table.docx"))
-        );
+//        fillTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx"),
+//                new File("C:\\Users\\86183\\Desktop\\test2.docx"),
+//                getTable(new File("C:\\Users\\86183\\Desktop\\table.docx"))
+//        );
     }
 
 
