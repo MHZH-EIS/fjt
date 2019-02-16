@@ -1,16 +1,15 @@
 package com.ai.eis.controller;
 
-import com.ai.eis.common.AjaxResult;
-import com.ai.eis.common.Constants;
-import com.ai.eis.common.DataGrid;
-import com.ai.eis.common.FileModel;
+import com.ai.eis.common.*;
 import com.ai.eis.configuration.ApplicationConfigData;
 import com.ai.eis.model.*;
 import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
+import com.ai.eis.service.SItemService;
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
-
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -26,6 +25,7 @@ import org.activiti.engine.task.Task;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.lang.StringUtils;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +79,9 @@ public class WorkFlowController {
     @Autowired
     private ApplicationConfigData applicationData;
 
+    @Autowired
+    private SItemService sItemService;
+
     @RequestMapping("/assign")
     public void assign(@RequestParam(value = "id", defaultValue = "") String id) {
 
@@ -88,12 +91,30 @@ public class WorkFlowController {
     public void itemForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
 
     }
-    
+
     @RequestMapping("/item/tabform")
-    public void itemTabForm(Integer id, Model model ) {
+    public void itemTabForm(Integer id, Model model) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            EisExperiment experiment = experimentService.queryById(id);
+            EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
+            if (StringUtils.isEmpty(eisStItem.getTableFile())) {
+                model.addAttribute("result", "failed");
+                model.addAttribute("data", "此测试项没有定义表格模板，不需要填写");
+                return;
+            }
+            File file = new File(eisStItem.getTableFile());
+            List <String> tables = WordCommon.getTable(file);
+            model.addAttribute("result", "success");
+            model.addAttribute("data", mapper.writeValueAsString(tables));
+        } catch (Docx4JException | JsonProcessingException e) {
+            logger.error(e.getMessage(), e);
+            model.addAttribute("result", "failed");
+            model.addAttribute("data", e.getMessage());
+        }
 
     }
-    
+
     @RequestMapping("/item/treeform")
     public void itemTreeForm(@RequestParam(value = "projectId", defaultValue = "") String projectId) {
 
@@ -133,12 +154,11 @@ public class WorkFlowController {
     public void testDeal(@RequestParam(value = "id", defaultValue = "") String id) {
 
     }
-    
+
     @RequestMapping("/item/dealform")
     public void dealForm(@RequestParam(value = "id", defaultValue = "") String id) {
 
     }
- 
 
 
     /**
@@ -261,11 +281,11 @@ public class WorkFlowController {
 
     @RequestMapping("/task/display")
     @ResponseBody
-    public DataGrid <EisAssignTaskDisplay> queryDisplayTasks(Integer page,Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
-    	HttpSession session = request.getSession();
+    public DataGrid <EisAssignTaskDisplay> queryDisplayTasks(Integer page, Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+        com.github.pagehelper.Page <Object> pg = PageHelper.startPage(page, rows);
+        HttpSession session = request.getSession();
         List <EisAssignTaskDisplay> displayTasks = new ArrayList <>();
-        Iterable<EisUserTask> tasks = queryCurrentUserTask(page,rows,taskName).getRows();
+        Iterable <EisUserTask> tasks = queryCurrentUserTask(page, rows, taskName).getRows();
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
@@ -294,20 +314,20 @@ public class WorkFlowController {
             one.setTaskId(task.getTaskId());
             displayTasks.add(one);
         }
-        
-        DataGrid<EisAssignTaskDisplay> dg = new DataGrid<EisAssignTaskDisplay>(displayTasks);
-    	dg.setTotal(pg.getTotal());
+
+        DataGrid <EisAssignTaskDisplay> dg = new DataGrid <EisAssignTaskDisplay>(displayTasks);
+        dg.setTotal(pg.getTotal());
         return dg;
     }
 
 
     @RequestMapping("/query/task/his/display")
     @ResponseBody
-    public DataGrid <EisAssignTaskDisplay> queryHisDisplayTasks(Integer page,Integer rows) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    public DataGrid <EisAssignTaskDisplay> queryHisDisplayTasks(Integer page, Integer rows) {
+        com.github.pagehelper.Page <Object> pg = PageHelper.startPage(page, rows);
         HttpSession session = request.getSession();
         List <EisAssignTaskDisplay> displayTasks = new ArrayList <>();
-        Iterable <EisUserTask> tasks = queryCurrentUserHisTask(page,rows).getRows();
+        Iterable <EisUserTask> tasks = queryCurrentUserHisTask(page, rows).getRows();
 
         for (EisUserTask task : tasks) {
             EisAssignTaskDisplay one = new EisAssignTaskDisplay();
@@ -333,8 +353,8 @@ public class WorkFlowController {
             one.setTaskId(task.getTaskId());
             displayTasks.add(one);
         }
-        DataGrid<EisAssignTaskDisplay> dg = new DataGrid<EisAssignTaskDisplay>(displayTasks);
-    	dg.setTotal(pg.getTotal());
+        DataGrid <EisAssignTaskDisplay> dg = new DataGrid <EisAssignTaskDisplay>(displayTasks);
+        dg.setTotal(pg.getTotal());
         return dg;
     }
 
@@ -346,45 +366,45 @@ public class WorkFlowController {
      */
     @RequestMapping("/queryCurrentUserTask")
     @ResponseBody
-    public DataGrid <EisUserTask> queryCurrentUserTask(Integer page,Integer rows,@RequestParam(value = "taskName", defaultValue = "") String taskName) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
-        List <EisUserTask>  tasks = queryCurrentUserTaskAll(taskName);
-        DataGrid<EisUserTask> dg = new DataGrid<EisUserTask>(tasks);
-    	dg.setTotal(pg.getTotal());
+    public DataGrid <EisUserTask> queryCurrentUserTask(Integer page, Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+        com.github.pagehelper.Page <Object> pg = PageHelper.startPage(page, rows);
+        List <EisUserTask> tasks = queryCurrentUserTaskAll(taskName);
+        DataGrid <EisUserTask> dg = new DataGrid <EisUserTask>(tasks);
+        dg.setTotal(pg.getTotal());
         return dg;
     }
-    
-   private boolean isTestTask(String taskName) {
-	   if (!taskName.contains(Constants.DISCARD_TASK) &&
-		   !taskName.contains(Constants.MAIL_TASK) &&
-		   !taskName.contains(Constants.MODIFY_TASK) &&
-		   !taskName.contains(Constants.VERIFY_TASK)  
-	     )  {
-		   return true;
-	   }
-	   return false;
-   }
-    
+
+    private boolean isTestTask(String taskName) {
+        if (!taskName.contains(Constants.DISCARD_TASK) &&
+                !taskName.contains(Constants.MAIL_TASK) &&
+                !taskName.contains(Constants.MODIFY_TASK) &&
+                !taskName.contains(Constants.VERIFY_TASK)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     @RequestMapping("/queryCurrentUserTaskAll")
     @ResponseBody
-    public List <EisUserTask> queryCurrentUserTaskAll( @RequestParam(value = "taskName", defaultValue = "") String taskName) {
- 
-    	List <EisUserTask> tasks = new ArrayList <>();
+    public List <EisUserTask> queryCurrentUserTaskAll(@RequestParam(value = "taskName", defaultValue = "") String taskName) {
+
+        List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
-        logger.info("=======userId:{} taskName:{}====", user.getUserid(),taskName);
+        logger.info("=======userId:{} taskName:{}====", user.getUserid(), taskName);
         List <Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(user.getUserid())).list();
         for (Task task : list) {
-            logger.info("taskId:{} taskName:{}",task.getId(),task.getName());
-            if(taskName.equals(Constants.TEST_TASK)) {
-            	if (!isTestTask(task.getName())) {
-            		continue;
-            	}
-            }else {
+            logger.info("taskId:{} taskName:{}", task.getId(), task.getName());
+            if (taskName.equals(Constants.TEST_TASK)) {
+                if (!isTestTask(task.getName())) {
+                    continue;
+                }
+            } else {
                 if (!task.getName().contains(taskName)) {
                     continue;
                 }
-            	
+
             }
             EisUserTask userTask = new EisUserTask();
             userTask.setTaskName(task.getName());
@@ -407,15 +427,13 @@ public class WorkFlowController {
         }
         return tasks;
     }
-    
-    
-    
+
 
     @RequestMapping("/queryAllCurrentTaskByName")
     @ResponseBody
-    public DataGrid <EisUserTask> queryAllCurrentTaskByName(Integer page,Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
-    	List <EisUserTask> tasks = new ArrayList <>();
+    public DataGrid <EisUserTask> queryAllCurrentTaskByName(Integer page, Integer rows, @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+        com.github.pagehelper.Page <Object> pg = PageHelper.startPage(page, rows);
+        List <EisUserTask> tasks = new ArrayList <>();
         List <Task> list = taskService.createTaskQuery().taskName(taskName).list();
         for (Task task : list) {
             EisUserTask userTask = new EisUserTask();
@@ -428,8 +446,8 @@ public class WorkFlowController {
             userTask.setProjectId(Integer.valueOf(processInstance.getBusinessKey()));
             tasks.add(userTask);
         }
-        DataGrid<EisUserTask> dg = new DataGrid<EisUserTask>(tasks);
-    	dg.setTotal(pg.getTotal());
+        DataGrid <EisUserTask> dg = new DataGrid <EisUserTask>(tasks);
+        dg.setTotal(pg.getTotal());
         return dg;
     }
 
@@ -441,8 +459,8 @@ public class WorkFlowController {
      */
     @RequestMapping("/queryCurrentUserHisTask")
     @ResponseBody
-    public DataGrid <EisUserTask> queryCurrentUserHisTask(Integer page,Integer rows) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    public DataGrid <EisUserTask> queryCurrentUserHisTask(Integer page, Integer rows) {
+        com.github.pagehelper.Page <Object> pg = PageHelper.startPage(page, rows);
         List <EisUserTask> tasks = new ArrayList <>();
         HttpSession session = request.getSession();
         EisUser user = (EisUser) session.getAttribute(Constants.SESSION_EIS_KEY);
@@ -465,8 +483,8 @@ public class WorkFlowController {
 
             tasks.add(userTask);
         }
-        DataGrid<EisUserTask> dg = new DataGrid<EisUserTask>(tasks);
-    	dg.setTotal(pg.getTotal());
+        DataGrid <EisUserTask> dg = new DataGrid <EisUserTask>(tasks);
+        dg.setTotal(pg.getTotal());
         return dg;
     }
 
