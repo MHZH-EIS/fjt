@@ -112,7 +112,22 @@ public class WorkFlowController {
             model.addAttribute("result", "failed");
             model.addAttribute("data", e.getMessage());
         }
+    }
 
+    @ResponseBody
+    @RequestMapping("/fillTable")
+    public AjaxResult fillTable(Integer id, List <String> dataList) {
+        EisExperiment experiment = experimentService.queryById(id);
+        EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
+        try {
+            File template = new File(eisStItem.getTableFile());
+            File dst = FileModel.getExperimentTable(String.valueOf(experiment.getProjectId()), template.getName());
+            WordCommon.fillTable(new File(eisStItem.getTableFile()), dst, dataList);
+            return new AjaxResult(true);
+        } catch (Docx4JException e) {
+            logger.error(e.getMessage(), e);
+            return new AjaxResult(false).setMessage(e.getMessage());
+        }
     }
 
     @RequestMapping("/item/treeform")
