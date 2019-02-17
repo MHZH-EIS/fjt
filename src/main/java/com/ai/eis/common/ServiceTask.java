@@ -167,7 +167,7 @@ public class ServiceTask implements JavaDelegate {
 
     private File createExperimentTable(List <Map <String, Object>> experiments, String projectId) throws IOException, Docx4JException {
         List <File> tableFile = experiments.stream()
-                                           .map(m -> String.valueOf(m.get("tableFile")))
+                                           .map(m -> m.get("tableFile") == null ? "" : String.valueOf(m.get("tableFile")))
                                            .filter(StringUtils::isNotEmpty)
                                            .map(File::new)
                                            .collect(Collectors.toList());
