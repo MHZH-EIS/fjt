@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class WordCommon {
 
@@ -168,6 +169,43 @@ public class WordCommon {
         wordMLPackage.save(dst);
     }
 
+    @SuppressWarnings("unchecked")
+    public static void fillTableWithHashMap(File file, File dst, List <LinkedHashMap<String,String>> mapList) throws Docx4JException {
+        List <String> header = new ArrayList <>();
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(file);
+        ClassFinder find = new ClassFinder(Tbl.class);
+        new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), find);
+        Tbl table = (Tbl) find.results.get(0);
+        List <Object> trs = table.getContent();
+        System.out.println("ts size:"+trs.size());
+        for (int i = 1; i < trs.size(); i++) {
+
+            Tr tr = (Tr) trs.get(i);
+            List <Object> tcs = tr.getContent();
+            LinkedHashMap<String,String> one = mapList.get(i-1);
+            Set<String> mapKeys = one.keySet();
+            int j = 0;
+            for (String onekey :mapKeys) {
+            	
+                JAXBElement element = (JAXBElement) tcs.get(j);
+                Tc value = (Tc) element.getValue();
+                if (i == 1) {
+                    header.add(value.getContent().get(0).toString());
+                } else {
+                    P p = (P) value.getContent().get(0);
+                    R r = (R) p.getContent().get(0);
+                    JAXBElement jaxbElement = (JAXBElement) r.getContent().get(0);
+                    jaxbElement.setValue(one.get(onekey));
+                }
+                j++;
+            }
+            
+       
+        }
+        wordMLPackage.save(dst);
+    }
+    
+    
     public static void main(String[] args) throws Docx4JException {
       //    getTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx")).forEach(System.out::println);
 //        fillTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx"),

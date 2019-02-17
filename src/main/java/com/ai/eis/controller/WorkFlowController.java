@@ -122,16 +122,16 @@ public class WorkFlowController {
     @RequestMapping(value="/fillTable", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     public AjaxResult fillTable(@RequestBody HashMap<String,Object> params) {
     	 Integer id = (Integer)params.get("id");
-    	 List<String> dataList = ( List<String>) params.get("dataList");
-    			 
-    			 // JSONObject.parseArray((String)params.get("dataList"), String.class); 
+    	 List<LinkedHashMap<String,String>> dataList = (List<LinkedHashMap<String, String>>) params.get("dataList");
+ 
+  
     	 
         EisExperiment experiment = experimentService.queryById(id);
         EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
         try {
             File template = new File(eisStItem.getTableFile());
             File dst = FileModel.getExperimentTable(String.valueOf(experiment.getProjectId()), template.getName());
-            WordCommon.fillTable(new File(eisStItem.getTableFile()), dst, dataList);
+            WordCommon.fillTableWithHashMap(new File(eisStItem.getTableFile()), dst, dataList);
             EisExperiment eisExperiment = new EisExperiment();
             eisExperiment.setTableFile(dst.getAbsolutePath());
             experimentService.update(eisExperiment);

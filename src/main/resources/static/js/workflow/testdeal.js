@@ -502,6 +502,12 @@ define(function () {
    	            form = $("#workflow-testtab-form");
    	           
    	          },
+            beforeSend: function() {
+             	 MaskUtil.mask();
+              },
+              complete:function() {
+             	 MaskUtil.unmask(); 
+              },
    	        onClose: function () {
    	          $(this).dialog("destroy");
    	        },
