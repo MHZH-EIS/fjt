@@ -171,6 +171,7 @@ public class ServiceTask implements JavaDelegate {
                                            .filter(StringUtils::isNotEmpty)
                                            .map(File::new)
                                            .collect(Collectors.toList());
+        logger.info("有{}个实验表待合并", tableFile.size());
         File target = FileModel.generateMergeExperimentTable(projectId);
         FileUtil.mergeWord(tableFile, target, false);
         if (target.exists()) {
