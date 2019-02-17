@@ -535,20 +535,16 @@ define(function () {
    	                 var option = $("#testtab_dg").datagrid('getColumnOption', fields[i]);
    	                 datagridTitle.push(option.title);
    	             }
-   	            // alert(datagridTitle);
+   	   
    	             
    	        	for (var i = 0; i < tabrows.length; i++) {
    	        		var onedata = {};
-   	        		//alert(datagridTitle[i]);
-   	        		//alert(tabrows[i]);
-   	        		//alert(tabrows[i][datagridTitle[i]]);
    	        		for (var j = 0 ; j < fields.length; j++) {
    	   	        		onedata[datagridTitle[j]] = tabrows[i][datagridTitle[j]]; 
    	        		}
    	        		dataList.push(onedata);
    	        	}
-   	        	alert(JSON.stringify(dataList));
-   	        	
+
    	        	  
            	    $.ajax({
         		 type:"POST",
@@ -556,12 +552,17 @@ define(function () {
         		 data:JSON.stringify({"id":parseInt(id),"dataList":dataList}),
                  dataType: "json",
                  contentType: "application/json;charset=UTF-8",
+                 beforeSend: function() {
+                	 MaskUtil.mask();
+                 },
+                 complete:function() {
+                	 MaskUtil.unmask(); 
+                 },
                  success: function(data) {
-            	     alert(data.success);
+ 
                      if (data.success) {
-                       $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
+                       $.messager.alert({title:'提示',msg:"填写测试表格完成",icon:'info'});
                        dialog.dialog('close');
-                       itemdg.datagrid('reload', {projectId: row.projectId});
                      }else {
                        $.messager.alert({title:'提示',msg:data.message,icon:'error'});
                      }
