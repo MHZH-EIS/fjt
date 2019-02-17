@@ -126,6 +126,7 @@ public class WorkFlowController {
             WordCommon.fillTable(new File(eisStItem.getTableFile()), dst, dataList);
             EisExperiment eisExperiment = new EisExperiment();
             eisExperiment.setTableFile(dst.getAbsolutePath());
+            eisExperiment.setId(id);
             experimentService.update(eisExperiment);
             return new AjaxResult(true);
         } catch (Docx4JException e) {
