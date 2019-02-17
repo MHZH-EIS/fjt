@@ -7,7 +7,6 @@ import com.ai.eis.service.EisContractService;
 import com.ai.eis.service.EisExperimentService;
 import com.ai.eis.service.SItemService;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
@@ -32,11 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -107,7 +102,7 @@ public class WorkFlowController {
                 return;
             }
             File file = new File(eisStItem.getTableFile());
-            List<LinkedHashMap<String,String>> tables = WordCommon.getTable(file);
+            List <LinkedHashMap <String, String>> tables = WordCommon.getTable(file);
             model.addAttribute("result", "success");
             model.addAttribute("data", mapper.writeValueAsString(tables));
         } catch (Docx4JException | JsonProcessingException e) {
@@ -117,21 +112,18 @@ public class WorkFlowController {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @ResponseBody
-    //@RequestMapping("/fillTable")
-    @RequestMapping(value="/fillTable", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
-    public AjaxResult fillTable(@RequestBody HashMap<String,Object> params) {
-    	 Integer id = (Integer)params.get("id");
-    	 List<LinkedHashMap<String,String>> dataList = (List<LinkedHashMap<String, String>>) params.get("dataList");
- 
-  
-    	 
-        EisExperiment experiment = experimentService.queryById(id);
-        EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
+    @RequestMapping(value = "/fillTable", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public AjaxResult fillTable(@RequestBody HashMap <String, Object> params) {
         try {
+            Integer id = (Integer) params.get("id");
+            List <LinkedHashMap <String, String>> dataList = (List <LinkedHashMap <String, String>>) params.get("dataList");
+            EisExperiment experiment = experimentService.queryById(id);
+            EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
             File template = new File(eisStItem.getTableFile());
             File dst = FileModel.getExperimentTable(String.valueOf(experiment.getProjectId()), template.getName());
-            WordCommon.fillTableWithHashMap(new File(eisStItem.getTableFile()), dst, dataList);
+            WordCommon.fillTable(new File(eisStItem.getTableFile()), dst, dataList);
             EisExperiment eisExperiment = new EisExperiment();
             eisExperiment.setTableFile(dst.getAbsolutePath());
             experimentService.update(eisExperiment);
