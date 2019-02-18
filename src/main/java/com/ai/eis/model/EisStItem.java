@@ -20,6 +20,8 @@ public class EisStItem {
     private MultipartFile templateFile;
     
     private MultipartFile tabTemplateFile;
+    
+    private String tableInfo;
 
     @Transient
     private String text;
@@ -96,4 +98,20 @@ public class EisStItem {
     public void setTableFile(String tableFile) {
         this.tableFile = tableFile;
     }
+
+	/**
+	 * @return the tableInfo
+	 */
+	public String getTableInfo() {
+		return tableInfo;
+	}
+
+	/**
+	 * @param tableInfo the tableInfo to set
+	 */
+	public void setTableInfo(String tableInfo) {
+		this.tableInfo = tableInfo;
+	}
+
+ 
 }

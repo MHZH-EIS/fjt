@@ -451,7 +451,7 @@ define(function () {
     	        		 success:function(data) {
     	        			 var obj = JSON.parse(data);
     	        			 if (obj.success) {
-    	        				 if (id != null) {
+    	        				 if (id == null ) {
         	        				 $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
     	        				 }else {
     	        					 $.messager.alert({title:'提示',msg:"修改测试项成功",icon:'info'});

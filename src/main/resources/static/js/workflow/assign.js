@@ -552,7 +552,6 @@ define(function () {
                  dataType: "json",
                  contentType: "application/json;charset=UTF-8",
                  success: function(data) {
-                	     alert(data.success);
                          if (data.success) {
                            $.messager.alert({title:'提示',msg:"新建测试项成功",icon:'info'});
                            dialog.dialog('close');

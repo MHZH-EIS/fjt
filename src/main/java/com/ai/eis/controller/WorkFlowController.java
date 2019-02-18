@@ -92,24 +92,15 @@ public class WorkFlowController {
 
     @RequestMapping("/item/tabform")
     public void itemTabForm(Integer id, Model model) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            EisExperiment experiment = experimentService.queryById(id);
-            EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
-            if (StringUtils.isEmpty(eisStItem.getTableFile())) {
-                model.addAttribute("result", "failed");
-                model.addAttribute("data", "此测试项没有定义表格模板，不需要填写");
-                return;
-            }
-            File file = new File(eisStItem.getTableFile());
-            List <LinkedHashMap <String, String>> tables = WordCommon.getTable(file);
-            model.addAttribute("result", "success");
-            model.addAttribute("data", mapper.writeValueAsString(tables));
-        } catch (Docx4JException | JsonProcessingException e) {
-            logger.error(e.getMessage(), e);
-            model.addAttribute("result", "failed");
-            model.addAttribute("data", e.getMessage());
-        }
+		EisExperiment experiment = experimentService.queryById(id);
+		EisStItem eisStItem = sItemService.queryById(experiment.getItemId());
+		if (StringUtils.isEmpty(eisStItem.getTableInfo())) {
+		    model.addAttribute("result", "failed");
+		    model.addAttribute("data", "此测试项没有定义表格模板，不需要填写");
+		    return;
+		}
+		model.addAttribute("result", "success");
+		model.addAttribute("data",  eisStItem.getTableInfo());
     }
 
     @SuppressWarnings("unchecked")

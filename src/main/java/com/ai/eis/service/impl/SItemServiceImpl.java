@@ -37,7 +37,7 @@ public class SItemServiceImpl implements SItemService {
 
 	@Override
 	public EisStItem queryById(Integer id) {
-        // TODO Auto-generated method stub
+ 
 		return itemMapper.selectByPrimaryKey(id);
 	}
 

@@ -489,6 +489,7 @@ define(function () {
    	 var dialog = $("<div/>", {class: 'flow'}).dialog({
    	        title: (id ? "编辑测试项表格" : "填写测试项表格") ,
    	        iconCls: 'fa ' + (id ? "fa-edit" : "fa-plus-square"),
+   	         id:'tabdig',
    	        height: 680,
    	        width: 580,
    	        collapsible:true,
