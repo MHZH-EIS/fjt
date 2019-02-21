@@ -12,7 +12,7 @@
   </div>
   
     <div class="field">
-    <input class="easyui-filebox" id="uploadtable" name="tabTemplateFile" accept=".docx" style="width:90%" data-options="label:'表格模板上传:',buttonText:'选择',required:true,prompt:'文件上传' ">
+    <input class="easyui-filebox" id="uploadtable" name="tabTemplateFile" accept=".docx" style="width:90%" data-options="label:'表格模板上传:',buttonText:'选择',required:false,prompt:'文件上传' ">
   </div>
 </form>
  

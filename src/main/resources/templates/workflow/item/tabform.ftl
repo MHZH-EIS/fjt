@@ -10,9 +10,17 @@
 <script>
  <#if data??> 
 	 var $datagrid = {};
-   var columns = new Array();　　 
-   var jsonObj =${data};
-   var arr = Object.keys(jsonObj[0]);
+   	 var columns = new Array();　　 
+   <#if result??> 
+   	 if ('${result}' == 'failed') {
+   	 	 $.messager.alert({title:'提示',msg:'${data}',icon:'info'});
+   	 	 $('#tabdig').dialog().panel('close');
+   	 	// this.close();
+   	 
+   	 }else {
+   	 
+   	 var jsonObj =${data};
+  	 var arr = Object.keys(jsonObj[0]);
    
       $datagrid.rownum=true;
       $datagrid.fitColumns=true;
@@ -21,10 +29,8 @@
       $datagrid.fit = true;
       $datagrid.rownumbers =true;
       $datagrid.resizeHandle ='right';
-	 /* for (var i = 0; i < jsonObj.length; i++) {
-	     alert(jsonObj[i][arr[1]]);
-	 } */ 
- 
+      
+	 
 	  $.each(arr, function (i, item) {
 	        if(arr[i] != null && typeof(arr[i])!=undefined) {
 	           if (i != 0) {
@@ -37,7 +43,7 @@
 	     
 	  });
    
-   $datagrid.columns = new Array(columns);
+    $datagrid.columns = new Array(columns);
 
    
     $('#testtab_dg').edatagrid($datagrid);
@@ -45,6 +51,11 @@
     $('#testtab_dg').edatagrid({
 	data: jsonObj
     });
+   	 
+   	 }
+   
+   </#if>
+
 
 
   </#if>

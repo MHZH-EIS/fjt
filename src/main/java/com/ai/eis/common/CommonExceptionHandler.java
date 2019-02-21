@@ -26,7 +26,7 @@ public class CommonExceptionHandler {
         mav.addObject("url", req.getRequestURL());
         mav.setViewName(DEFAULT_ERROR_VIEW);
         logger.error("..............");
-        logger.error("url:{},exception:{}",mav.getModelMap().get("url"),mav.getModel().get("url"));
+        logger.error("url:{},exception:{}",mav.getModelMap().get("url"),mav.getModel().get("exception"));
         e.printStackTrace();
         return mav;
     }

@@ -5,16 +5,20 @@ import com.ai.eis.common.Constants;
 import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.FileModel;
 import com.ai.eis.common.Tools;
+import com.ai.eis.common.WordCommon;
 import com.ai.eis.model.EisDevice;
 import com.ai.eis.model.EisStItem;
 import com.ai.eis.model.EisStandard;
 import com.ai.eis.service.SItemService;
 import com.ai.eis.service.StandardService;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -227,6 +232,7 @@ public class StandardController {
 
         MultipartFile multipartFile = item.getTemplateFile();
         MultipartFile tabFile = item.getTabTemplateFile();
+       
         
         EisStandard standard = standardService.queryById(item.getStId());
         try {
@@ -235,22 +241,43 @@ public class StandardController {
                 
                 File file = FileModel.generateItem(standard.getStNo(), multipartFile.getOriginalFilename());
                 
-                String newFileName = item.getTestName()+"_"+item.getClause()+".docx";
-                File tableFile = FileModel.generateTabItem(standard.getStNo(), newFileName);
+
                 
                 
                 /*更新情况*/
                 if (file.exists()) {
                 	file.delete();
                 }
-                if (tableFile.exists()) {
-                	tableFile.delete();
-                }
+
                 multipartFile.transferTo(file);
-                tabFile.transferTo(tableFile);
+          
                 logger.info("附件上传成功,地址为{}", file.getAbsolutePath());
-                logger.info("表格模板上传成功,地址为:{}",tableFile.getAbsolutePath());
                 item.setTemplate(file.getAbsolutePath());
+                
+                if ( StringUtils.isNotBlank (tabFile.getOriginalFilename())) {
+                    String newFileName = item.getTestName()+"_"+item.getClause()+".docx";
+                    File tableFile = FileModel.generateTabItem(standard.getStNo(), newFileName);
+                    
+                    if (tableFile.exists()) {
+                    	tableFile.delete();
+                    }
+                    
+                    tabFile.transferTo(tableFile);
+                    item.setTableFile(tableFile.getAbsolutePath());
+                    logger.info("表格模板上传成功,地址为:{}",tableFile.getAbsolutePath());
+                    List <LinkedHashMap <String, String>> tables = null;
+                    try {
+    					 tables = WordCommon.getTable(tableFile);
+    				} catch (Docx4JException e) {
+    					logger.error("获取表格模板信息失败:{}",e.getMessage());
+    					return new  AjaxResult(false).setMessage("获取表格模板信息失败:"+e.getMessage());
+    				}
+                    String jsonStr = JSON.toJSONString(tables);
+                    logger.info("获取表格模板信息:{}",jsonStr);
+                    item.setTableInfo(jsonStr);
+                }
+
+                
                 if(item.getItemId() != null) {
                     sItemService.update(item);
                     logger.info("测试项目{}修改成功", item.getTestName());
@@ -286,7 +313,15 @@ public class StandardController {
                 file.delete();
                 logger.info("附件删除成功");
             }
-    
+            
+            if (!StringUtils.isEmpty(item.getTableFile())) {
+                File tabFile = new File(item.getTableFile());
+                if (file.exists()) {
+                	file.delete();
+                	logger.info("表格模板删除成功:{}",item.getTableFile());
+                }
+            }
+
             logger.info("标准测试项{}删除成功", item.getTestName());
         }catch(Exception e) {
         	return   new AjaxResult(false).setMessage(e.getMessage());
