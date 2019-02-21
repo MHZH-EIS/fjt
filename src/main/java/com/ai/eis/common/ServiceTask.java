@@ -68,7 +68,10 @@ public class ServiceTask implements JavaDelegate {
             allFiles.add(createExperimentBrief(experiments, projectId));
             allFiles.add(createDetailExperiment(experiments, projectId));
             allFiles.add(createDevBrief(devs, projectId));
-            allFiles.add(createExperimentTable(experiments, projectId));
+            File tableFile = createExperimentTable(experiments, projectId);
+            if (tableFile.exists()) {
+                allFiles.add(tableFile);
+            }
             allFiles.add(FileModel.getEndPage());
 
             FileUtil.mergeWord(allFiles, FileModel.generateReport(projectId));
@@ -171,11 +174,13 @@ public class ServiceTask implements JavaDelegate {
                                            .filter(StringUtils::isNotEmpty)
                                            .map(File::new)
                                            .collect(Collectors.toList());
-        logger.info("有{}个实验表待合并", tableFile.size());
         File target = FileModel.generateMergeExperimentTable(projectId);
-        FileUtil.mergeWord(tableFile, target, false);
-        if (target.exists()) {
-            logger.info("子实验项目报告表文件合并成功");
+        if (tableFile.size() > 0) {
+            logger.info("有{}个实验表待合并", tableFile.size());
+            FileUtil.mergeWord(tableFile, target, false);
+            if (target.exists()) {
+                logger.info("子实验项目报告表文件合并成功");
+            }
         }
         return target;
     }
