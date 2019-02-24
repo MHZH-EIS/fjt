@@ -143,8 +143,8 @@ define(function () {
                     }
 
                 }, {
-                    field: 'assignTime',
-                    title: '下发时间',
+                    field: 'completeReportTime',
+                    title: '完成时间',
                     width: 50,
                     editor: {
                         type: 'validatebox',
@@ -154,7 +154,7 @@ define(function () {
                     },
                     formatter: formatDatebox
                 }, {
-                    field: 'remarks',
+                    field: 'remark',
                     title: '备注',
                     width: 30,
                     editor: {

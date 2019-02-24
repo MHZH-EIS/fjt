@@ -33,6 +33,28 @@ public class FileModel {
         sb.append(fileName);
         return FileUtil.createSpoolAndFile(sb.toString());
     }
+    
+    /**
+     * 生成标准文件路径
+     *
+     * @param reportNo    报告号
+     * @param fileName    文件名
+     * @return
+     */
+    public static File generateReport(String reportNo, String fileName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_PATH);
+        sb.append("reports");
+        sb.append(File.separator);
+        sb.append(reportNo);
+        sb.append(File.separator);
+        sb.append(fileName);
+        return FileUtil.createSpoolAndFile(sb.toString());
+    }
+    
+    
+    
+    
 
     /**
      * 生成样品描述文件路径

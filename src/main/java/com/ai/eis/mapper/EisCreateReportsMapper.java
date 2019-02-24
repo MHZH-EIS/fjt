@@ -1,7 +1,6 @@
 package com.ai.eis.mapper;
 
 import com.ai.eis.model.EisCreateReports;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
