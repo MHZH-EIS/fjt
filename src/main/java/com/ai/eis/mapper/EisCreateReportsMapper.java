@@ -1,6 +1,6 @@
 package com.ai.eis.mapper;
 
-import com.ai.eis.model.EisCreateReports;
+import com.ai.eis.model.EisCreateReport;
 
 import java.util.List;
 import java.util.Map;
@@ -8,15 +8,15 @@ import java.util.Map;
 public interface EisCreateReportsMapper {
     int deleteByPrimaryKey(Integer projectNo);
 
-    int insertSelective(EisCreateReports record);
+    int insertSelective(EisCreateReport record);
 
-    EisCreateReports selectByPrimaryKey(Integer projectNo);
+    EisCreateReport selectByPrimaryKey(Integer projectNo);
 
 
-    int updateByPrimaryKeySelective(EisCreateReports record);
+    int updateByPrimaryKeySelective(EisCreateReport record);
 
-    int updateByPrimaryKey(EisCreateReports record);
+    int updateByPrimaryKey(EisCreateReport record);
 
-    List<EisCreateReports> queryByCondition(Map<String, String> map);
+    List<EisCreateReport> queryByCondition(Map<String, String> map);
 
 }

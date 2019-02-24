@@ -1,7 +1,7 @@
 package com.ai.eis.service.impl;
 
 import com.ai.eis.mapper.EisCreateReportsMapper;
-import com.ai.eis.model.EisCreateReports;
+import com.ai.eis.model.EisCreateReport;
 import com.ai.eis.service.EisCreateReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,22 +16,22 @@ public class EisCreateReportServiceImpl implements EisCreateReportService {
 
 
     @Override
-    public int insert(EisCreateReports report) {
+    public int insert(EisCreateReport report) {
         return eisCreateReportsMapper.insertSelective(report);
     }
 
     @Override
-    public List<EisCreateReports> queryByCondition(Map<String, String> map) {
+    public List<EisCreateReport> queryByCondition(Map<String, String> map) {
         return eisCreateReportsMapper.queryByCondition(map);
     }
 
     @Override
-    public EisCreateReports queryById(Integer id) {
+    public EisCreateReport queryById(Integer id) {
         return eisCreateReportsMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    public int update(EisCreateReports report) {
+    public int update(EisCreateReport report) {
         return eisCreateReportsMapper.updateByPrimaryKeySelective(report);
     }
 

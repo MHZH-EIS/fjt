@@ -1,6 +1,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <!-- link rel="stylesheet" href="/css/progressbar.css" -->
+
 <form class="app-form" id="report-tool-form" enctype="multipart/form-data"  method="post" >
     <input type="hidden" name="projectNo">
+ 
     <div class="field">
         <input class="easyui-textbox" name="projectName" style="width:90%" data-options="label:'项目名称:',required:true">
     </div>
@@ -26,6 +29,10 @@
         <input class="easyui-textbox" name="remark" style="width:90%" data-options="label:'备注:',required:false ">
     </div>
 </form>
+
+<div id="prog"   style="width:400px;" type="hidden"></div>
+ 
+
 
 <script>
     $("#qzoneFilePath").filebox({
@@ -75,8 +82,9 @@
         }
     };
 
-    $("#standard-item-form").form("load",
+    $("#report-tool-form").form("load",
         <#if resource??>
         ${resource}
-        </#if>)
+        </#if>);
+
 </script>

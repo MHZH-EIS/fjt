@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class EisCreateReports {
+public class EisCreateReport {
     private Integer projectNo;
 
     private String projectName;
@@ -26,6 +26,22 @@ public class EisCreateReports {
     private String qplusMaxFilePath;
 
     private MultipartFile qminusMaxFile;
+
+    private String qminusMaxFilePath;
+
+    private Integer dataSpeed;
+
+    private String trfNo;
+
+    public String getReportFilePath() {
+        return reportFilePath;
+    }
+
+    public void setReportFilePath(String reportFilePath) {
+        this.reportFilePath = reportFilePath;
+    }
+
+    private String reportFilePath;
     
     public MultipartFile getQzoneFile() {
 		return qzoneFile;
@@ -50,14 +66,6 @@ public class EisCreateReports {
 	public void setQminusMaxFile(MultipartFile qminusMaxFile) {
 		this.qminusMaxFile = qminusMaxFile;
 	}
-
-	private String qminusMaxFilePath;
-
-    private Integer dataSpeed;
-
-    private String trfNo;
-    
-    
 
     public Integer getProjectNo() {
         return projectNo;
