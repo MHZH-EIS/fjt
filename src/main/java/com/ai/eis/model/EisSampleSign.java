@@ -29,13 +29,11 @@ public class EisSampleSign {
     private String status;
 
     private MultipartFile enclosureFile;
-    
-    private String projectNo;
- 
-    
- 
 
-	public Integer getId() {
+    private String projectNo;
+
+
+    public Integer getId() {
         return id;
     }
 
@@ -123,19 +121,19 @@ public class EisSampleSign {
         this.status = status == null ? null : status.trim();
     }
 
-	public MultipartFile getEnclosureFile() {
-		return enclosureFile;
-	}
+    public MultipartFile getEnclosureFile() {
+        return enclosureFile;
+    }
 
-	public void setEnclosureFile(MultipartFile enclosureFile) {
-		this.enclosureFile = enclosureFile;
-	}
+    public void setEnclosureFile(MultipartFile enclosureFile) {
+        this.enclosureFile = enclosureFile;
+    }
 
-	public String getProjectNo() {
-		return projectNo;
-	}
+    public String getProjectNo() {
+        return projectNo;
+    }
 
-	public void setProjectNo(String projectNo) {
-		this.projectNo = projectNo;
-	}
+    public void setProjectNo(String projectNo) {
+        this.projectNo = projectNo;
+    }
 }

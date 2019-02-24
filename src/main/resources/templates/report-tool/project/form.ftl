@@ -1,0 +1,82 @@
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<form class="app-form" id="report-tool-form" enctype="multipart/form-data"  method="post" >
+    <input type="hidden" name="projectNo">
+    <div class="field">
+        <input class="easyui-textbox" name="projectName" style="width:90%" data-options="label:'项目名称:',required:true">
+    </div>
+    <div class="field">
+        <input class="easyui-textbox" name="reportNo" style="width:90%" data-options="label:'报告编号:',required:false ">
+    </div>
+    <div class="field">
+        <input class="easyui-textbox" name="dataSpeed" style="width:90%" data-options="label:'数据记录速度:',required:false ">
+    </div>
+    <div class="field">
+        <input class="easyui-textbox" name="trfNo" style="width:90%" data-options="label:'TRF-NO:',required:false ">
+    </div>
+    <div class="field">
+        <input class="easyui-filebox" id="qzoneFilePath" name="qzoneFilePath" accept=".xls" style="width:90%" data-options="label:'Q=0:',buttonText:'选择',required:true,prompt:'文件上传' ">
+    </div>
+    <div class="field">
+        <input class="easyui-filebox" id="qplusMaxFilePath" name="qplusMaxFilePath" accept=".xls" style="width:90%" data-options="label:'Q=+Max:',buttonText:'选择',required:true,prompt:'文件上传' ">
+    </div>
+    <div class="field">
+        <input class="easyui-filebox" id="qminusMaxFilePath" name="qminusMaxFilePath" accept=".xls" style="width:90%" data-options="label:'Q=-Max:',buttonText:'选择',required:true,prompt:'文件上传' ">
+    </div>
+    <div class="field">
+        <input class="easyui-textbox" name="remark" style="width:90%" data-options="label:'备注:',required:false ">
+    </div>
+</form>
+
+<script>
+    $("#qzoneFilePath").filebox({
+            onChange:function(newValue,oldValue) {
+                checkFile("#qzoneFilePath");
+            }
+        }
+    );
+
+    $("#qminusMaxFilePath").filebox({
+            onChange:function(newValue,oldValue) {
+                checkFile("#qminusMaxFilePath");
+            }
+        }
+    );
+
+    $("#qplusMaxFilePath").filebox({
+            onChange: function (newValue, oldValue) {
+                checkFile("#qplusMaxFilePath");
+            }
+        }
+    );
+
+    function checkFile(idName) //检查文件
+    {
+        var fileTypes = ['.xls'];
+        var filePath = $(idName).textbox('getValue');
+        if (filePath != '')
+        {
+            var flag = false;
+            var fileType = filePath.substring(filePath.lastIndexOf("."));
+            if(fileTypes && fileTypes.length>0){
+
+                for (var i = 0; i < fileTypes.length; i++){
+
+                    if(fileTypes[i]==fileType){
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if (!flag) {
+                $.messager.alert({title:'提示',msg:"只可以上传.xls格式文件!",icon:'info'});
+                $(idName).textbox('setValue', '');
+                return;
+            }
+        }
+    };
+
+    $("#standard-item-form").form("load",
+        <#if resource??>
+        ${resource}
+        </#if>)
+</script>

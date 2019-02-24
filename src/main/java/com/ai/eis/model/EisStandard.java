@@ -42,26 +42,24 @@ public class EisStandard {
     private MultipartFile enclosureFile;
 
     private String stNo;
-    
+
     @Transient
     private String text;
-    
-    
+
+
     @Transient
     private List<EisStItem> children = new ArrayList<EisStItem>();
-    
-    
-    
+
 
     public List<EisStItem> getChildren() {
-		return children;
-	}
+        return children;
+    }
 
-	public void setChildren(List<EisStItem> children) {
-		this.children = children;
-	}
+    public void setChildren(List<EisStItem> children) {
+        this.children = children;
+    }
 
-	public Integer getStId() {
+    public Integer getStId() {
         return stId;
     }
 
@@ -198,11 +196,11 @@ public class EisStandard {
         this.stNo = stNo;
     }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 }

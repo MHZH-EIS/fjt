@@ -18,23 +18,23 @@ public class EisStItem {
     private String tableFile;
 
     private MultipartFile templateFile;
-    
+
     private MultipartFile tabTemplateFile;
-    
+
     private String tableInfo;
 
     @Transient
     private String text;
 
     public MultipartFile getTabTemplateFile() {
-		return tabTemplateFile;
-	}
+        return tabTemplateFile;
+    }
 
-	public void setTabTemplateFile(MultipartFile tabTemplateFile) {
-		this.tabTemplateFile = tabTemplateFile;
-	}
+    public void setTabTemplateFile(MultipartFile tabTemplateFile) {
+        this.tabTemplateFile = tabTemplateFile;
+    }
 
-	public String getText() {
+    public String getText() {
         return text;
     }
 
@@ -99,19 +99,19 @@ public class EisStItem {
         this.tableFile = tableFile;
     }
 
-	/**
-	 * @return the tableInfo
-	 */
-	public String getTableInfo() {
-		return tableInfo;
-	}
+    /**
+     * @return the tableInfo
+     */
+    public String getTableInfo() {
+        return tableInfo;
+    }
 
-	/**
-	 * @param tableInfo the tableInfo to set
-	 */
-	public void setTableInfo(String tableInfo) {
-		this.tableInfo = tableInfo;
-	}
+    /**
+     * @param tableInfo the tableInfo to set
+     */
+    public void setTableInfo(String tableInfo) {
+        this.tableInfo = tableInfo;
+    }
 
- 
+
 }

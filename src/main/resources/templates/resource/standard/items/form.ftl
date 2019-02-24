@@ -10,31 +10,31 @@
   <div class="field">
     <input class="easyui-filebox" id="upload" name="templateFile" accept=".docx" style="width:90%" data-options="label:'模板文件上传:',buttonText:'选择',required:true,prompt:'文件上传' ">
   </div>
-  
+
     <div class="field">
     <input class="easyui-filebox" id="uploadtable" name="tabTemplateFile" accept=".docx" style="width:90%" data-options="label:'表格模板上传:',buttonText:'选择',required:false,prompt:'文件上传' ">
   </div>
 </form>
- 
- <script>	
+
+ <script>
    $("#upload").filebox({
    onChange:function(newValue,oldValue) {
-         checkFile();
+         checkFile("#upload");
     }
    }
    );
-   
+
    $("#uploadtable").filebox({
    onChange:function(newValue,oldValue) {
-         checkFile();
+         checkFile("#uploadtable");
     }
    }
    );
- 
- function checkFile() //检查文件
+
+ function checkFile(idname) //检查文件
 {
 　　var fileTypes = ['.docx'];
-　　var filePath = $('#upload').textbox('getValue');
+　　var filePath = $(idname).textbox('getValue');
 　　if (filePath != '')
 　　{
 　　　　var flag = false;
@@ -51,7 +51,7 @@
 　　　　}
 　　　　if (!flag) {
 　　　　　    $.messager.alert({title:'提示',msg:"只可以上传docx格式文件!",icon:'info'});
-　　　　　　$('#upload').textbox('setValue', '');
+　　　　　　$(idname).textbox('setValue', '');
 　　　　　　return;
 　　　　}
 　　}
