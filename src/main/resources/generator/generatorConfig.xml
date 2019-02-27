@@ -37,10 +37,12 @@
          <table tableName="eis_department" domainObjectName="EisDepartment" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
          <table tableName="eis_post" domainObjectName="EisPost" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
          <table tableName="eis_rank" domainObjectName="EisRank" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-         <table tableName="eis_role" domainObjectName="EisRole" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+         <table tableName="eis_role" domainObjectName="EisRole" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         
          <table tableName="eis_menu_resource" domainObjectName="EisMenuResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table>
-         <table tableName="eis_role_menu_resource" domainObjectName="EisRoleMenuResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table> 
+         <table tableName="eis_role_menu_resource" domainObjectName="EisRoleMenuResource" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table> -->
+
+        <table tableName="eis_create_reports" domainObjectName="EisCreateReports" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="false" selectByExampleQueryId="true"></table>
     </context>
 </generatorConfiguration>
 

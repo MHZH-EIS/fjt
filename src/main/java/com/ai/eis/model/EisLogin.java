@@ -20,9 +20,9 @@ public class EisLogin {
     private String loginIp;
 
     private Integer status;
-    
+
     private EisUser user;
- 
+
 
     public Integer getUserid() {
         return userid;
@@ -32,9 +32,8 @@ public class EisLogin {
         this.userid = userid;
     }
 
-  
 
-	public String getAccount() {
+    public String getAccount() {
         return account;
     }
 
@@ -82,11 +81,11 @@ public class EisLogin {
         this.status = status;
     }
 
-	public EisUser getUser() {
-		return user;
-	}
+    public EisUser getUser() {
+        return user;
+    }
 
-	public void setUser(EisUser user) {
-		this.user = user;
-	}
+    public void setUser(EisUser user) {
+        this.user = user;
+    }
 }

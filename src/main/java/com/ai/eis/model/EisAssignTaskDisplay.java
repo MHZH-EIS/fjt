@@ -4,95 +4,95 @@ import java.util.Date;
 
 public class EisAssignTaskDisplay {
 
-		private String projectNo;
-		private String projectName;
-		private String taskName;
-		
-		private String assignName;
-		private Date assignTime;
-		private Integer projectId;
-		private String remarks;
-		private String id;
-		private String taskId;
-		private String testFilePath;
-		
-		public String getProjectNo() {
-			return projectNo;
-		}
+    private String projectNo;
+    private String projectName;
+    private String taskName;
 
-		public void setProjectNo(String projectNo) {
-			this.projectNo = projectNo;
-		}
+    private String assignName;
+    private Date assignTime;
+    private Integer projectId;
+    private String remarks;
+    private String id;
+    private String taskId;
+    private String testFilePath;
 
-		public String getProjectName() {
-			return projectName;
-		}
+    public String getProjectNo() {
+        return projectNo;
+    }
 
-		public void setProjectName(String projectName) {
-			this.projectName = projectName;
-		}
+    public void setProjectNo(String projectNo) {
+        this.projectNo = projectNo;
+    }
 
-		public String getTaskName() {
-			return taskName;
-		}
+    public String getProjectName() {
+        return projectName;
+    }
 
-		public void setTaskName(String taskName) {
-			this.taskName = taskName;
-		}
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
-		public String getAssignName() {
-			return assignName;
-		}
+    public String getTaskName() {
+        return taskName;
+    }
 
-		public void setAssignName(String assignName) {
-			this.assignName = assignName;
-		}
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
 
-		public Date getAssignTime() {
-			return assignTime;
-		}
+    public String getAssignName() {
+        return assignName;
+    }
 
-		public void setAssignTime(Date assignTime) {
-			this.assignTime = assignTime;
-		}
+    public void setAssignName(String assignName) {
+        this.assignName = assignName;
+    }
 
-		public String getRemarks() {
-			return remarks;
-		}
+    public Date getAssignTime() {
+        return assignTime;
+    }
 
-		public void setRemarks(String remarks) {
-			this.remarks = remarks;
-		}
+    public void setAssignTime(Date assignTime) {
+        this.assignTime = assignTime;
+    }
 
-		public Integer getProjectId() {
-			return projectId;
-		}
+    public String getRemarks() {
+        return remarks;
+    }
 
-		public void setProjectId(Integer projectId) {
-			this.projectId = projectId;
-		}
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
-		public String getId() {
-			return id;
-		}
+    public Integer getProjectId() {
+        return projectId;
+    }
 
-		public void setId(String id) {
-			this.id = id;
-		}
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
+    }
 
-		public String getTaskId() {
-			return taskId;
-		}
+    public String getId() {
+        return id;
+    }
 
-		public void setTaskId(String taskId) {
-			this.taskId = taskId;
-		}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-		public String getTestFilePath() {
-			return testFilePath;
-		}
+    public String getTaskId() {
+        return taskId;
+    }
 
-		public void setTestFilePath(String testFilePath) {
-			this.testFilePath = testFilePath;
-		}
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTestFilePath() {
+        return testFilePath;
+    }
+
+    public void setTestFilePath(String testFilePath) {
+        this.testFilePath = testFilePath;
+    }
 }

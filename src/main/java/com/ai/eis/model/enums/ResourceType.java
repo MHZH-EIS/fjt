@@ -2,10 +2,9 @@ package com.ai.eis.model.enums;
 
 /**
  * 资源类型
- * 
- * @author gson
  *
+ * @author gson
  */
 public enum ResourceType {
-	MENU, FUNCTION, BLOCK
+    MENU, FUNCTION, BLOCK
 }

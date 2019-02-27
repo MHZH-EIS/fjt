@@ -199,9 +199,9 @@ define(function () {
                 return;
               }
               var itemrows = dg.datagrid("getRows"); 
-              if (commit < itemrows.length  ) {
+              /*if (commit < itemrows.length  ) {
             	  $.messager.alert({title:'提示',msg:"待审核文档未审核完成，需要审核"+itemrows.length+"个报告",icon:'error'});
-              } 
+              } */
               if (itemrows.length == 0 ) {
             	  $.messager.alert({title:'提示',msg:"未有要审核的报告",icon:'error'});
               }

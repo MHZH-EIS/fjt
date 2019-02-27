@@ -2,10 +2,9 @@ package com.ai.eis.model.enums;
 
 /**
  * 性别
- * 
- * @author 
  *
+ * @author
  */
 public enum Gender {
-	BOY, GIRL
+    BOY, GIRL
 }

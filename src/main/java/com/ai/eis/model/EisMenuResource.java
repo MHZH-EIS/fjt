@@ -7,8 +7,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
- 
- 
+
 public class EisMenuResource {
     private Long id;
 
@@ -25,22 +24,21 @@ public class EisMenuResource {
     private Boolean status;
 
 
-
-	private Long parentId;
+    private Long parentId;
 
     private Integer weight;
-    
+
     @Transient
     private EisMenuResource parent;
-    
+
     private String text;
-    
+
     /**
      * 非持久化字段，可以使用@Transient标识
      */
     @Transient
     private List<EisMenuResource> children = new ArrayList<EisMenuResource>();
-    
+
     public Long getId() {
         return id;
     }
@@ -48,17 +46,15 @@ public class EisMenuResource {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
-    
-    
-    public List<EisMenuResource> getChildren() {
-		return children;
-	}
 
-	public void setChildren(List<EisMenuResource> children) {
-		this.children = children;
-	}
+
+    public List<EisMenuResource> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<EisMenuResource> children) {
+        this.children = children;
+    }
 
     public String getFunUrls() {
         return funUrls;
@@ -108,13 +104,13 @@ public class EisMenuResource {
         this.status = status;
     }
 
-    
+
     public Long getParentId() {
-         
+
         return this.parentId;
     }
-    
-    
+
+
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
@@ -127,11 +123,11 @@ public class EisMenuResource {
         this.weight = weight;
     }
 
-	public EisMenuResource getParent() {
-		return parent;
-	}
-	
-	
+    public EisMenuResource getParent() {
+        return parent;
+    }
+
+
     @JsonGetter("parent")
     public Long getParentId2() {
         if (this.parentId != null) {
@@ -140,15 +136,15 @@ public class EisMenuResource {
         return null;
     }
 
-	public void setParent(EisMenuResource parent) {
-		this.parent = parent;
-	}
+    public void setParent(EisMenuResource parent) {
+        this.parent = parent;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 }

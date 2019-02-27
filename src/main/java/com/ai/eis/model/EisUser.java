@@ -34,33 +34,33 @@ public class EisUser {
     private Integer roleId;
 
     private String remarks;
-    
+
     private String account;
-    
+
     //目前只支持一个用户一个角色，后续一个用户可以有多个角色 
     //要改下表结构
     @Transient
     private EisRole role;
-    
+
     @Transient
     private EisLogin loginInfo;
-    
+
     private String password;
-    
+
     private String roleName;
 
     private String status;
-    
-    
+
+
     public String getRoleName() {
-		return roleName;
-	}
+        return roleName;
+    }
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
-	public Integer getUserid() {
+    public Integer getUserid() {
         return userid;
     }
 
@@ -180,43 +180,43 @@ public class EisUser {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
-	public EisRole getRole() {
-		return role;
-	}
+    public EisRole getRole() {
+        return role;
+    }
 
-	public void setRole(EisRole role) {
-		this.role = role;
-	}
+    public void setRole(EisRole role) {
+        this.role = role;
+    }
 
-	public EisLogin getLoginInfo() {
-		return loginInfo;
-	}
+    public EisLogin getLoginInfo() {
+        return loginInfo;
+    }
 
-	public void setLoginInfo(EisLogin loginInfo) {
-		this.loginInfo = loginInfo;
-	}
+    public void setLoginInfo(EisLogin loginInfo) {
+        this.loginInfo = loginInfo;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getAccount() {
-		return account;
-	}
+    public String getAccount() {
+        return account;
+    }
 
-	public void setAccount(String account) {
-		this.account = account;
-	}
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

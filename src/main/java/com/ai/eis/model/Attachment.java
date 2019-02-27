@@ -19,9 +19,9 @@ import java.util.Date;
  * </ul>
  * <p>****************************************************************************</p>
  */
- 
+
 public class Attachment {
- 
+
     private Long id;
 
 
@@ -30,7 +30,7 @@ public class Attachment {
     /**
      * 上传人
      */
- 
+
     private EisLogin member;
 
     /**
@@ -41,7 +41,7 @@ public class Attachment {
     /**
      * 文件存储的相对路径
      */
- 
+
     private String filePath;
 
     /**
@@ -52,16 +52,16 @@ public class Attachment {
     /**
      * 文件类型(后缀)
      */
- 
+
     private String suffix;
 
- 
+
     private String contentType;
 
     /**
      * 上传时间
      */
- 
+
     private Date uploadTime = new Date();
 
     /**

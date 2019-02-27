@@ -8,27 +8,27 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
- 
+
 public class Resource {
 
- 
+
     private Long id;
 
- 
+
     private Resource parent;
 
- 
+
     private String resName;
 
- 
+
     private String resKey;
- 
+
     private ResourceType resType;
 
- 
+
     private String menuUrl;
 
- 
+
     private String funUrls;
 
     private Integer weight = 0;

@@ -9,9 +9,9 @@ public class EisRole {
     private String name;
 
     private String remarks;
-    
+
     private Boolean status;
-    
+
     private String id;
 
     public Integer getRoleId() {
@@ -38,21 +38,21 @@ public class EisRole {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
-	public Boolean getStatus() {
-		return status;
-	}
+    public Boolean getStatus() {
+        return status;
+    }
 
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
 
 }
