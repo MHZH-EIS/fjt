@@ -166,10 +166,10 @@ public class WordCommon {
 
     public static void main(String[] args) throws Docx4JException {
         //    getTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx")).forEach(System.out::println);
-//        fillTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx"),
-//                new File("C:\\Users\\86183\\Desktop\\test2.docx"),
-//                getTable(new File("C:\\Users\\86183\\Desktop\\table.docx"))
-//        );
+        fillTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx"),
+                new File("C:\\Users\\86183\\Desktop\\test2.docx"),
+                getTable(new File("C:\\Users\\86183\\Desktop\\table.docx"))
+        );
     }
 
 
