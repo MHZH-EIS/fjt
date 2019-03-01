@@ -69,6 +69,9 @@ public class InverterModeler implements AbstractModeler {
 
         QzeroMap.put("projectNo", projectNo);
         QzeroMap.put("trfNo", param.get("trfNo"));
+        QzeroMap.put("dataSource", "Q=0");
+        QmaxMap.put("dataSource", "Q=+Max");
+        QminMap.put("dataSource", "Q=-Max");
 
         try {
             String chart = FileUtils.readFileToString(chartTemplate, "UTF-8");
