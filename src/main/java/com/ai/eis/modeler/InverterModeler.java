@@ -22,7 +22,7 @@ public class InverterModeler implements AbstractModeler {
     private Logger logger = LoggerFactory.getLogger(InverterModeler.class);
 
     @Override
-    public void process(Map <String, String> param) throws Exception {
+    public File process(Map <String, String> param) throws Exception {
         File zeroFile = new File(param.get("zero"));
         File maxFile = new File(param.get("max"));
         File minFile = new File(param.get("min"));
@@ -72,7 +72,7 @@ public class InverterModeler implements AbstractModeler {
             if (reportFile.exists()) {
                 logger.info("报告生成成功{}", projectNo);
             }
-
+            return reportFile;
         } finally {
             if (zeroWord.exists()) {
                 zeroWord.delete();
