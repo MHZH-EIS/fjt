@@ -6,6 +6,12 @@ import com.ai.eis.common.FileModel;
 import com.ai.eis.model.EisExperiment;
 import com.ai.eis.model.EisUser;
 import com.ai.eis.model.EisUserTask;
+import com.zhuozhengsoft.pageoffice.FileSaver;
+import com.zhuozhengsoft.pageoffice.OpenModeType;
+import com.zhuozhengsoft.pageoffice.PageOfficeCtrl;
+import com.zhuozhengsoft.pageoffice.wordwriter.WordDocument;
+import com.zhuozhengsoft.pageoffice.wordwriter.DataRegion;
+
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -96,7 +102,17 @@ public class WorkFlowControllerTest {
 		 
 	}
 	
-	
+	@RequestMapping("/testword")
+	public void savefile(HttpServletRequest request, HttpServletResponse response) {
+	    PageOfficeCtrl poCtrl = new PageOfficeCtrl(request);
+		poCtrl.setServerPage(request.getContextPath()+"/poserver.zz");// 设置服务页面
+		WordDocument doc = new WordDocument();
+		DataRegion dataRegion = doc.openDataRegion("PO_regTable");
+		poCtrl.setWriter(doc);
+		poCtrl.webOpen("file:///"+"E:\\vscode\\v2.doc", OpenModeType.docAdmin, "Tom");
+      
+
+	}
 
 	@RequestMapping("/workflow/deploy")
 	@ResponseBody

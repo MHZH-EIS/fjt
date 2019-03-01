@@ -10,8 +10,11 @@
     <div class="field">
         <input class="easyui-textbox" name="reportNo" style="width:90%" data-options="label:'报告编号:',required:false ">
     </div>
+   <div class="field">
+        <input class="easyui-numberbox" name="ratePower" style="width:90%" data-options="label:'RatePower:',required:false "> W
+    </div>
     <div class="field">
-        <input class="easyui-textbox" name="dataSpeed" style="width:90%" data-options="label:'数据记录速度:',required:false ">
+        <input class="easyui-textbox" name="dataSpeed" style="width:90%" data-options="label:'数据记录速度:',required:true,min:0,precision: 0">
     </div>
     <div class="field">
         <input class="easyui-textbox" name="trfNo" style="width:90%" data-options="label:'TRF-NO:',required:false ">

@@ -30,7 +30,7 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
- 
+
 
 		<!-- 添加Sqlite依赖（可选：如果不需要使用印章功能的话，不需要添加此依赖 ） -->
 		<dependency>
@@ -65,8 +65,8 @@
 			<version>3.17</version>
 		</dependency>
 
- 
-		
+
+
 		<dependency>
 			<groupId>org.docx4j</groupId>
 			<artifactId>docx4j</artifactId>
@@ -157,19 +157,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
-			<exclusion>
-                    <artifactId>org.springframework.boot</artifactId>
-                    <groupId>spring-boot-starter-logging</groupId>
-                </exclusion>
-            </exclusions>
-                
+				<exclusion>
+					<artifactId>org.springframework.boot</artifactId>
+					<groupId>spring-boot-starter-logging</groupId>
+				</exclusion>
+			</exclusions>
+
 		</dependency>
 
-<dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-log4j2</artifactId>
-   <version>1.5.8.RELEASE</version>
-</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+			<version>1.5.8.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -183,7 +183,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<!-- <version>8.0.13</version> -->
+			<version>8.0.13</version>
 		</dependency>
 
 		<dependency>

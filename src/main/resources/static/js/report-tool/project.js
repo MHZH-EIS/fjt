@@ -293,32 +293,6 @@ define(function () {
                                 timeout:30000,//超时时间：30秒
                                 beforeSend: function () {
                                 	 $(".app-form").attr("readonly", "readonly");
-                                	
-                                	/*$('#report-tool-form').dialog({
-                                	    modal:true  
-                                	});*/
-                       
-                                	/*progdig = $("<div/>", {class: 'flow'}).dialog({
-                                	    title: '进度',
-                                	    width: 400,
-                                	    height: 200,
-                                	    closed: false,
-                                	    cache: false,
-                                	    modal: true,
-                                	    href: '/report-tool/project/progform',
-                                	    onLoad:function() {
-                                	    	
-                                	    },
-                                	    sucess:function() {
-                                	    	var value = $('#prog').progressbar('getValue'); 
-                                            timerId = window.setInterval(function(){
-                                            	if (value < 100) {
-                                               	   value += 5;
-                                             	    $('#prog').progressbar('setValue', value);
-                                            	}
-                                            },30);
-                                	    }
-                                	});*/
                                 	$('#prog').progressbar().removeClass('hidden');
                                 	var value = $('#prog').progressbar('getValue'); 
                                     timerId = window.setInterval(function(){

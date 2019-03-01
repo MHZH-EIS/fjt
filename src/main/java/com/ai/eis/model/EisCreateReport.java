@@ -32,8 +32,18 @@ public class EisCreateReport {
     private Integer dataSpeed;
 
     private String trfNo;
+    
+    private Integer ratePower;
 
-    public String getReportFilePath() {
+    public Integer getRatePower() {
+		return ratePower;
+	}
+
+	public void setRatePower(Integer ratePower) {
+		this.ratePower = ratePower;
+	}
+
+	public String getReportFilePath() {
         return reportFilePath;
     }
 
