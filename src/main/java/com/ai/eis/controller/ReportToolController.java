@@ -3,9 +3,11 @@ package com.ai.eis.controller;
 import com.ai.eis.common.AjaxResult;
 import com.ai.eis.common.DataGrid;
 import com.ai.eis.common.FileModel;
+import com.ai.eis.common.Reflection;
 import com.ai.eis.common.Tools;
 import com.ai.eis.model.EisCreateReport;
 import com.ai.eis.model.EisDevice;
+import com.ai.eis.modeler.AbstractModeler;
 import com.ai.eis.service.EisCreateReportService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+ 
+
 @Controller
 @RequestMapping(value = "/report-tool/project")
 public class ReportToolController {
@@ -44,6 +48,7 @@ public class ReportToolController {
 
 	@Autowired
 	private EisCreateReportService eisCreateReportService;
+	private static final String modeler = "com.ai.eis.modeler.InverterModeler";
 
 	@RequestMapping
 	public void index() {
@@ -109,6 +114,7 @@ public class ReportToolController {
 			OutputStream out = response.getOutputStream();
 			byte buffer[] = new byte[1024];
 			int len = 0;
+
 			while ((len = in.read(buffer)) > 0) {
 				out.write(buffer, 0, len);
 			}
@@ -137,12 +143,13 @@ public class ReportToolController {
 	@Transactional
 	@RequestMapping(value = "/save")
 	@ResponseBody
-	public AjaxResult insertDevice(@Valid EisCreateReport report, BindingResult br) {
+	public AjaxResult insertDevice(@Valid EisCreateReport report, BindingResult br) throws ClassNotFoundException {
 		if (br.hasErrors()) {
 			logger.error("对象校验失败：" + br.getAllErrors());
 			return new AjaxResult(false).setData(br.getAllErrors());
 		} else {
-
+			Class<?> clazz = Class.forName(modeler);
+			AbstractModeler modelerInstance = (AbstractModeler)Reflection.newInstance(clazz);
 			try {
 
 				MultipartFile qzonefile = report.getQzoneFile();
@@ -166,10 +173,24 @@ public class ReportToolController {
 					File file = FileModel.generateReport(report.getReportNo(), qmaxfile.getOriginalFilename());
 					qmaxfile.transferTo(file);
 					report.setQplusMaxFilePath(file.getAbsolutePath());
+					
 					logger.info("+QMax文件上传成功，地址为{}", file.getAbsolutePath());
 				}
 
 				report.setSubmitTime(new Date());
+				Map<String,String> param = new HashMap<>();
+				param.put("zero", report.getQzoneFilePath());
+				param.put("max", report.getQplusMaxFilePath());
+				param.put("min", report.getQminusMaxFilePath());
+				param.put("ratePower", String.valueOf(report.getRatePower()));
+				param.put("projectNo",  report.getReportNo() );
+				param.put("trfNo", report.getTrfNo());
+				
+				File reportFile = modelerInstance.process(param);
+				if (reportFile != null) {
+					report.setReportFilePath(reportFile.getAbsolutePath());
+				}
+				
 				if (report.getProjectNo() != null) {
 					EisCreateReport old = eisCreateReportService.queryById(report.getProjectNo());
 					deleteFile(old.getQminusMaxFilePath());
@@ -183,7 +204,6 @@ public class ReportToolController {
 					eisCreateReportService.insert(report);
 					logger.info("添加了一个新项目{}", report.getProjectName());
 				}
-				TimeUnit.SECONDS.sleep(3);
 				return new AjaxResult(true);
 			} catch (Exception e) {
 				return new AjaxResult(false).setMessage(e.getMessage());
