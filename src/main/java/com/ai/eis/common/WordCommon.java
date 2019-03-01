@@ -22,6 +22,15 @@ import java.util.Map;
 
 public class WordCommon {
 
+    private static List <String> refLists = new ArrayList <>();
+
+    static {
+        refLists.add("rId8");
+        refLists.add("rId10");
+        refLists.add("rId13");
+        refLists.add("rId14");
+    }
+
     public static void replacePlaceholder(File src, File dest, Map <String, String> map) throws Exception {
         WordprocessingMLPackage template = WordprocessingMLPackage.load(new FileInputStream(src));
         List <Object> texts = getAllElementFromObject(template.getMainDocumentPart(), Text.class);
@@ -84,7 +93,7 @@ public class WordCommon {
         RelationshipsPart relationshipPart = wordMLPackage.getMainDocumentPart().getRelationshipsPart();
         List <Relationship> relationships = relationshipPart.getRelationships().getRelationship();
         for (Relationship r : relationships) {
-            if (r.getId().equals("rId13") || r.getId().equals("rId14")) {
+            if (refLists.contains(r.getId())) {
                 JaxbXmlPart part = (JaxbXmlPart) relationshipPart.getPart(r);
                 List <Object> texts = getAllElementFromObject(part.getContents(), Text.class);
                 for (Object text : texts) {
@@ -162,15 +171,5 @@ public class WordCommon {
         }
         wordMLPackage.save(dst);
     }
-
-
-    public static void main(String[] args) throws Docx4JException {
-        //    getTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx")).forEach(System.out::println);
-//        fillTable(new File("C:\\Users\\86183\\Desktop\\table_9.4.5.4.docx"),
-//                new File("C:\\Users\\86183\\Desktop\\test2.docx"),
-//                getTable(new File("C:\\Users\\86183\\Desktop\\table.docx"))
-//        );
-    }
-
 
 }
