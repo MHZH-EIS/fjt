@@ -21,6 +21,19 @@ public class InverterModeler implements AbstractModeler {
 
     private Logger logger = LoggerFactory.getLogger(InverterModeler.class);
 
+    public static void main(String[] args) throws Exception {
+        FileModel.setBasePath("D:\\lic");
+        Map <String, String> map = new HashMap <>();
+        map.put("zero", "C:\\Users\\86183\\Desktop\\wz\\0=0.csv");
+        map.put("max", "C:\\Users\\86183\\Desktop\\wz\\+Qmax.csv");
+        map.put("min", "C:\\Users\\86183\\Desktop\\wz\\-Qmax.csv");
+        map.put("ratePower", "10000");
+        map.put("projectNo", "CYONY20190301");
+        map.put("trfNo", "ZHUSY20190301");
+        InverterModeler inverterModeler = new InverterModeler();
+        inverterModeler.process(map);
+    }
+
     @Override
     public File process(Map <String, String> param) throws Exception {
         File zeroFile = new File(param.get("zero"));
@@ -29,9 +42,13 @@ public class InverterModeler implements AbstractModeler {
         int ratePower = Integer.valueOf(param.get("ratePower"));
         String projectNo = param.get("projectNo");
 
-        LinkedHashMap <String, String> QzeroMap = handle(zeroFile, ratePower);
-        LinkedHashMap <String, String> QmaxMap = handle(maxFile, ratePower);
-        LinkedHashMap <String, String> QminMap = handle(minFile, ratePower);
+        File tableTemplate = new File(FileModel.getBasePath() + File.separator + "modeler" + File.separator
+                + "inverter" + File.separator + "inverter.docx");
+        File chartTemplate = new File(FileModel.getBasePath() + File.separator + "modeler" + File.separator
+                + "inverter" + File.separator + "chart.xml");
+        if (!tableTemplate.exists() || !chartTemplate.exists()) {
+            throw new IOException("找不到模板文件");
+        }
 
         List <File> allFiles = new ArrayList <>();
 
@@ -41,21 +58,20 @@ public class InverterModeler implements AbstractModeler {
         File chartWord = FileModel.generateReport(projectNo, "chart.docx");
         File reportFile = FileModel.generateReport(projectNo, projectNo + ".docx");
 
-        allFiles.add(zeroFile);
-        allFiles.add(maxFile);
-        allFiles.add(minFile);
+        allFiles.add(zeroWord);
+        allFiles.add(maxWord);
+        allFiles.add(minWord);
         allFiles.add(chartWord);
 
-        File tableTemplate = new File(FileModel.getBasePath() + File.separator + "modeler" + File.separator
-                + "inverter" + File.separator + "table.docx");
-        File chartTemplate = new File(FileModel.getBasePath() + File.separator + "modeler" + File.separator
-                + "inverter" + File.separator + "chart.xml");
-        if (!tableTemplate.exists() || !chartTemplate.exists()) {
-            throw new IOException("找不到模板文件");
-        }
-        String chart = FileUtils.readFileToString(chartTemplate, "UTF-8");
+        LinkedHashMap <String, String> QzeroMap = handle(zeroFile, ratePower);
+        LinkedHashMap <String, String> QmaxMap = handle(maxFile, ratePower);
+        LinkedHashMap <String, String> QminMap = handle(minFile, ratePower);
+
+        QzeroMap.put("projectNo", projectNo);
+        QzeroMap.put("trfNo", param.get("trfNo"));
 
         try {
+            String chart = FileUtils.readFileToString(chartTemplate, "UTF-8");
             WordCommon.replacePlaceholder(tableTemplate, zeroWord, QzeroMap);
             WordCommon.replacePlaceholder(tableTemplate, maxWord, QmaxMap);
             WordCommon.replacePlaceholder(tableTemplate, minWord, QminMap);
@@ -279,13 +295,13 @@ public class InverterModeler implements AbstractModeler {
         }
         while (no < 3) {
             no++;
-            rsMap.put("apw" + powerBin + no, "0(no enough data)");
-            rsMap.put("rpv" + powerBin + no, "0(no enough data)");
-            rsMap.put("dpw" + powerBin + no, "0(no enough data)");
-            rsMap.put("apu" + powerBin + no, "0(no enough data)");
-            rsMap.put("rpu" + powerBin + no, "0(no enough data)");
-            rsMap.put("dpu" + powerBin + no, "0(no enough data)");
-            rsMap.put("cos" + powerBin + no, "0(no enough data)");
+            rsMap.put("apw" + powerBin + no, "0(lack)");
+            rsMap.put("rpv" + powerBin + no, "0(lack)");
+            rsMap.put("dpw" + powerBin + no, "0(lack)");
+            rsMap.put("apu" + powerBin + no, "0(lack)");
+            rsMap.put("rpu" + powerBin + no, "0(lack)");
+            rsMap.put("dpu" + powerBin + no, "0(lack)");
+            rsMap.put("cos" + powerBin + no, "0(lack)");
         }
         return rsMap;
     }

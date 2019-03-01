@@ -62,12 +62,17 @@ public class FileUtil {
                 addPageBreak(mainDocumentPart);
             }
             AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/part" + index++ + ".docx"));
-            afiPart.setBinaryData(IOUtils.toByteArray(new FileInputStream(srcDocx)));
-            Relationship relationship = mainDocumentPart.addTargetPart(afiPart);
-            CTAltChunk chunk = Context.getWmlObjectFactory().createCTAltChunk();
-            chunk.setId(relationship.getId());
-            mainDocumentPart.addObject(chunk);
-
+            FileInputStream fileInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(srcDocx);
+                afiPart.setBinaryData(IOUtils.toByteArray(fileInputStream));
+                Relationship relationship = mainDocumentPart.addTargetPart(afiPart);
+                CTAltChunk chunk = Context.getWmlObjectFactory().createCTAltChunk();
+                chunk.setId(relationship.getId());
+                mainDocumentPart.addObject(chunk);
+            } finally {
+                IOUtils.closeQuietly(fileInputStream);
+            }
         }
         if (target != null) {
             target.save(destDocx);
