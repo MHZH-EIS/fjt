@@ -288,13 +288,13 @@ public class InverterModeler implements AbstractModeler {
             rsMap.put("cos" + powerBin + no, String.format("%.2f", cosTotal / index));
         } else if (apwTotal > 0) {
             no++;
-            rsMap.put("apw" + powerBin + no, String.format("%.1f", apwTotal / index) + "(no enough data)");
-            rsMap.put("rpv" + powerBin + no, String.format("%.1f", rpvTotal / index) + "(no enough data)");
-            rsMap.put("dpw" + powerBin + no, String.format("%.1f", dpwTotal / index) + "(no enough data)");
-            rsMap.put("apu" + powerBin + no, String.format("%.2f", apwTotal / index / ratePower) + "(no enough data)");
-            rsMap.put("rpu" + powerBin + no, String.format("%.2f", rpvTotal / index / ratePower) + "(no enough data)");
-            rsMap.put("dpu" + powerBin + no, String.format("%.2f", dpwTotal / index / ratePower) + "(no enough data)");
-            rsMap.put("cos" + powerBin + no, String.format("%.2f", cosTotal / index) + "(no enough data)");
+            rsMap.put("apw" + powerBin + no, String.format("%.1f", apwTotal / index) + "(lack)");
+            rsMap.put("rpv" + powerBin + no, String.format("%.1f", rpvTotal / index) + "(lack)");
+            rsMap.put("dpw" + powerBin + no, String.format("%.1f", dpwTotal / index) + "(lack)");
+            rsMap.put("apu" + powerBin + no, String.format("%.2f", apwTotal / index / ratePower) + "(lack)");
+            rsMap.put("rpu" + powerBin + no, String.format("%.2f", rpvTotal / index / ratePower) + "(lack)");
+            rsMap.put("dpu" + powerBin + no, String.format("%.2f", dpwTotal / index / ratePower) + "(lack)");
+            rsMap.put("cos" + powerBin + no, String.format("%.2f", cosTotal / index) + "(lack)");
         }
         while (no < 3) {
             no++;
