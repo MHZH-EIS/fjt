@@ -24,6 +24,7 @@
   <script src="/easyui/fixed.js" charset="utf-8"></script>
   <script src="/js/lib/xss.js" charset="utf-8"></script>
   <script src="/js/lib/jqsession.js" charset="utf-8"></script>
+  <script src="/js/lib/jquery.form.js" charset="utf-8"></script>
   <!--权限资源-->
   <script src="/resource" charset="utf-8"></script>
 

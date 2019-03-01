@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ai.eis.mapper.EisCreateReportsMapper">
-  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisCreateReports">
+  <resultMap id="BaseResultMap" type="com.ai.eis.model.EisCreateReport">
     <id column="PROJECT_NO" jdbcType="INTEGER" property="projectNo" />
     <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
     <result column="SUBMIT_TIME" jdbcType="TIMESTAMP" property="submitTime" />
@@ -13,11 +13,13 @@
     <result column="QMINUS_MAX_FILE_PATH" jdbcType="VARCHAR" property="qminusMaxFilePath" />
     <result column="DATA_SPEED" jdbcType="INTEGER" property="dataSpeed" />
     <result column="TRF_NO" jdbcType="VARCHAR" property="trfNo" />
+    <result column="REPORT_FILE_PATH" jdbcType="VARCHAR" property="reportFilePath" />
+    <result column="RATE_POWER" jdbcType="INTEGER" property="ratePower" />
   </resultMap>
 
   <sql id="Base_Column_List">
     PROJECT_NO, PROJECT_NAME, SUBMIT_TIME, COMPLETE_REPORT_TIME, REPORT_NO, remark, QZONE_FILE_PATH, 
-    QPLUS_MAX_FILE_PATH, QMINUS_MAX_FILE_PATH, DATA_SPEED, TRF_NO
+    QPLUS_MAX_FILE_PATH, QMINUS_MAX_FILE_PATH, DATA_SPEED, TRF_NO,REPORT_FILE_PATH,RATE_POWER
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -50,7 +52,7 @@
     </where>
   </select>
 
-  <insert id="insert" parameterType="com.ai.eis.model.EisCreateReports">
+  <insert id="insert" parameterType="com.ai.eis.model.EisCreateReport">
     insert into eis_create_reports (PROJECT_NO, PROJECT_NAME, SUBMIT_TIME, 
       COMPLETE_REPORT_TIME, REPORT_NO, remark, 
       QZONE_FILE_PATH, QPLUS_MAX_FILE_PATH, QMINUS_MAX_FILE_PATH, 
@@ -60,7 +62,7 @@
       #{qzoneFilePath,jdbcType=VARCHAR}, #{qplusMaxFilePath,jdbcType=VARCHAR}, #{qminusMaxFilePath,jdbcType=VARCHAR}, 
       #{dataSpeed,jdbcType=INTEGER}, #{trfNo,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ai.eis.model.EisCreateReports">
+  <insert id="insertSelective" parameterType="com.ai.eis.model.EisCreateReport">
     insert into eis_create_reports
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="projectNo != null">
@@ -95,6 +97,12 @@
       </if>
       <if test="trfNo != null">
         TRF_NO,
+      </if>
+       <if test="ratePower != null">
+        RATE_POWER,
+      </if>
+      <if test="reportFilePath != null">
+        REPORT_FILE_PATH,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -131,11 +139,17 @@
       <if test="trfNo != null">
         #{trfNo,jdbcType=VARCHAR},
       </if>
+       <if test="ratePower != null">
+        #{ratePower,jdbcType=INTEGER},
+      </if>
+      <if test="reportFilePath != null">
+        #{reportFilePath,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
 
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisCreateReports">
+  <update id="updateByPrimaryKeySelective" parameterType="com.ai.eis.model.EisCreateReport">
     update eis_create_reports
     <set>
       <if test="projectName != null">
@@ -168,10 +182,13 @@
       <if test="trfNo != null">
         TRF_NO = #{trfNo,jdbcType=VARCHAR},
       </if>
+       <if test="ratePower != null">
+        RATE_POWER = #{ratePower,jdbcType=INTEGER},
+      </if>
     </set>
     where PROJECT_NO = #{projectNo,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisCreateReports">
+  <update id="updateByPrimaryKey" parameterType="com.ai.eis.model.EisCreateReport">
     update eis_create_reports
     set PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
       SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
@@ -182,7 +199,8 @@
       QPLUS_MAX_FILE_PATH = #{qplusMaxFilePath,jdbcType=VARCHAR},
       QMINUS_MAX_FILE_PATH = #{qminusMaxFilePath,jdbcType=VARCHAR},
       DATA_SPEED = #{dataSpeed,jdbcType=INTEGER},
-      TRF_NO = #{trfNo,jdbcType=VARCHAR}
+      TRF_NO = #{trfNo,jdbcType=VARCHAR},
+      RATE_POWER =#{ratePower,jdbcType=INTEGER}
     where PROJECT_NO = #{projectNo,jdbcType=INTEGER}
   </update>
 
@@ -196,7 +214,7 @@
     where PROJECT_NO = #{projectNo,jdbcType=INTEGER}
   </select>
 
-  <update id="update" parameterType="com.ai.eis.model.EisCreateReports">
+  <update id="update" parameterType="com.ai.eis.model.EisCreateReport">
     update eis_create_reports
     <set>
       <if test="projectName != null">
@@ -225,6 +243,9 @@
       </if>
       <if test="remark != null">
         REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+        <if test="ratePower != null">
+        RATE_POWER = #{ratePower,jdbcType=INTEGER},
       </if>
       </set>
     where PROJECT_NO = #{projectNo,jdbcType=INTEGER}
