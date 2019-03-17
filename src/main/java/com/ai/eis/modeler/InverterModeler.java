@@ -24,10 +24,15 @@ public class InverterModeler implements AbstractModeler {
     public static void main(String[] args) throws Exception {
         FileModel.setBasePath("D:\\lic");
         Map <String, String> map = new HashMap <>();
-        map.put("zero", "C:\\Users\\86183\\Desktop\\wz\\0=0.csv");
-        map.put("max", "C:\\Users\\86183\\Desktop\\wz\\+Qmax.csv");
-        map.put("min", "C:\\Users\\86183\\Desktop\\wz\\-Qmax.csv");
-        map.put("ratePower", "10000");
+        map.put("zero", "C:\\Users\\86183\\Desktop\\New folder\\Delta-reactive power\\PF=1.0.csv");
+        map.put("max", "C:\\Users\\86183\\Desktop\\New folder\\Delta-reactive power\\Q=0.49Pn.csv");
+        map.put("min", "C:\\Users\\86183\\Desktop\\New folder\\Delta-reactive power\\Q=-0.49Pn.csv");
+        //map.put("zero", "C:\\Users\\86183\\Desktop\\New folder\\Goodwe\\B1.2.2.2-Q=0.csv");
+        //map.put("max", "C:\\Users\\86183\\Desktop\\New folder\\Goodwe\\B1.2.2.2-Q=MAX.csv");
+        //map.put("min", "C:\\Users\\86183\\Desktop\\New folder\\Goodwe\\B1.2.2.2-Q=-MAX.csv");
+
+
+        map.put("ratePower", "60000");
         map.put("projectNo", "CYONY20190301");
         map.put("trfNo", "ZHUSY20190301");
         InverterModeler inverterModeler = new InverterModeler();
@@ -114,7 +119,7 @@ public class InverterModeler implements AbstractModeler {
         List <Map <String, String>> lists = new ArrayList <>();
         List <String> headers = null;
         for (String line : lines) {
-            if (line.startsWith("\"Store No")) {
+            if (line.startsWith("\"Store No") || line.startsWith("Store No")) {
                 headers = Arrays.stream(line.split(","))
                                 .map(x -> x.replace("\"", "").trim())
                                 .collect(Collectors.toList());
@@ -157,6 +162,7 @@ public class InverterModeler implements AbstractModeler {
             BigDecimal b = new BigDecimal(String.valueOf(i));
             i = b.add(step).floatValue();
         }
+        rsMap.forEach((k, v) -> System.out.println(k + "=" + v));
         return rsMap;
 
 
@@ -184,10 +190,20 @@ public class InverterModeler implements AbstractModeler {
 
         long startDate = 0;
         for (Map <String, String> map : lists) {
-            double apw = Double.valueOf(map.get("P-SigmaA-Total"));
-            double rpv = Double.valueOf(map.get("Q-SigmaA-Total"));
-            double dpw = Double.valueOf(map.get("P-4-Total"));
-            double cos = Double.valueOf(map.get("PF-SigmaA-Total"));
+            String pst = map.get("P-SigmaA-Total");
+            String qst = map.get("Q-SigmaA-Total");
+            String pfst = map.getOrDefault("PF-SigmaA-Total", "0");
+            String p4t = map.get("P-4-Total");
+            String all = pst + qst + pfst + p4t;
+
+            if (all.contains("NAN") || all.contains("Error")) {
+                continue;
+            }
+
+            double apw = Double.valueOf(pst);
+            double rpv = Double.valueOf(qst);
+            double dpw = Double.valueOf(p4t);
+            double cos = Double.valueOf(pfst);
             long date = Long.valueOf(map.get("date"));
             if (startDate == 0) {
                 startDate = date;
