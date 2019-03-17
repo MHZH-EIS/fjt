@@ -290,7 +290,7 @@ define(function () {
                                 dataType: 'json',
                                 collapsible:true,
                                 modal: true,
-                                timeout:30000,//超时时间：30秒
+                                timeout:100000,//超时时间：30秒
                                 beforeSend: function () {
                                 	 $(".app-form").attr("readonly", "readonly");
                                 	$('#prog').progressbar().removeClass('hidden');
@@ -300,7 +300,7 @@ define(function () {
                                        	   value += 5;
                                      	    $('#prog').progressbar('setValue', value);
                                     	}
-                                    },500);
+                                    },1000);
                                    
                                 },
                                 success: function (obj) {     

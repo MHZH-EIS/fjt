@@ -189,6 +189,7 @@ public class ReportToolController {
 				File reportFile = modelerInstance.process(param);
 				if (reportFile != null) {
 					report.setReportFilePath(reportFile.getAbsolutePath());
+					report.setCompleteReportTime(new Date());
 				}
 				
 				if (report.getProjectNo() != null) {
