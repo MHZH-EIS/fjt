@@ -61,6 +61,27 @@ public class RoleController {
     		  pg = PageHelper.startPage(page, rows);
     	}
      
+    	List<EisRoleWithMenuReource> rsResources = listAll();
+        DataGrid<EisRoleWithMenuReource> dg = new DataGrid<EisRoleWithMenuReource>(rsResources);
+        if ( pg != null) {
+    		dg.setTotal(pg.getTotal());
+        }else {
+        	if (rsResources.size()!=0) {
+               	dg.setTotal(1L);
+        	}else {
+        		dg.setTotal(0L);
+        	}
+ 
+        }
+
+        return  dg;
+    }
+    
+    
+    
+    @RequestMapping("/listRoles")
+    @ResponseBody
+    public List<EisRoleWithMenuReource> listAll() {
     	List<EisRoleWithMenuReource> rsResources = new ArrayList<>();
      	List<EisRole> lst = eisRoleService.findAll();
     	for (EisRole role:lst) {
@@ -78,20 +99,12 @@ public class RoleController {
     		rsResources.add(one);
     	}
     	
-        DataGrid<EisRoleWithMenuReource> dg = new DataGrid<EisRoleWithMenuReource>(rsResources);
-        if ( pg != null) {
-    		dg.setTotal(pg.getTotal());
-        }else {
-        	if (rsResources.size()!=0) {
-               	dg.setTotal(1L);
-        	}else {
-        		dg.setTotal(0L);
-        	}
- 
-        }
-
-        return  dg;
+       
+        return  rsResources;
     }
+    
+    
+    
 
     @RequestMapping({"/save" })
     @Transactional

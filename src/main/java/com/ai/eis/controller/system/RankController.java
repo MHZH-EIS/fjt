@@ -77,15 +77,45 @@ public class RankController {
     public DataGrid <EisRank> postquery(Integer page,Integer rows,@RequestParam(value = "rankId", defaultValue = "") String pId,
                                         @RequestParam(value = "name", defaultValue = "") String pName
                                       ) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	com.github.pagehelper.Page<Object> pg = null;
+    	if (page != null && rows != null) {
+       	  pg = PageHelper.startPage(page, rows);
+    	}
+
+ 
+        DataGrid<EisRank> dg = new DataGrid<EisRank>(postquery(pId,pName));
+        //如果不分页就没有total，这样会按照正常的来，
+        //[{"roleId":1,"name":"超级管理员","remarks":"管理","status":true,"id":"1"},{"roleId":3,"name":"项目经理","remarks":"项目下卡、报告调整","status":true,"id":"3"},{"roleId":4,"name":"测试工程师","remarks":"测试","status":true,"id":"4"},{"roleId":5,"name":"业务管理岗","remarks":"合同录入","status":true,"id":"5"},{"roleId":6,"name":"样品管理","remarks":"样品管理","status":true,"id":"6"},{"roleId":7,"name":"超级管理员","remarks":"超级管理","status":null,"id":"7"}]
+        //如果有total，则是分页是以下内容:
+        //{"total":5,"rows":[{"postId":1,"name":"检验工程师","remarks":"检验"},{"postId":2,"name":"测试工程师","remarks":"测试"},{"postId":3,"name":"项目经理","remarks":"项目把控"},{"postId":4,"name":"业务员","remarks":"合同录入"},{"postId":5,"name":"样品管理员","remarks":"样品管理"}],"footer":null}
+        if (pg != null) {
+    		dg.setTotal(pg.getTotal());
+        }else {
+           	dg.setTotal(1L);
+        }
+
+		return dg;
+    }
+    
+    
+    @ResponseBody
+    @RequestMapping(value = "/listRanks")
+    public List <EisRank> postquery( @RequestParam(value = "rankId", defaultValue = "") String pId,
+                                        @RequestParam(value = "name", defaultValue = "") String pName
+                                      ) {
+   
+
         Map <String, String> map = new HashMap <>();
         map.put("rankId", pId);
         map.put("name", Tools.liker(pName));
         List <EisRank>  lst =  rankService.queryByCondition(map);
-        DataGrid<EisRank> dg = new DataGrid<EisRank>(lst);
-		dg.setTotal(pg.getTotal());
-		return dg;
+        
+		return lst;
     }
+    
+    
+    
+    
     
     @ResponseBody
     @Transactional

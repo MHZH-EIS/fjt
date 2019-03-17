@@ -87,16 +87,45 @@ public class PostController {
     public DataGrid <EisPost> postquery(Integer page,Integer rows,@RequestParam(value = "postId", defaultValue = "") String pId,
                                         @RequestParam(value = "name", defaultValue = "") String pName
                                       ) {
-    	com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page, rows);
+    	com.github.pagehelper.Page<Object> pg = null;
+    	if (page != null && rows != null) {
+    		pg = PageHelper.startPage(page, rows);
+    	}
+
+     
+        List <EisPost> lst =  postquery(pId,pName);
+        DataGrid<EisPost> dg = new DataGrid<EisPost>(lst);
+
+    	if (pg != null) {
+        	dg.setTotal(pg.getTotal());
+    	} else {
+        	if (lst.size()!=0) {
+               	dg.setTotal(1L);
+        	}else {
+        		dg.setTotal(0L);
+        	}
+    	}
+    	
+        return dg;
+    }
+    
+    
+    @ResponseBody
+    @RequestMapping(value = "/listPosts")
+    public List <EisPost> postquery( @RequestParam(value = "postId", defaultValue = "") String pId,
+                                        @RequestParam(value = "name", defaultValue = "") String pName
+                                      ) {
+    	 
         Map <String, String> map = new HashMap <>();
         map.put("postId", pId);
         map.put("name", Tools.liker(pName));
-        List <EisPost> lst =  eispostService.queryByCondition(map);
-        
-        DataGrid<EisPost> dg = new DataGrid<EisPost>(lst);
-    	dg.setTotal(pg.getTotal());
-        return dg;
+        List <EisPost> lst =  eispostService.queryByCondition(map);    
+        return lst;
     }
+    
+    
+    
+    
     
     @ResponseBody
     @Transactional
